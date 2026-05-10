@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracker de rutina</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff; --bg2: #f5f5f3; --bg3: #eeede8;
+    --text: #1a1a1a; --text2: #666660; --text3: #999993;
+    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
+    --success-bg: #e6f4ee; --success-text: #0f6e56; --success-border: #5dcaa5;
+    --radius: 8px; --radius-lg: 12px;
+    --purple-bg: #eeedfe; --purple-text: #3c3489; --purple-border: #afa9ec;
+    --teal-bg: #e1f5ee; --teal-text: #085041; --teal-border: #5dcaa5;
+    --amber-bg: #faeeda; --amber-text: #633806;
+    --blue-bg: #e6f1fb; --blue-text: #0c447c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a; --bg2: #252523; --bg3: #2e2e2b;
+      --text: #f0efe8; --text2: #a0a09a; --text3: #666660;
+      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
+      --success-bg: #04342c; --success-text: #9fe1cb; --success-border: #0f6e56;
+      --purple-bg: #26215c; --purple-text: #cecbf6; --purple-border: #534ab7;
+      --teal-bg: #04342c; --teal-text: #9fe1cb; --teal-border: #0f6e56;
+      --amber-bg: #412402; --amber-text: #fac775;
+      --blue-bg: #042c53; --blue-text: #b5d4f4;
+    }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; padding: 16px; }
+  .app { max-width: 480px; margin: 0 auto; }
+  h1 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+  .app-sub { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
+  .cycle-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .cycle-info .label { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+  .cycle-info .val { font-size: 22px; font-weight: 500; }
+  .cycle-info .sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+  .btn-group { display: flex; gap: 6px; }
+  .btn { padding: 7px 14px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: transparent; color: var(--text); font-size: 13px; cursor: pointer; font-family: inherit; }
+  .btn:active { opacity: 0.7; }
+  .week-pill { display: inline-block; padding: 5px 12px; border-radius: var(--radius); font-size: 12px; font-weight: 500; margin-bottom: 14px; }
+  .wp-a { background: var(--purple-bg); color: var(--purple-text); border: 0.5px solid var(--purple-border); }
+  .wp-b { background: var(--teal-bg); color: var(--teal-text); border: 0.5px solid var(--teal-border); }
+  .cycle-explain { font-size: 12px; color: var(--text3); margin-bottom: 14px; padding: 8px 12px; background: var(--bg2); border-radius: var(--radius); line-height: 1.6; }
+  .days-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .day-tile { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; display: flex; align-items: center; gap: 12px; }
+  .day-tile.done { background: var(--success-bg); border-color: var(--success-border); }
+  .day-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--border2); flex-shrink: 0; }
+  .day-tile.done .day-dot { background: var(--success-text); border-color: var(--success-text); }
+  .day-info { flex: 1; }
+  .day-name { font-size: 11px; color: var(--text3); margin-bottom: 2px; }
+  .day-group { font-size: 14px; font-weight: 500; }
+  .day-tile.done .day-group { color: var(--success-text); }
+  .day-focus { font-size: 12px; color: var(--text2); margin-top: 1px; }
+  .btn-mark { padding: 5px 12px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: transparent; font-size: 12px; color: var(--text2); cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .btn-mark.marked { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+  .btn-mark:active { opacity: 0.7; }
+  .progress-row { display: flex; align-items: center; gap: 10px; }
+  .prog-bar { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .prog-fill { height: 100%; background: #1d9e75; border-radius: 2px; transition: width 0.3s; }
+  .prog-label { font-size: 12px; color: var(--text2); white-space: nowrap; }
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 14px 0; }
+  .section-label { font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+  .history-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .hist-chip { font-size: 11px; padding: 3px 10px; border-radius: var(--radius); border: 0.5px solid var(--border); color: var(--text2); background: var(--bg2); }
+  .hist-chip.ha { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); }
+  .hist-chip.hb { background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal-border); }
+  .empty-note { font-size: 12px; color: var(--text3); }
+  .reset-btn { font-size: 12px; color: var(--text3); background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
+  .sec-toggle { width: 100%; text-align: left; background: none; border: none; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0; }
+  .sec-toggle .arrow { font-size: 18px; color: var(--text2); transition: transform 0.2s; }
+  .sec-toggle.open .arrow { transform: rotate(180deg); }
+  .day-detail-card { border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 8px; overflow: hidden; }
+  .ddc-header { display: flex; align-items: center; gap: 8px; padding: 10px 12px; cursor: pointer; background: var(--bg2); }
+  .ddc-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: var(--radius); }
+  .ddc-title { font-size: 13px; font-weight: 500; flex: 1; }
+  .ddc-chev { font-size: 14px; color: var(--text3); transition: transform 0.2s; }
+  .ddc-chev.open { transform: rotate(180deg); }
+  .ddc-body { padding: 10px 12px; display: none; }
+  .ddc-body.open { display: block; }
+  .sec-lbl { font-size: 10px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin: 10px 0 6px; }
+  .ex-row { display: flex; gap: 8px; padding: 6px 0; border-bottom: 0.5px solid var(--border); align-items: flex-start; }
+  .ex-row:last-child { border-bottom: none; }
+  .ex-n { font-size: 11px; color: var(--text3); min-width: 22px; padding-top: 2px; }
+  .ex-nm { font-size: 13px; font-weight: 500; margin-bottom: 1px; }
+  .ex-dt { font-size: 12px; color: var(--text2); }
+  .etag { font-size: 10px; padding: 2px 6px; border-radius: var(--radius); font-weight: 500; display: inline-block; margin-top: 3px; }
+  .etag-p { background: var(--purple-bg); color: var(--purple-text); }
+  .etag-ss { background: var(--amber-bg); color: var(--amber-text); }
+  .etag-ds { background: #faece7; color: #712b13; }
+  .etag-f { background: var(--teal-bg); color: var(--teal-text); }
+  @media (prefers-color-scheme: dark) { .etag-ds { background: #4a1b0c; color: #f5c4b3; } }
+  .gloss-item { padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .gloss-item:last-child { border-bottom: none; }
+  .gloss-term { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+  .gloss-def { font-size: 12px; color: var(--text2); line-height: 1.6; }
+  .rpe-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+  .rpe-table th { text-align: left; font-weight: 500; padding: 5px 8px; background: var(--bg2); color: var(--text3); font-size: 11px; }
+  .rpe-table td { padding: 6px 8px; border-bottom: 0.5px solid var(--border); color: var(--text2); vertical-align: top; }
+  .rpe-table tr:last-child td { border-bottom: none; }
+  .rpe-table td:first-child { font-weight: 500; color: var(--text); white-space: nowrap; }
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>Mi rutina de gimnasio</h1>
+  <p class="app-sub">Tracker de semanas · 4 días · Powerbuilding DUP</p>
+
+  <div class="card">
+    <div class="cycle-header">
+      <div class="cycle-info">
+        <div class="label">Semana actual</div>
+        <div class="val" id="week-val">Semana 1</div>
+        <div class="sub" id="week-sub">Tipo A · Fuerza</div>
+      </div>
+      <div class="btn-group">
+        <button class="btn" onclick="prevWeek()">&#8592;</button>
+        <button class="btn" onclick="nextWeek()">&#8594;</button>
+      </div>
+    </div>
+
+    <div id="week-pill-wrap"></div>
+    <div class="cycle-explain" id="week-explain"></div>
+    <div class="days-list" id="days-list"></div>
+
+    <div class="progress-row">
+      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <span class="prog-label" id="prog-label">0 de 4 días</span>
+    </div>
+
+    <div class="divider"></div>
+    <div class="section-label">Historial (semanas completadas)</div>
+    <div class="history-row" id="history-row"><span class="empty-note">Aún no hay semanas completadas.</span></div>
+    <div class="divider"></div>
+    <button class="reset-btn" onclick="resetAll()">&#8635; Reiniciar todo</button>
+  </div>
+
+  <div class="card">
+    <button class="sec-toggle" id="tog-routine" onclick="toggleSection('tog-routine','body-routine')">
+      Ver rutina completa <span class="arrow">&#8964;</span>
+    </button>
+    <div id="body-routine" style="display:none; margin-top:12px">
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <span id="rt-btn-a" class="week-pill wp-a" style="cursor:pointer" onclick="setRoutineWeek('A')">Semana A</span>
+        <span id="rt-btn-b" class="week-pill" style="cursor:pointer;background:var(--bg2);color:var(--text2);border:0.5px solid var(--border);font-weight:400" onclick="setRoutineWeek('B')">Semana B</span>
+      </div>
+      <div id="rt-days-a">
+        <div class="day-detail-card">
+          <div class="ddc-header" onclick="togDay(this)"><span class="ddc-badge" style="background:var(--purple-bg);color:var(--purple-text)">Día 1</span><span class="ddc-title">Pecho y tríceps</span><span class="ddc-chev">&#8964;</span></div>
+          <div class="ddc-body">
+            <div class="sec-lbl">Principal</div>
+            <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Press de banca con barra</p><p class="ex-dt">4 × 3–5 reps · RPE 8–9 · 2–3 min descanso</p><span class="etag etag-p">Principal</span></div></div>
+            <div class="sec-lbl">Accesorios — superseries</div>
+            <div class="ex-row"><span class="ex-n">2a</span><div><p class="ex-nm">Press inclinado con mancuernas</p><p class="ex-dt">3 × 8–10 reps</p><span class="etag etag-ss">Superserie con 2b</span></div></div>
+            <div class="ex-row"><span class="ex-n">2b</span><div><p class="ex-nm">Press francés con barra Z</p><p class="ex-dt">3 × 10–12 reps · 90 seg tras el par</p></div></div>
+            <div class="ex-row"><span class="ex-n">3a</span><div><p class="ex-nm">Aperturas en polea baja</p><p class="ex-dt">3 × 12–15 reps</p><span class="etag etag-ss">Superserie con 3b</span></div></div>
+            <div class="ex-row"><span class="ex-n">3b</span><div><p class="ex-nm">Extensión de tríceps en polea — cuerda</p><p class="ex-dt">3 × 12–15 reps · 60 seg tras el par</p></div></div>
+            <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Flexiones de brazo</p><p class="ex-dt">2 series al fallo</p><span class="etag etag-f">Finisher</span></div></div>
+          </div>
+        </div>
+        <div class="day-detail-card">
+          <div class="ddc-header" onclick="togDay(this)"><span class="ddc-badge" style="background:var(--blue-bg);color:var(--blue-text)">Día 2</span><span class="ddc-title">Piernas anterior</span><span class="ddc-chev">&#8964;</span></div>
+          <div class="ddc-body">
+            <div class="sec-lbl">Principal</div>
+            <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Sentadilla trasera con barra</p><p class="ex-dt">4 × 3–5 reps · RPE 8–9 · 2–3 min descanso</p><span class="etag etag-p">Principal</span></div></div>
+            <div class="sec-lbl">Accesorios — superseries</div>
+            <div class="ex-row"><span class="ex-n">2a</span><div><p class="ex-nm">Prensa de piernas</p><p class="ex-dt">3 × 8–10 reps</p><span class="etag etag-ss">Superserie con 2b</span></div></div>
+            <div class="ex-row"><span class="ex-n">2b</span><div><p class="ex-nm">Extensiones de cuádriceps en máquina</p><p class="ex-dt">3 × 12–15 reps · 90 seg tras el par</p></div></div>
+            <div class="ex-row"><span class="ex-n">3</span><div><p class="ex-nm">Estocadas búlgaras con mancuernas</p><p class="ex-dt">3 × 10 reps por pierna · 90 seg</p></div></div>
+            <div class="ex-row"><span class="ex-n">4a</span><div><p class="ex-nm">Gemelos en prensa de piernas</p><p class="ex-dt">3 × 12–15 reps</p><span class="etag etag-ss">Superserie con 4b</span></div></div>
+            <div class="ex-row"><span class="ex-n">4b</span><div><p class="ex-nm">Gemelos sentado en máquina</p><p class="ex-dt">3 × 15–20 reps · 60 seg tras el par</p><span class="etag etag-f">Finisher</span></div></div>
+          </div>
+        </div>
+        <div class="day-detail-card">
+          <div class="ddc-header" onclick="togDay(this)"><span class="ddc-badge" style="background:var(--amber-bg);color:var(--amber-text)">Día 3</span><span class="ddc-title">Hombros y abdomen</span><span class="ddc-chev">&#8964;</span></div>
+          <div class="ddc-body">
+            <div class="sec-lbl">Principal</div>
+            <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Press militar con barra de pie</p><p class="ex-dt">4 × 3–5 reps · RPE 8–9 · 2–3 min descanso</p><span class="etag etag-p">Principal</span></div></div>
+            <div class="sec-lbl">Accesorios — superseries</div>
+            <div class="ex-row"><span class="ex-n">2a</span><div><p class="ex-nm">Elevaciones laterales con mancuernas</p><p class="ex-dt">4 × 12–15 reps</p><span class="etag etag-ss">Superserie con 2b</span></div></div>
+            <div class="ex-row"><span class="ex-n">2b</span><div><p class="ex-nm">Facepulls en polea alta</p><p class="ex-dt">4 × 12–15 reps · 60 seg tras el par</p></div></div>
+            <div class="ex-row"><span class="ex-n">3a</span><div><p class="ex-nm">Press arnold con mancuernas sentado</p><p class="ex-dt">3 × 10–12 reps</p><span class="etag etag-ss">Superserie con 3b</span></div></div>
+            <div class="ex-row"><span class="ex-n">3b</span><div><p class="ex-nm">Crunch en polea alta</p><p class="ex-dt">3 × 12–15 reps · 90 seg tras el par</p></div></div>
+            <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Rueda abdominal o elevación de piernas colgado</p><p class="ex-dt">3 × 10–15 reps</p><span class="etag etag-f">Finisher</span></div></div>
+          </div>
+        </div>
+        <div class="day-detail-card">
+          <div class="ddc-header" onclick="togDay(this)"><span class="ddc-badge" style="background:var(--teal-bg);color:var(--teal-text)">Día 4</span><span class="ddc-title">Espalda, isquios y bíceps</span><span class="ddc-chev">&#8964;</span></div>
+          <div class="ddc-body">
+            <div class="sec-lbl">Principal</div>
+            <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Peso muerto convencional</p><p class="ex-dt">4 × 3–5 reps · RPE 8–9 · 2–3 min descanso</p><span class="etag etag-p">Principal</span></div></div>
+            <div class="sec-lbl">Accesorios — superseries</div>
+            <div class="ex-row"><span class="ex-n">2a</span><div><p class="ex-nm">Dominadas o jalón al pecho</p><p class="ex-dt">4 × 6–8 reps</p><span class="etag etag-ss">Superserie con 2b</span></div></div>
+            <div class="ex-row"><span class="ex-n">2b</span><div><p class="ex-nm">Remo con barra agarre prono</p><p class="ex-dt">4 × 8–10 reps · 90 seg tras el par</p></div></div>
+            <div class="ex-row"><span class="ex-n">3a</span><div><p class="ex-nm">Curl femoral sentado en máquina</p><p class="ex-dt">3 × 10–12 reps</p><span class="etag etag-ss">Superserie con 3b</span></div></div>
+            <div class="ex-row"><span class="ex-n">3b</span><div><p class="ex-nm">Curl de bíceps con barra</p><p class="ex-dt">3 × 8–10 reps · 90 seg tras el par</p></div></div>
+            <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Curl martillo con mancuernas</p><p class="ex-dt">3 × 10–12 reps</p><span class="etag etag-f">Finisher</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div id="rt-days-b" style="display:none">
+        <div class="day-detail-card">
+          <div class="ddc-header" onclick="togDay(this)"><span class="ddc-badge" style="background:var(--purple-bg);color:var(--purple-text)">Día 1</span><span class="ddc-title">Pecho y tríceps</span><span class="ddc-chev">&#8964;</span></div>
+          <div class="ddc-body">
+            <div class="sec-lbl">Principal</div>
+            <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Press de banca con barra</p><p class="ex-dt">4 × 6–8 reps · RPE 8 · 2 min descanso</p><span class="etag etag-p">Principal</span></div></div>
+            <div class="sec-lbl">Accesorios — drop sets y rotativos</div>
+            <div class="ex-row"><span class="ex-n">2</span><div><p class="ex-nm">Press en máquina (Hammer o similar)</p><p class="ex-dt">3 × 10–12 reps + drop set última serie · 90 seg</p><span class="etag etag-ds">Drop set</span></div></div>
+            <div class="ex-row"><span class="ex-n">3</span><div><p class="ex-nm">Aperturas con mancuernas en banco plano</p><p class="ex-dt">3 × 12–15 reps · 60 seg</p></div></div>
+            <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Dips en paralelas</p><p class="ex-dt">3 × 8–12 reps · 90 seg</p></div></div>
+            <div class="ex-row"><span class="ex-n">5</span><div><p class="ex-nm">Kickbacks de tríceps con mancuerna</p><p class="ex-dt">3 × 12–15 reps + drop set última serie · 60 seg</p><span class="etag etag-ds">Drop set</span></div></div>
+            <div class="ex-row"><span class="ex-n">6</span><div><p class="ex-nm">Flexiones de brazo</p><p class="ex-dt">2 series al fallo</p><span class="etag etag-f">Finisher</span></div></div>
+          </div>
+        </div>
+        <div class="day-detail-card">
+          <div class="ddc-header" onclick="togDay(this)"><span class="ddc-badge" style="background:var(--blue-bg);color:var(--blue-text)">Día 2</span><span class="ddc-title">Piernas anterior</span><span class="ddc-chev">&#8964;</span></div>
+          <div class="ddc-body">
+            <div class="sec-lbl">Principal</div>
+            <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Sentadilla trasera con barra</p><p class="ex-dt">4 × 6–8 reps · RPE 8 · 2 min descanso</p><span class="etag etag-p">Principal</span></div></div>
+            <div class="sec-lbl">Accesorios — drop sets y rotativos</div>
+            <div class="ex-row"><span class="ex-n">2</span><div><p class="ex-nm">Hack squat en máquina</p><p class="ex-dt">3 × 10–12 reps + drop set última serie · 2 min</p><span class="etag etag-ds">Drop set</span></div></div>
+            <div class="ex-row"><span class="ex-n">3</span><div><p class="ex-nm">Zancadas caminando con mancuernas</p><p class="ex-dt">3 × 12 reps por pierna · 90 seg</p></div></div>
+            <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Extensiones de cuádriceps en máquina</p><p class="ex-dt">3 × 15 reps + drop set última serie · 60 seg</p><span class="etag etag-ds">Drop set</span></div></div>
+            <div class="ex-row"><span class="ex-n">5</span><div><p class="ex-nm">Gemelos de pie en máquina</p><p class="ex-dt">4 × 15–20 reps · 60 seg</p><span class="etag etag-f">Finisher</span></div></div>
+          </div>
+        </div>
+        <div class="day-detail-card">
+          <div class="ddc-header" onclick="togDay(this)"><span class="ddc-badge" style="background:var(--amber-bg);color:var(--amber-text)">Día 3</span><span class="ddc-title">Hombros y abdomen</span><span class="ddc-chev">&#8964;</span></div>
+          <div class="ddc-body">
+            <div class="sec-lbl">Principal</div>
+            <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Press militar con barra de pie</p><p class="ex-dt">4 × 6–8 reps · RPE 8 · 2 min descanso</p><span class="etag etag-p">Principal</span></div></div>
+            <div class="sec-lbl">Accesorios — drop sets y rotativos</div>
+            <div class="ex-row"><span class="ex-n">2</span><div><p class="ex-nm">Press arnold con mancuernas sentado</p><p class="ex-dt">3 × 10–12 reps + drop set última serie · 90 seg</p><span class="etag etag-ds">Drop set</span></div></div>
+            <div class="ex-row"><span class="ex-n">3</span><div><p class="ex-nm">Elevaciones laterales en polea baja</p><p class="ex-dt">4 × 15 reps · 60 seg</p></div></div>
+            <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Facepulls en polea alta</p><p class="ex-dt">3 × 12–15 reps · 60 seg</p></div></div>
+            <div class="ex-row"><span class="ex-n">5</span><div><p class="ex-nm">Elevación de piernas colgado + crunch en polea</p><p class="ex-dt">3 × 12 reps cada uno · 60 seg</p><span class="etag etag-f">Finisher</span></div></div>
+          </div>
+        </div>
+        <div class="day-detail-card">
+          <div class="ddc-header" onclick="togDay(this)"><span class="ddc-badge" style="background:var(--teal-bg);color:var(--teal-text)">Día 4</span><span class="ddc-title">Espalda, isquios y bíceps</span><span class="ddc-chev">&#8964;</span></div>
+          <div class="ddc-body">
+            <div class="sec-lbl">Principal</div>
+            <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Peso muerto rumano con barra</p><p class="ex-dt">4 × 6–8 reps · RPE 8 · 2 min descanso</p><span class="etag etag-p">Principal rotativo</span></div></div>
+            <div class="sec-lbl">Accesorios — drop sets y rotativos</div>
+            <div class="ex-row"><span class="ex-n">2</span><div><p class="ex-nm">Remo en polea sentado (agarre neutro)</p><p class="ex-dt">4 × 10–12 reps + drop set última serie · 90 seg</p><span class="etag etag-ds">Drop set</span></div></div>
+            <div class="ex-row"><span class="ex-n">3</span><div><p class="ex-nm">Jalón al pecho agarre supino</p><p class="ex-dt">3 × 10–12 reps · 90 seg</p></div></div>
+            <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Curl femoral acostado en máquina</p><p class="ex-dt">3 × 12 reps + drop set última serie · 90 seg</p><span class="etag etag-ds">Drop set</span></div></div>
+            <div class="ex-row"><span class="ex-n">5</span><div><p class="ex-nm">Curl de bíceps con mancuernas alterno</p><p class="ex-dt">3 × 10–12 reps · 60 seg</p></div></div>
+            <div class="ex-row"><span class="ex-n">6</span><div><p class="ex-nm">Curl martillo en polea baja</p><p class="ex-dt">3 × 12–15 reps</p><span class="etag etag-f">Finisher</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="sec-toggle" id="tog-warm" onclick="toggleSection('tog-warm','body-warm')">
+      Entrada en calor <span class="arrow">&#8964;</span>
+    </button>
+    <div id="body-warm" style="display:none; margin-top:12px">
+      <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Rotaciones de hombros y cuello</p><p class="ex-dt">10 rotaciones por lado en cada dirección · despacio</p></div></div>
+      <div class="ex-row"><span class="ex-n">2</span><div><p class="ex-nm">Rotaciones de cadera y rodillas</p><p class="ex-dt">10 círculos en cada dirección · pies al ancho de hombros</p></div></div>
+      <div class="ex-row"><span class="ex-n">3</span><div><p class="ex-nm">Sentadilla de peso corporal</p><p class="ex-dt">2 × 10 reps · sin peso · controlado</p></div></div>
+      <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Serie de activación con barra vacía</p><p class="ex-dt">1 × 10 reps del ejercicio principal del día · lento</p></div></div>
+      <p style="font-size:12px;color:var(--text3);margin-top:10px">Tiempo total: 3–4 minutos</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="sec-toggle" id="tog-cool" onclick="toggleSection('tog-cool','body-cool')">
+      Estiramientos <span class="arrow">&#8964;</span>
+    </button>
+    <div id="body-cool" style="display:none; margin-top:12px">
+      <div class="ex-row"><span class="ex-n">1</span><div><p class="ex-nm">Pecho en marco de puerta</p><p class="ex-dt">30 seg por lado · antebrazo apoyado, girar el cuerpo</p></div></div>
+      <div class="ex-row"><span class="ex-n">2</span><div><p class="ex-nm">Cuádriceps de pie</p><p class="ex-dt">30 seg por lado · doblar pierna hacia atrás, agarrar tobillo</p></div></div>
+      <div class="ex-row"><span class="ex-n">3</span><div><p class="ex-nm">Isquiotibiales sentado</p><p class="ex-dt">30–40 seg · piernas extendidas, inclinarse hacia adelante</p></div></div>
+      <div class="ex-row"><span class="ex-n">4</span><div><p class="ex-nm">Hombro cruzado</p><p class="ex-dt">30 seg por lado · brazo extendido por delante del pecho</p></div></div>
+      <div class="ex-row"><span class="ex-n">5</span><div><p class="ex-nm">Gato-vaca</p><p class="ex-dt">10 reps lentas · en cuatro apoyos, arquear y redondear espalda</p></div></div>
+      <p style="font-size:12px;color:var(--text3);margin-top:10px">Tiempo total: 4–5 minutos</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="sec-toggle" id="tog-gloss" onclick="toggleSection('tog-gloss','body-gloss')">
+      Glosario de términos <span class="arrow">&#8964;</span>
+    </button>
+    <div id="body-gloss" style="display:none; margin-top:12px">
+      <div class="gloss-item">
+        <div class="gloss-term">RPE (Rate of Perceived Exertion)</div>
+        <div class="gloss-def">Escala del 1 al 10 que indica cuán cerca del fallo terminás una serie. No mide el peso sino el esfuerzo percibido.
+          <table class="rpe-table">
+            <tr><th>RPE</th><th>Significado práctico</th></tr>
+            <tr><td>RPE 10</td><td>Fallo total. No podés hacer ni una rep más.</td></tr>
+            <tr><td>RPE 9</td><td>Te quedaba 1 rep en el tanque.</td></tr>
+            <tr><td>RPE 8</td><td>Te quedaban 2 reps. Difícil pero controlado.</td></tr>
+            <tr><td>RPE 7</td><td>Te quedaban 3 reps. Moderado.</td></tr>
+          </table>
+          <p style="margin-top:8px">En los ejercicios principales se trabaja a RPE 8–9: terminás sintiendo que te quedaba 1 o 2 reps. Esto protege la técnica y permite recuperarte para la próxima sesión.</p>
+        </div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Superserie</div>
+        <div class="gloss-def">Dos ejercicios realizados uno detrás del otro sin descanso entre ellos. El descanso se toma recién al terminar el par completo. Permite hacer más trabajo en menos tiempo.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Drop set</div>
+        <div class="gloss-def">Técnica que se aplica solo en la última serie de un ejercicio accesorio. Al llegar cerca del fallo, bajás el peso un 20–30% de inmediato y seguís haciendo reps hasta agotar el músculo.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Finisher</div>
+        <div class="gloss-def">Ejercicio final del día para agotar el músculo trabajado. Se hace al fallo o con reps altas. Podés omitirlo si el tiempo no alcanza.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">DUP (Daily Undulating Periodization)</div>
+        <div class="gloss-def">Sistema donde el esquema de carga varía entre semanas. Semana A: fuerza (pocos reps, mucho peso). Semana B: hipertrofia (más reps, peso moderado). Ataca ambos objetivos de forma sistemática.</div>
+      </div>
+      <div class="gloss-item">
+        <div class="gloss-term">Fallo muscular</div>
+        <div class="gloss-def">Punto en que no podés completar ni una repetición más con buena técnica. En los principales se evita (RPE 8–9). En finishers y drop sets sí se busca llegar cerca o al fallo.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script>
+const GROUPS = [
+  { group: 'Pecho y tríceps',   focus: 'Empuje horizontal' },
+  { group: 'Piernas',           focus: 'Cuádriceps y pantorrillas' },
+  { group: 'Hombros y abdomen', focus: 'Empuje vertical' },
+  { group: 'Espalda e isquios', focus: 'Tracción y cadena posterior' },
+];
+const DAYS = ['Lunes','Martes','Jueves','Viernes'];
+
+// Semana N:
+// tipo: N impar = A (fuerza), N par = B (hipertrofia)
+// rotación: cambia CADA semana, offset = (N-1) % 4
+function weekType(n){ return (n % 2 === 1) ? 'A' : 'B'; }
+function rotOffset(n){ return (n-1) % 4; }
+function weekOrder(n){ const o = rotOffset(n); return GROUPS.map((_,i) => GROUPS[(i+o)%4]); }
+
+const ROT_LABELS = [
+  'Pecho · Piernas · Hombros · Espalda',
+  'Espalda · Pecho · Piernas · Hombros',
+  'Hombros · Espalda · Pecho · Piernas',
+  'Piernas · Hombros · Espalda · Pecho',
+];
+
+function getState(){
+  try { const r = localStorage.getItem('gym_v5'); if(r) return JSON.parse(r); } catch(e){}
+  return { weekNum:1, done:[false,false,false,false], history:[] };
+}
+function save(s){ try{ localStorage.setItem('gym_v5', JSON.stringify(s)); } catch(e){} }
+let S = getState();
+
+function render(){
+  const wt = weekType(S.weekNum);
+  const order = weekOrder(S.weekNum);
+  const ro = rotOffset(S.weekNum);
+
+  document.getElementById('week-val').textContent = 'Semana ' + S.weekNum;
+  document.getElementById('week-sub').textContent = 'Tipo ' + wt + ' · ' + (wt==='A' ? 'Fuerza' : 'Hipertrofia');
+
+  document.getElementById('week-pill-wrap').innerHTML =
+    `<span class="week-pill ${wt==='A'?'wp-a':'wp-b'}">Semana ${wt==='A'?'A — fuerza':'B — hipertrofia'}</span>`;
+
+  document.getElementById('week-explain').textContent =
+    'Orden de esta semana: ' + ROT_LABELS[ro] + '. La próxima semana el orden vuelve a rotar.';
+
+  const list = document.getElementById('days-list');
+  list.innerHTML = '';
+  let doneCount = 0;
+  order.forEach((item, i) => {
+    if(S.done[i]) doneCount++;
+    const div = document.createElement('div');
+    div.className = 'day-tile' + (S.done[i] ? ' done' : '');
+    div.innerHTML = `<div class="day-dot"></div><div class="day-info"><div class="day-name">${DAYS[i]}</div><div class="day-group">${item.group}</div><div class="day-focus">${item.focus}</div></div><button class="btn-mark ${S.done[i]?'marked':''}" onclick="toggleDay(${i})">${S.done[i]?'&#10003; Hecho':'Marcar'}</button>`;
+    list.appendChild(div);
+  });
+
+  const pct = Math.round((doneCount/4)*100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = doneCount + ' de 4 días';
+
+  const hr = document.getElementById('history-row');
+  if(S.history.length === 0){
+    hr.innerHTML = '<span class="empty-note">Aún no hay semanas completadas.</span>';
+  } else {
+    hr.innerHTML = S.history.slice(-20).map(h =>
+      `<span class="hist-chip ${h.type==='A'?'ha':'hb'}" title="${h.order}">S${h.week}·${h.type}·${h.done}/4</span>`
+    ).join('');
+  }
+}
+
+function toggleDay(i){
+  S.done[i] = !S.done[i];
+  if(S.done.every(Boolean)){
+    S.history.push({ week:S.weekNum, type:weekType(S.weekNum), done:4, order:ROT_LABELS[rotOffset(S.weekNum)] });
+    S.weekNum++;
+    S.done = [false,false,false,false];
+  }
+  save(S); render();
+}
+
+// Las flechas solo navegan, NO tocan el historial
+function nextWeek(){ S.weekNum++; S.done=[false,false,false,false]; save(S); render(); }
+function prevWeek(){ if(S.weekNum>1){ S.weekNum--; S.done=[false,false,false,false]; save(S); render(); } }
+
+function resetAll(){
+  if(confirm('¿Reiniciar todo el progreso?')){
+    S={weekNum:1,done:[false,false,false,false],history:[]};
+    save(S); render();
+  }
+}
+function toggleSection(tid,bid){
+  const b=document.getElementById(bid), t=document.getElementById(tid);
+  const open = b.style.display!=='none';
+  b.style.display = open?'none':'block';
+  t.classList.toggle('open',!open);
+}
+function togDay(header){
+  const body=header.nextElementSibling, chev=header.querySelector('.ddc-chev');
+  const open=body.classList.contains('open');
+  body.classList.toggle('open',!open); chev.classList.toggle('open',!open);
+}
+function setRoutineWeek(w){
+  document.getElementById('rt-days-a').style.display=w==='A'?'block':'none';
+  document.getElementById('rt-days-b').style.display=w==='B'?'block':'none';
+  const styleOff='display:inline-block;padding:5px 12px;border-radius:var(--radius);font-size:12px;font-weight:400;background:var(--bg2);color:var(--text2);border:0.5px solid var(--border);cursor:pointer';
+  document.getElementById('rt-btn-a').className=w==='A'?'week-pill wp-a':'';
+  document.getElementById('rt-btn-a').style=w==='A'?'cursor:pointer':styleOff;
+  document.getElementById('rt-btn-b').className=w==='B'?'week-pill wp-b':'';
+  document.getElementById('rt-btn-b').style=w==='B'?'cursor:pointer':styleOff;
+}
+render();
+</script>
+</body>
+</html>
