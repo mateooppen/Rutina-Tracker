@@ -2,9 +2,9 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#eeede8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#1c1c1a" media="(prefers-color-scheme: dark)">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f2f1ed" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161615" media="(prefers-color-scheme: dark)">
 <title>Rutina Tracker</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -12,252 +12,315 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #ffffff; --bg2: #f5f5f3; --bg3: #eeede8;
-    --text: #1a1a1a; --text2: #666660; --text3: #8a8a84;
-    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
-    --success-bg: #e6f4ee; --success-text: #0f6e56; --success-border: #5dcaa5;
-    --radius: 8px; --radius-lg: 12px;
-    --purple-bg: #eeedfe; --purple-text: #3c3489; --purple-border: #afa9ec;
-    --teal-bg: #e1f5ee; --teal-text: #085041; --teal-border: #5dcaa5;
-    --amber-bg: #faeeda; --amber-text: #633806;
-    --blue-bg: #e6f1fb; --blue-text: #0c447c;
-    --red-bg: #faece7; --red-text: #712b13;
+    --bg: #ffffff; --bg2: #f6f5f2; --bg3: #f2f1ed;
+    --text: #1a1a1a; --text2: #63635e; --text3: #8a8a84;
+    --border: rgba(0,0,0,0.09); --border2: rgba(0,0,0,0.18);
+    --accent: #4f46b8; --accent-soft: #eeedfe; --accent-text: #3c3489;
+    --green: #1d9e75; --green-soft: #e2f4ec; --green-text: #0f6e56;
+    --teal-soft: #e1f5ee; --teal-text: #085041;
+    --amber-soft: #faeeda; --amber-text: #633806;
+    --red-soft: #faece7; --red-text: #712b13;
+    --shadow: 0 1px 2px rgba(0,0,0,0.05), 0 4px 16px rgba(0,0,0,0.04);
+    --radius: 10px; --radius-lg: 16px;
+    --tabbar-h: 60px;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1c1c1a; --bg2: #252523; --bg3: #2e2e2b;
-      --text: #f0efe8; --text2: #a0a09a; --text3: #7a7a74;
-      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
-      --success-bg: #04342c; --success-text: #9fe1cb; --success-border: #0f6e56;
-      --purple-bg: #26215c; --purple-text: #cecbf6; --purple-border: #534ab7;
-      --teal-bg: #04342c; --teal-text: #9fe1cb; --teal-border: #0f6e56;
-      --amber-bg: #412402; --amber-text: #fac775;
-      --blue-bg: #042c53; --blue-text: #b5d4f4;
-      --red-bg: #4a1b0c; --red-text: #f5c4b3;
+      --bg: #202020; --bg2: #2a2a29; --bg3: #161615;
+      --text: #f0efe8; --text2: #a5a59e; --text3: #7a7a74;
+      --border: rgba(255,255,255,0.09); --border2: rgba(255,255,255,0.2);
+      --accent: #8d85e8; --accent-soft: #2b2660; --accent-text: #cecbf6;
+      --green: #34c795; --green-soft: #0b3f33; --green-text: #9fe1cb;
+      --teal-soft: #0b3f33; --teal-text: #9fe1cb;
+      --amber-soft: #412402; --amber-text: #fac775;
+      --red-soft: #4a1b0c; --red-text: #f5c4b3;
+      --shadow: none;
     }
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; padding: 16px; }
-  .app { max-width: 480px; margin: 0 auto; }
-  h1 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
-  .app-sub { font-size: 13px; color: var(--text2); margin-bottom: 14px; }
-  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; }
+  button { font-family: inherit; color: inherit; }
 
-  /* Selector de usuario */
-  .user-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-  .user-chip { padding: 9px 16px; min-height: 40px; border-radius: 20px; border: 0.5px solid var(--border2); background: var(--bg); color: var(--text2); font-size: 13px; cursor: pointer; font-family: inherit; }
-  .user-chip.active { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); font-weight: 500; }
+  /* ---------- Barra superior ---------- */
+  .topbar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg3) 85%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 0.5px solid var(--border); }
+  .topbar-in { max-width: 520px; margin: 0 auto; padding: 12px 16px; padding-top: max(12px, env(safe-area-inset-top)); display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; }
+  .topbar .title { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .topbar .title .back { display: none; background: none; border: none; cursor: pointer; padding: 8px; margin: -8px 0 -8px -8px; min-width: 44px; min-height: 44px; color: var(--text); }
+  .topbar.has-back .title .back { display: inline-flex; align-items: center; justify-content: center; }
+  .topbar .title span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-btn { display: flex; align-items: center; gap: 7px; background: var(--bg); border: 0.5px solid var(--border2); border-radius: 999px; padding: 7px 14px 7px 8px; min-height: 38px; font-size: 13px; font-weight: 500; cursor: pointer; flex-shrink: 0; }
+  .user-btn .avatar { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
 
-  /* Semana */
-  .cycle-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-  .cycle-info .label { font-size: 12px; color: var(--text3); margin-bottom: 2px; }
-  .cycle-info .val { font-size: 22px; font-weight: 500; }
-  .btn-group { display: flex; gap: 6px; }
-  .btn { padding: 10px 16px; min-height: 44px; min-width: 44px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: transparent; color: var(--text); font-size: 14px; cursor: pointer; font-family: inherit; }
-  .btn:active { opacity: 0.7; }
-  .week-pill { display: inline-block; padding: 5px 12px; border-radius: var(--radius); font-size: 12px; font-weight: 500; margin-bottom: 14px; border: 0.5px solid transparent; }
-  .wp-a { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); }
-  .wp-b { background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal-border); }
-  .wp-off { background: var(--bg2); color: var(--text2); border-color: var(--border); font-weight: 400; }
+  /* ---------- Layout / vistas ---------- */
+  main { max-width: 520px; margin: 0 auto; padding: 16px 16px calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 24px); }
+  .view { display: none; animation: fadein 0.18s ease; }
+  .view.active { display: block; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 
-  /* Días */
-  .days-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-  .day-tile { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
-  .day-tile.done > .day-head { background: var(--success-bg); }
-  .day-head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer; min-height: 56px; }
-  .day-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--border2); flex-shrink: 0; }
-  .day-tile.done .day-dot { background: var(--success-text); border-color: var(--success-text); }
-  .day-info { flex: 1; min-width: 0; }
-  .day-name { font-size: 12px; color: var(--text3); margin-bottom: 2px; }
-  .day-group { font-size: 14px; font-weight: 500; }
-  .day-tile.done .day-group { color: var(--success-text); }
-  .btn-mark { padding: 10px 14px; min-height: 44px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg); font-size: 12px; color: var(--text2); cursor: pointer; font-family: inherit; white-space: nowrap; flex-shrink: 0; }
-  .btn-mark.marked { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
-  .btn-mark:active { opacity: 0.7; }
-  .day-body { display: none; padding: 4px 14px 14px; border-top: 0.5px solid var(--border); background: var(--bg); }
-  .day-body.open { display: block; }
+  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px; box-shadow: var(--shadow); }
+  .h-section { font-size: 13px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin: 20px 4px 10px; }
+  .h-section:first-child { margin-top: 4px; }
 
-  .progress-row { display: flex; align-items: center; gap: 10px; }
-  .prog-bar { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
-  .prog-fill { height: 100%; background: #1d9e75; border-radius: 2px; transition: width 0.3s; }
-  .prog-label { font-size: 12px; color: var(--text2); white-space: nowrap; }
-  .divider { border: none; border-top: 0.5px solid var(--border); margin: 14px 0; }
-  .section-label { font-size: 12px; color: var(--text3); margin-bottom: 8px; }
-  .history-row { display: flex; gap: 6px; flex-wrap: wrap; }
-  .hist-chip { font-size: 12px; padding: 5px 10px; border-radius: var(--radius); border: 0.5px solid var(--border); color: var(--text2); background: var(--bg2); }
-  .hist-chip.ha { background: var(--purple-bg); color: var(--purple-text); border-color: var(--purple-border); }
-  .hist-chip.hb { background: var(--teal-bg); color: var(--teal-text); border-color: var(--teal-border); }
-  .empty-note { font-size: 12px; color: var(--text3); }
-  .reset-btn { font-size: 12px; color: var(--text3); background: none; border: none; cursor: pointer; font-family: inherit; padding: 10px 0; min-height: 44px; }
+  /* ---------- Vista Rutina ---------- */
+  .hero { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 4px 4px 4px; }
+  .hero h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.02em; }
+  .hero .meta { font-size: 13px; color: var(--text2); font-weight: 500; }
+  .hero-sub { margin: 0 4px 14px; display: flex; align-items: center; gap: 10px; }
+  .pill { display: inline-flex; align-items: center; padding: 4px 11px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--accent-soft); color: var(--accent-text); }
+  .pill.green { background: var(--green-soft); color: var(--green-text); }
+  .hero-prog { flex: 1; height: 5px; background: var(--bg); border: 0.5px solid var(--border); border-radius: 3px; overflow: hidden; }
+  .hero-prog i { display: block; height: 100%; background: var(--green); border-radius: 3px; transition: width 0.3s; }
 
-  /* Secciones plegables */
-  .sec-toggle { width: 100%; text-align: left; background: none; border: none; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--text); cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 4px 0; min-height: 44px; }
-  .sec-toggle .arrow { font-size: 18px; color: var(--text2); transition: transform 0.2s; }
-  .sec-toggle[aria-expanded="true"] .arrow { transform: rotate(180deg); }
+  .banner { display: flex; align-items: center; gap: 10px; background: var(--green-soft); color: var(--green-text); border-radius: var(--radius-lg); padding: 13px 16px; font-size: 14px; font-weight: 500; margin-bottom: 12px; }
+  .banner button { margin-left: auto; background: none; border: none; color: inherit; font-size: 18px; cursor: pointer; padding: 6px; margin-right: -6px; }
 
-  /* Ejercicios */
-  .sec-lbl { font-size: 11px; font-weight: 500; color: var(--text3); text-transform: uppercase; letter-spacing: 0.05em; margin: 12px 0 6px; }
+  .day-card { width: 100%; text-align: left; display: flex; align-items: center; gap: 14px; background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px 14px; margin-bottom: 10px; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.1s; }
+  .day-card:active { transform: scale(0.985); }
+  .day-check { width: 44px; height: 44px; border-radius: 50%; border: 1.5px solid var(--border2); background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 600; color: var(--text2); flex-shrink: 0; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+  .day-card.done .day-check { background: var(--green); border-color: var(--green); color: #fff; }
+  .day-card .info { flex: 1; min-width: 0; }
+  .day-card .nm { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+  .day-card.done .nm { color: var(--green-text); }
+  .day-card .dt { font-size: 12.5px; color: var(--text2); }
+  .day-card .chev { color: var(--text3); flex-shrink: 0; }
+
+  /* ---------- Vista Día ---------- */
+  .seg { display: flex; background: var(--bg); border: 0.5px solid var(--border); border-radius: 999px; padding: 3px; margin-bottom: 14px; }
+  .seg button { flex: 1; border: none; background: none; border-radius: 999px; padding: 8px 10px; min-height: 38px; font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; }
+  .seg button.on { background: var(--accent-soft); color: var(--accent-text); }
+  .seg-note { font-size: 12px; color: var(--text3); text-align: center; margin: -6px 0 14px; }
+
   .ex-row { border-bottom: 0.5px solid var(--border); }
   .ex-row:last-child { border-bottom: none; }
-  .ex-head { display: flex; gap: 10px; padding: 8px 0; align-items: center; cursor: pointer; min-height: 48px; }
-  .ex-thumb { width: 44px; height: 44px; border-radius: var(--radius); background: var(--bg2); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+  .ex-head { display: flex; gap: 12px; padding: 11px 0; align-items: center; cursor: pointer; min-height: 56px; }
+  .ex-thumb { width: 48px; height: 48px; border-radius: var(--radius); background: var(--bg2); flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
   .ex-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .ex-thumb .ex-n { font-size: 12px; color: var(--text3); }
+  .ex-thumb .ex-n { font-size: 13px; color: var(--text3); font-weight: 600; }
   .ex-main { flex: 1; min-width: 0; }
-  .ex-nm { font-size: 13px; font-weight: 500; margin-bottom: 1px; }
-  .ex-dt { font-size: 12px; color: var(--text2); }
+  .ex-nm { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .ex-dt { font-size: 12.5px; color: var(--text2); }
   .ex-chev { font-size: 14px; color: var(--text3); transition: transform 0.2s; flex-shrink: 0; }
   .ex-head[aria-expanded="true"] .ex-chev { transform: rotate(180deg); }
-  .etag { font-size: 11px; padding: 2px 6px; border-radius: var(--radius); font-weight: 500; display: inline-block; margin-top: 3px; margin-right: 4px; }
-  .etag-p { background: var(--purple-bg); color: var(--purple-text); }
-  .etag-ss { background: var(--amber-bg); color: var(--amber-text); }
-  .etag-ds { background: var(--red-bg); color: var(--red-text); }
-  .etag-f { background: var(--teal-bg); color: var(--teal-text); }
-  .ex-drawer { display: none; padding: 4px 0 12px; }
+  .etag { font-size: 11px; padding: 2.5px 8px; border-radius: 999px; font-weight: 600; display: inline-block; margin-top: 4px; margin-right: 4px; }
+  .etag-p { background: var(--accent-soft); color: var(--accent-text); }
+  .etag-ss { background: var(--amber-soft); color: var(--amber-text); }
+  .etag-ds { background: var(--red-soft); color: var(--red-text); }
+  .etag-f { background: var(--teal-soft); color: var(--teal-text); }
+  .etag-n { background: var(--bg2); color: var(--text2); }
+  .ex-drawer { display: none; padding: 2px 0 14px; }
   .ex-drawer.open { display: block; }
   .ex-media { border-radius: var(--radius); overflow: hidden; background: var(--bg2); margin-bottom: 10px; }
   .ex-media img { width: 100%; display: block; }
-  .ex-steps { padding-left: 20px; font-size: 13px; color: var(--text2); line-height: 1.7; }
-  .ex-tip { font-size: 12px; color: var(--text2); background: var(--bg2); border-radius: var(--radius); padding: 8px 10px; margin-top: 8px; line-height: 1.6; }
-  .ex-tip b { color: var(--text); font-weight: 500; }
-  .ex-nodata { font-size: 12px; color: var(--text3); }
+  .ex-steps { padding-left: 20px; font-size: 13.5px; color: var(--text2); line-height: 1.7; }
+  .ex-tip { font-size: 13px; color: var(--text2); background: var(--bg2); border-radius: var(--radius); padding: 9px 12px; margin-top: 8px; line-height: 1.6; }
+  .ex-tip b { color: var(--text); font-weight: 600; }
+  .ex-nodata { font-size: 13px; color: var(--text3); padding: 8px 0; }
 
-  /* Configuración */
-  .cfg-field { margin-bottom: 10px; }
-  .cfg-field label { display: block; font-size: 12px; color: var(--text3); margin-bottom: 4px; }
-  .cfg-input { width: 100%; padding: 11px 12px; min-height: 44px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text); font-size: 13px; font-family: inherit; }
-  .cfg-status { font-size: 12px; color: var(--text2); margin-top: 8px; line-height: 1.6; }
-  .cfg-status.err { color: #b3401f; }
-  .cfg-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .acc { border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 12px; background: var(--bg); box-shadow: var(--shadow); overflow: hidden; }
+  .acc-head { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 14px 16px; min-height: 52px; background: none; border: none; font-size: 14px; font-weight: 600; cursor: pointer; text-align: left; }
+  .acc-head .arrow { color: var(--text3); transition: transform 0.2s; }
+  .acc-head[aria-expanded="true"] .arrow { transform: rotate(180deg); }
+  .acc-head .count { font-size: 12px; color: var(--text3); font-weight: 500; margin-left: auto; }
+  .acc-body { display: none; padding: 0 16px 8px; }
+  .acc-body.open { display: block; }
 
-  /* Glosario */
-  .gloss-item { padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+  .btn-big { width: 100%; padding: 15px; min-height: 52px; border-radius: var(--radius-lg); border: none; background: var(--accent); color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 4px; }
+  .btn-big:active { opacity: 0.85; }
+  .btn-big.done { background: var(--green-soft); color: var(--green-text); border: 0.5px solid var(--green); }
+
+  /* ---------- Vista Progreso ---------- */
+  .week-nav { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+  .week-nav .wk { text-align: center; }
+  .week-nav .wk .n { font-size: 20px; font-weight: 700; }
+  .week-nav .wk .t { font-size: 12.5px; color: var(--text2); margin-top: 1px; }
+  .btn-ico { width: 44px; height: 44px; border-radius: 50%; border: 0.5px solid var(--border2); background: var(--bg2); font-size: 16px; cursor: pointer; }
+  .btn-ico:active { opacity: 0.7; }
+  .mini-days { display: flex; gap: 8px; justify-content: center; margin: 14px 0 4px; flex-wrap: wrap; }
+  .mini-day { width: 40px; height: 40px; border-radius: 50%; border: 1.5px solid var(--border2); background: var(--bg2); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--text2); }
+  .mini-day.done { background: var(--green); border-color: var(--green); color: #fff; }
+  .hist-item { display: flex; align-items: center; gap: 12px; padding: 12px 2px; border-bottom: 0.5px solid var(--border); font-size: 14px; }
+  .hist-item:last-child { border-bottom: none; }
+  .hist-item .tick { width: 30px; height: 30px; border-radius: 50%; background: var(--green-soft); color: var(--green-text); display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .hist-item .w { font-weight: 600; flex: 1; }
+  .hist-item .d { color: var(--text3); font-size: 12.5px; }
+  .empty-note { font-size: 13px; color: var(--text3); padding: 6px 0; }
+  .link-danger { background: none; border: none; color: var(--red-text); font-size: 13px; cursor: pointer; padding: 12px 0; min-height: 44px; }
+
+  /* ---------- Vista Ajustes ---------- */
+  .user-list { display: flex; gap: 8px; flex-wrap: wrap; }
+  .user-chip { padding: 10px 18px; min-height: 42px; border-radius: 999px; border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text2); font-size: 13.5px; font-weight: 500; cursor: pointer; }
+  .user-chip.active { background: var(--accent-soft); color: var(--accent-text); border-color: var(--accent); }
+  .cfg-field label { display: block; font-size: 12.5px; color: var(--text3); margin-bottom: 6px; }
+  .cfg-input { width: 100%; padding: 12px; min-height: 46px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text); font-size: 13px; font-family: inherit; }
+  .cfg-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .btn { padding: 11px 16px; min-height: 44px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg2); color: var(--text); font-size: 13.5px; font-weight: 500; cursor: pointer; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn:active { opacity: 0.8; }
+  .cfg-status { font-size: 12.5px; color: var(--text2); margin-top: 10px; line-height: 1.6; }
+  .cfg-status.err { color: #c14a24; }
+  .cfg-help { font-size: 12.5px; color: var(--text3); line-height: 1.6; margin-top: 12px; }
+  .gloss-item { padding: 11px 0; border-bottom: 0.5px solid var(--border); }
   .gloss-item:last-child { border-bottom: none; }
-  .gloss-term { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
-  .gloss-def { font-size: 12px; color: var(--text2); line-height: 1.6; }
+  .gloss-term { font-size: 13.5px; font-weight: 600; margin-bottom: 4px; }
+  .gloss-def { font-size: 12.5px; color: var(--text2); line-height: 1.65; }
   .rpe-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-  .rpe-table th { text-align: left; font-weight: 500; padding: 5px 8px; background: var(--bg2); color: var(--text3); font-size: 11px; }
+  .rpe-table th { text-align: left; font-weight: 600; padding: 5px 8px; background: var(--bg2); color: var(--text3); font-size: 11px; }
   .rpe-table td { padding: 6px 8px; border-bottom: 0.5px solid var(--border); color: var(--text2); vertical-align: top; }
   .rpe-table tr:last-child td { border-bottom: none; }
-  .rpe-table td:first-child { font-weight: 500; color: var(--text); white-space: nowrap; }
+  .rpe-table td:first-child { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .about { font-size: 12.5px; color: var(--text3); line-height: 1.7; }
+
+  /* ---------- Tab bar ---------- */
+  .tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 0.5px solid var(--border); }
+  .tabbar-in { max-width: 520px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); height: var(--tabbar-h); padding-bottom: env(safe-area-inset-bottom); }
+  .tab { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; background: none; border: none; font-size: 11px; font-weight: 500; color: var(--text3); cursor: pointer; }
+  .tab svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .tab.on { color: var(--accent); }
 </style>
 </head>
 <body>
-<div class="app">
-  <h1>Rutina Tracker</h1>
-  <p class="app-sub" id="app-sub">Tracker de semanas</p>
 
-  <div class="user-row" id="user-row"></div>
-
-  <!-- Semana actual -->
-  <div class="card">
-    <div class="cycle-header">
-      <div class="cycle-info">
-        <div class="label">Semana actual</div>
-        <div class="val" id="week-val">Semana 1</div>
-      </div>
-      <div class="btn-group">
-        <button class="btn" id="btn-prev" aria-label="Semana anterior">&#8592;</button>
-        <button class="btn" id="btn-next" aria-label="Semana siguiente">&#8594;</button>
-      </div>
+<header class="topbar" id="topbar">
+  <div class="topbar-in">
+    <div class="title">
+      <button class="back" id="btn-back" aria-label="Volver">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <span id="topbar-title">Rutina Tracker</span>
     </div>
-    <div id="week-pill-wrap"></div>
-    <div class="days-list" id="days-list"></div>
-    <div class="progress-row">
-      <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-      <span class="prog-label" id="prog-label"></span>
+    <button class="user-btn" id="btn-user" aria-label="Cambiar usuario">
+      <span class="avatar" id="user-avatar">?</span>
+      <span id="user-name"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- ============ RUTINA ============ -->
+  <section class="view" id="view-rutina">
+    <div id="rutina-banner"></div>
+    <div class="hero">
+      <h2 id="rt-week">Semana 1</h2>
+      <span class="meta" id="rt-count"></span>
     </div>
-    <div class="divider"></div>
-    <div class="section-label">Historial (semanas completadas)</div>
-    <div class="history-row" id="history-row"></div>
-    <div class="divider"></div>
-    <button class="reset-btn" id="btn-reset">&#8635; Reiniciar progreso de este usuario</button>
-  </div>
+    <div class="hero-sub">
+      <span class="pill" id="rt-tipo" style="display:none"></span>
+      <div class="hero-prog"><i id="rt-prog"></i></div>
+    </div>
+    <div id="rt-days"></div>
+  </section>
 
-  <!-- Rutina completa -->
-  <div class="card">
-    <button class="sec-toggle" id="tog-routine" aria-expanded="false" aria-controls="body-routine">
-      Ver rutina completa <span class="arrow">&#8964;</span>
-    </button>
-    <div id="body-routine" style="display:none; margin-top:8px"></div>
-  </div>
+  <!-- ============ DÍA ============ -->
+  <section class="view" id="view-dia">
+    <div id="dia-seg"></div>
+    <div id="dia-warm"></div>
+    <div id="dia-main"></div>
+    <div id="dia-cool"></div>
+    <button class="btn-big" id="btn-dia-mark"></button>
+  </section>
 
-  <!-- Entrada en calor -->
-  <div class="card" id="card-warm" style="display:none">
-    <button class="sec-toggle" id="tog-warm" aria-expanded="false" aria-controls="body-warm">
-      Entrada en calor <span class="arrow">&#8964;</span>
-    </button>
-    <div id="body-warm" style="display:none; margin-top:8px"></div>
-  </div>
+  <!-- ============ PROGRESO ============ -->
+  <section class="view" id="view-progreso">
+    <div class="card">
+      <div class="week-nav">
+        <button class="btn-ico" id="btn-prev" aria-label="Semana anterior">&#8592;</button>
+        <div class="wk">
+          <div class="n" id="pg-week">Semana 1</div>
+          <div class="t" id="pg-tipo"></div>
+        </div>
+        <button class="btn-ico" id="btn-next" aria-label="Semana siguiente">&#8594;</button>
+      </div>
+      <div class="mini-days" id="pg-days"></div>
+      <p class="empty-note" style="text-align:center" id="pg-label"></p>
+    </div>
+    <div class="h-section">Historial</div>
+    <div class="card" id="pg-hist"></div>
+    <div style="text-align:center"><button class="link-danger" id="btn-reset">Reiniciar progreso de este usuario</button></div>
+  </section>
 
-  <!-- Estiramientos -->
-  <div class="card" id="card-cool" style="display:none">
-    <button class="sec-toggle" id="tog-cool" aria-expanded="false" aria-controls="body-cool">
-      Estiramientos <span class="arrow">&#8964;</span>
-    </button>
-    <div id="body-cool" style="display:none; margin-top:8px"></div>
-  </div>
+  <!-- ============ AJUSTES ============ -->
+  <section class="view" id="view-ajustes">
+    <div class="h-section">Usuario</div>
+    <div class="card"><div class="user-list" id="aj-users"></div></div>
 
-  <!-- Configuración -->
-  <div class="card">
-    <button class="sec-toggle" id="tog-cfg" aria-expanded="false" aria-controls="body-cfg">
-      Configuración y datos <span class="arrow">&#8964;</span>
-    </button>
-    <div id="body-cfg" style="display:none; margin-top:12px">
+    <div class="h-section">Datos de la rutina</div>
+    <div class="card">
       <div class="cfg-field">
-        <label for="cfg-sheet">Link de la planilla de Google Sheets</label>
+        <label for="cfg-sheet">Planilla de Google Sheets</label>
         <input class="cfg-input" id="cfg-sheet" type="url" placeholder="https://docs.google.com/spreadsheets/d/..." autocomplete="off">
       </div>
       <div class="cfg-btns">
-        <button class="btn" id="btn-sync">Conectar y sincronizar</button>
-        <button class="btn" id="btn-forget" style="display:none">Usar datos de ejemplo</button>
+        <button class="btn primary" id="btn-sync">Sincronizar</button>
+        <button class="btn" id="btn-forget" style="display:none">Desconectar</button>
       </div>
       <p class="cfg-status" id="cfg-status"></p>
-      <p class="cfg-status" style="margin-top:12px">La planilla debe estar compartida como <b>"Cualquier persona con el enlace puede ver"</b> y tener las pestañas <b>Ejercicios</b> y <b>Rutinas</b>. El formato está explicado en el README del repositorio. Los datos se guardan en este teléfono, así que en el gimnasio funciona sin conexión.</p>
+      <p class="cfg-help">La planilla debe estar compartida como <b>"Cualquier persona con el enlace puede ver"</b> y tener las pestañas <b>Ejercicios</b> y <b>Rutinas</b> (formato en el README del repositorio). Los datos quedan guardados en este teléfono: en el gimnasio funciona sin conexión.</p>
     </div>
-  </div>
 
-  <!-- Glosario -->
-  <div class="card">
-    <button class="sec-toggle" id="tog-gloss" aria-expanded="false" aria-controls="body-gloss">
-      Glosario de términos <span class="arrow">&#8964;</span>
-    </button>
-    <div id="body-gloss" style="display:none; margin-top:12px">
-      <div class="gloss-item">
-        <div class="gloss-term">RPE (Rate of Perceived Exertion)</div>
-        <div class="gloss-def">Escala del 1 al 10 que indica cuán cerca del fallo terminás una serie. No mide el peso sino el esfuerzo percibido.
-          <table class="rpe-table">
-            <tr><th>RPE</th><th>Significado práctico</th></tr>
-            <tr><td>RPE 10</td><td>Fallo total. No podés hacer ni una rep más.</td></tr>
-            <tr><td>RPE 9</td><td>Te quedaba 1 rep en el tanque.</td></tr>
-            <tr><td>RPE 8</td><td>Te quedaban 2 reps. Difícil pero controlado.</td></tr>
-            <tr><td>RPE 7</td><td>Te quedaban 3 reps. Moderado.</td></tr>
-          </table>
+    <div class="h-section">Referencia</div>
+    <div class="acc">
+      <button class="acc-head" aria-expanded="false">Glosario de términos <span class="arrow">&#8964;</span></button>
+      <div class="acc-body">
+        <div class="gloss-item">
+          <div class="gloss-term">RPE (Rate of Perceived Exertion)</div>
+          <div class="gloss-def">Escala del 1 al 10 que indica cuán cerca del fallo terminás una serie. No mide el peso sino el esfuerzo percibido.
+            <table class="rpe-table">
+              <tr><th>RPE</th><th>Significado práctico</th></tr>
+              <tr><td>RPE 10</td><td>Fallo total. No podés hacer ni una rep más.</td></tr>
+              <tr><td>RPE 9</td><td>Te quedaba 1 rep en el tanque.</td></tr>
+              <tr><td>RPE 8</td><td>Te quedaban 2 reps. Difícil pero controlado.</td></tr>
+              <tr><td>RPE 7</td><td>Te quedaban 3 reps. Moderado.</td></tr>
+            </table>
+          </div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-term">RIR (Reps in Reserve)</div>
+          <div class="gloss-def">Cuántas repeticiones te quedan "en el tanque" al terminar la serie. RIR 2 = podrías haber hecho 2 más. Es la cara inversa del RPE: RIR 2 ≈ RPE 8.</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-term">Superserie</div>
+          <div class="gloss-def">Dos ejercicios realizados uno detrás del otro sin descanso entre ellos. El descanso se toma recién al terminar el par completo.</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-term">Drop set</div>
+          <div class="gloss-def">Solo en la última serie de un accesorio: al llegar cerca del fallo, bajás el peso un 20–30% de inmediato y seguís hasta agotar el músculo.</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-term">Finisher</div>
+          <div class="gloss-def">Ejercicio final del día para agotar el músculo trabajado. Se hace al fallo o con reps altas. Podés omitirlo si el tiempo no alcanza.</div>
+        </div>
+        <div class="gloss-item">
+          <div class="gloss-term">Fallo muscular</div>
+          <div class="gloss-def">Punto en que no podés completar ni una repetición más con buena técnica. En los principales se evita; en finishers y drop sets sí se busca llegar cerca.</div>
         </div>
       </div>
-      <div class="gloss-item">
-        <div class="gloss-term">RIR (Reps in Reserve)</div>
-        <div class="gloss-def">Cuántas repeticiones te quedan "en el tanque" al terminar la serie. RIR 2 = podrías haber hecho 2 más. Es la cara inversa del RPE: RIR 2 ≈ RPE 8.</div>
-      </div>
-      <div class="gloss-item">
-        <div class="gloss-term">Superserie</div>
-        <div class="gloss-def">Dos ejercicios realizados uno detrás del otro sin descanso entre ellos. El descanso se toma recién al terminar el par completo.</div>
-      </div>
-      <div class="gloss-item">
-        <div class="gloss-term">Drop set</div>
-        <div class="gloss-def">Solo en la última serie de un accesorio: al llegar cerca del fallo, bajás el peso un 20–30% de inmediato y seguís hasta agotar el músculo.</div>
-      </div>
-      <div class="gloss-item">
-        <div class="gloss-term">Finisher</div>
-        <div class="gloss-def">Ejercicio final del día para agotar el músculo trabajado. Se hace al fallo o con reps altas. Podés omitirlo si el tiempo no alcanza.</div>
-      </div>
-      <div class="gloss-item">
-        <div class="gloss-term">Fallo muscular</div>
-        <div class="gloss-def">Punto en que no podés completar ni una repetición más con buena técnica. En los principales se evita; en finishers y drop sets sí se busca llegar cerca.</div>
-      </div>
     </div>
-  </div>
 
-</div>
+    <div class="h-section">Acerca de</div>
+    <div class="card about">
+      Rutina Tracker · app familiar de rutinas de gimnasio.<br>
+      La rutina se configura desde Google Sheets; el progreso se guarda en cada teléfono.
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar">
+  <div class="tabbar-in">
+    <button class="tab on" data-view="rutina">
+      <svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>
+      Rutina
+    </button>
+    <button class="tab" data-view="progreso">
+      <svg viewBox="0 0 24 24"><path d="M4 19V10M10 19V5M16 19v-8M21 19H3"/></svg>
+      Progreso
+    </button>
+    <button class="tab" data-view="ajustes">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.01a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      Ajustes
+    </button>
+  </div>
+</nav>
+
 <script>
 'use strict';
 /* =====================================================================
@@ -265,12 +328,14 @@
  *
  * Fuente de datos:
  *   1. Google Sheet (pestañas "Ejercicios" y "Rutinas") si el usuario
- *      conectó una en Configuración. Se cachea en localStorage para
- *      funcionar offline en el gimnasio.
+ *      conectó una en Ajustes. Se cachea en localStorage para funcionar
+ *      offline en el gimnasio.
  *   2. Datos de ejemplo embebidos (DEFAULT_*) si no hay planilla.
  *
  * El progreso (semana actual, días hechos, historial) es local a cada
  * dispositivo y separado por usuario.
+ *
+ * UI: 3 pestañas (Rutina / Progreso / Ajustes) + pantalla de día.
  * ===================================================================== */
 
 const MEDIA_PATH = 'assets/';
@@ -571,10 +636,6 @@ const $ = id => document.getElementById(id);
 
 const TAG_LABEL = { principal: ['etag-p', 'Principal'], superserie: ['etag-ss', 'Superserie'], dropset: ['etag-ds', 'Drop set'], finisher: ['etag-f', 'Finisher'] };
 
-function mediaFile(ejercicios, nombre) {
-  const e = getEjercicio(ejercicios, nombre);
-  return (e && e.media) ? e.media : '';
-}
 // La media puede ser un archivo local de assets/ o una URL completa.
 const mediaSrc = f => /^https?:\/\//.test(f) ? f : MEDIA_PATH + f;
 const thumbSrc = f => /^https?:\/\//.test(f) ? f : MEDIA_PATH + 'thumbs/' + f.replace(/\.[a-z0-9]+$/i, '.jpg');
@@ -584,9 +645,9 @@ function exerciseRowHTML(ejercicios, r) {
   const media = e.media || '';
   const dt = [r.series, r.intensidad, r.descanso].filter(Boolean).join(' · ');
   const tag = TAG_LABEL[r.tag];
-  const tagHtml = tag ? `<span class="etag ${tag[0]}">${esc(r.nota || tag[1])}</span>` : (r.nota ? `<span class="etag" style="background:var(--bg2);color:var(--text2)">${esc(r.nota)}</span>` : '');
+  const tagHtml = tag ? `<span class="etag ${tag[0]}">${esc(r.nota || tag[1])}</span>` : (r.nota ? `<span class="etag etag-n">${esc(r.nota)}</span>` : '');
   const pasos = e.pasos || [];
-  const hasDrawer = !!(media || pasos.length || e.tip);
+  const hasDrawer = !!(media || pasos.length || e.tip || e.alternativa);
   const thumb = media
     ? `<img src="${esc(thumbSrc(media))}" alt="" loading="lazy" onerror="this.parentElement.innerHTML='<span class=&quot;ex-n&quot;>${esc(r.orden)}</span>'">`
     : `<span class="ex-n">${esc(r.orden)}</span>`;
@@ -619,102 +680,163 @@ function sectionListHTML(ejercicios, rows) {
     if (!last || last.nombre !== r.seccion) secs.push({ nombre: r.seccion, rows: [r] });
     else last.rows.push(r);
   }
-  return secs.map(s => (s.nombre ? `<div class="sec-lbl">${esc(s.nombre)}</div>` : '') + s.rows.map(r => exerciseRowHTML(ejercicios, r)).join('')).join('');
+  return secs.map(s =>
+    (s.nombre ? `<div class="h-section" style="margin:14px 0 2px">${esc(s.nombre)}</div>` : '') +
+    s.rows.map(r => exerciseRowHTML(ejercicios, r)).join('')
+  ).join('');
 }
 
-/* ============================== Render principal ============================== */
+function accHTML(id, titulo, count, bodyHtml, open) {
+  return `
+    <div class="acc">
+      <button class="acc-head" aria-expanded="${!!open}" data-acc="${id}">${esc(titulo)} <span class="count">${esc(count)}</span><span class="arrow">&#8964;</span></button>
+      <div class="acc-body ${open ? 'open' : ''}">${bodyHtml}</div>
+    </div>`;
+}
 
-let rutinaTipoSel = null; // tipo elegido en "Ver rutina completa"
+/* ============================== Navegación ============================== */
 
-function render() {
+let currentView = 'rutina';   // rutina | progreso | ajustes
+let currentDia = null;        // nº de día abierto (pantalla de día) o null
+let diaTipoSel = null;        // tipo (A/B) elegido dentro de la pantalla de día
+let flash = null;             // semana recién completada (banner)
+
+function ctx() {
   const { ejercicios, rutinas, origen } = activeData();
   const users = usuarios(rutinas);
   if (!S.usuario || !users.some(u => normKey(u) === normKey(S.usuario))) S.usuario = users[0] || '';
   const model = buildModel(rutinas, S.usuario);
-  const p = prog(S.usuario);
-  const tipo = weekTipo(model, p.semana);
-  const nDias = model.dias.length;
+  return { ejercicios, rutinas, origen, users, model, p: prog(S.usuario) };
+}
 
-  $('app-sub').textContent = `Tracker de semanas · ${nDias} día${nDias === 1 ? '' : 's'}${model.tipos.length > 1 ? ' · semanas ' + model.tipos.join('/') : ''}`;
+function showView(v, dia) {
+  currentView = v;
+  currentDia = (v === 'rutina' && dia != null) ? dia : null;
+  if (currentDia == null) diaTipoSel = null;
+  if (currentDia != null && !history.state?.dia) history.pushState({ dia: currentDia }, '');
+  render();
+  window.scrollTo(0, 0);
+}
+window.addEventListener('popstate', () => { if (currentDia != null) { currentDia = null; diaTipoSel = null; render(); } });
 
-  // Usuarios
-  $('user-row').innerHTML = users.map(u =>
-    `<button class="user-chip ${normKey(u) === normKey(S.usuario) ? 'active' : ''}" data-user="${esc(u)}">${esc(u)}</button>`).join('');
+/* ============================== Render ============================== */
 
-  // Semana
-  $('week-val').textContent = 'Semana ' + p.semana;
-  $('week-pill-wrap').innerHTML = tipo
-    ? `<span class="week-pill ${tipo === 'A' ? 'wp-a' : 'wp-b'}">Semana tipo ${esc(tipo)}</span>` : '';
+function render() {
+  const c = ctx();
+  const tipo = weekTipo(c.model, c.p.semana);
 
-  // Días de la semana actual
+  // Topbar
+  const dia = currentDia != null ? c.model.dias.find(d => d.n === currentDia) : null;
+  $('topbar').classList.toggle('has-back', !!dia);
+  $('topbar-title').textContent = dia ? `Día ${dia.n} · ${dia.nombre}` : 'Rutina Tracker';
+  $('user-name').textContent = S.usuario || '—';
+  $('user-avatar').textContent = (S.usuario || '?').charAt(0).toUpperCase();
+
+  // Vistas activas
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.view === currentView));
+  if (dia) { $('view-dia').classList.add('active'); renderDia(c, dia); return; }
+  $('view-' + currentView).classList.add('active');
+  if (currentView === 'rutina') renderRutina(c, tipo);
+  if (currentView === 'progreso') renderProgreso(c, tipo);
+  if (currentView === 'ajustes') renderAjustes(c);
+}
+
+function renderRutina(c, tipo) {
+  const { model, p, ejercicios } = c;
   const hechos = p.hechos[p.semana] || {};
-  let doneCount = 0;
-  $('days-list').innerHTML = model.dias.map(d => {
-    const done = !!hechos[d.n];
-    if (done) doneCount++;
+  const done = model.dias.filter(d => hechos[d.n]).length;
+  const total = model.dias.length;
+
+  $('rutina-banner').innerHTML = flash != null
+    ? `<div class="banner">&#127881; ¡Semana ${flash} completada! Arranca la semana ${p.semana}.<button data-dismiss aria-label="Cerrar">&times;</button></div>` : '';
+
+  $('rt-week').textContent = 'Semana ' + p.semana;
+  $('rt-count').textContent = total ? `${done} de ${total} días` : '';
+  $('rt-prog').style.width = total ? Math.round(done / total * 100) + '%' : '0';
+  const pillEl = $('rt-tipo');
+  if (tipo) { pillEl.style.display = ''; pillEl.textContent = 'Tipo ' + tipo; } else pillEl.style.display = 'none';
+
+  $('rt-days').innerHTML = model.dias.map(d => {
+    const isDone = !!hechos[d.n];
     const filas = d.porTipo[tipo] || d.porTipo[''] || [];
+    const nEj = filas.length;
     return `
-      <div class="day-tile ${done ? 'done' : ''}" data-dia="${d.n}">
-        <div class="day-head" role="button" tabindex="0" aria-expanded="false">
-          <div class="day-dot"></div>
-          <div class="day-info">
-            <div class="day-name">Día ${d.n}</div>
-            <div class="day-group">${esc(d.nombre)}</div>
-          </div>
-          <button class="btn-mark ${done ? 'marked' : ''}" data-mark="${d.n}">${done ? '&#10003; Hecho' : 'Marcar'}</button>
+      <div class="day-card ${isDone ? 'done' : ''}" data-open-dia="${d.n}" role="button" tabindex="0">
+        <button class="day-check" data-mark="${d.n}" aria-label="Marcar día ${d.n}">${isDone ? '&#10003;' : d.n}</button>
+        <div class="info">
+          <div class="nm">${esc(d.nombre)}</div>
+          <div class="dt">Día ${d.n}${nEj ? ` · ${nEj} ejercicios` : ''}${isDone ? ' · completado' : ''}</div>
         </div>
-        <div class="day-body">${sectionListHTML(ejercicios, filas) || '<p class="ex-nodata">Sin ejercicios cargados para este día.</p>'}</div>
+        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
       </div>`;
-  }).join('') || '<p class="empty-note">Este usuario no tiene días cargados en la rutina.</p>';
+  }).join('') || '<p class="empty-note">Este usuario no tiene días cargados en la rutina. Revisá la planilla en Ajustes.</p>';
+}
 
-  const pct = nDias ? Math.round((doneCount / nDias) * 100) : 0;
-  $('prog-fill').style.width = pct + '%';
-  $('prog-label').textContent = `${doneCount} de ${nDias} día${nDias === 1 ? '' : 's'}`;
+function renderDia(c, d) {
+  const { model, p, ejercicios } = c;
+  const tipoActual = weekTipo(model, p.semana);
+  if (diaTipoSel === null) diaTipoSel = tipoActual;
+  const filas = d.porTipo[diaTipoSel] || d.porTipo[''] || [];
+  const hechos = p.hechos[p.semana] || {};
+  const isDone = !!hechos[d.n];
 
-  // Historial
-  const weeks = Object.keys(p.completadas).map(Number).sort((a, b) => a - b);
-  $('history-row').innerHTML = weeks.length
-    ? weeks.slice(-20).map(w => {
+  // Selector A/B (solo si la rutina define tipos)
+  $('dia-seg').innerHTML = model.tipos.length > 1 ? `
+    <div class="seg" role="tablist">${model.tipos.map(t =>
+      `<button role="tab" aria-selected="${t === diaTipoSel}" class="${t === diaTipoSel ? 'on' : ''}" data-dia-tipo="${esc(t)}">Semana ${esc(t)}${t === tipoActual ? ' · actual' : ''}</button>`).join('')}
+    </div>` : '';
+
+  $('dia-warm').innerHTML = model.calentamiento.length
+    ? accHTML('warm', 'Entrada en calor', model.calentamiento.length + ' ejercicios',
+        model.calentamiento.map(r => exerciseRowHTML(ejercicios, r)).join(''), false)
+    : '';
+
+  $('dia-main').innerHTML = `<div class="card">${sectionListHTML(ejercicios, filas) || '<p class="ex-nodata">Sin ejercicios cargados para este día.</p>'}</div>`;
+
+  $('dia-cool').innerHTML = model.estiramiento.length
+    ? accHTML('cool', 'Estiramientos', model.estiramiento.length + ' ejercicios',
+        model.estiramiento.map(r => exerciseRowHTML(ejercicios, r)).join(''), false)
+    : '';
+
+  const btn = $('btn-dia-mark');
+  btn.textContent = isDone ? '✓ Día completado — tocar para desmarcar' : 'Marcar día como hecho';
+  btn.className = 'btn-big' + (isDone ? ' done' : '');
+  btn.dataset.mark = d.n;
+}
+
+function renderProgreso(c, tipo) {
+  const { model, p } = c;
+  const hechos = p.hechos[p.semana] || {};
+  const done = model.dias.filter(d => hechos[d.n]).length;
+
+  $('pg-week').textContent = 'Semana ' + p.semana;
+  $('pg-tipo').textContent = tipo ? 'Tipo ' + tipo : '';
+  $('pg-days').innerHTML = model.dias.map(d =>
+    `<div class="mini-day ${hechos[d.n] ? 'done' : ''}" title="Día ${d.n}">${hechos[d.n] ? '&#10003;' : d.n}</div>`).join('');
+  $('pg-label').textContent = model.dias.length ? `${done} de ${model.dias.length} días completados` : 'Sin días cargados';
+
+  const weeks = Object.keys(p.completadas).map(Number).sort((a, b) => b - a);
+  $('pg-hist').innerHTML = weeks.length
+    ? weeks.map(w => {
         const t = weekTipo(model, w);
         const f = p.completadas[w];
-        const fecha = f ? ' · ' + new Date(f).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }) : '';
-        return `<span class="hist-chip ${t === 'A' ? 'ha' : t === 'B' ? 'hb' : ''}">S${w}${t ? '·' + t : ''}${fecha}</span>`;
+        const fecha = f ? new Date(f).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+        return `<div class="hist-item"><span class="tick">&#10003;</span><span class="w">Semana ${w}${t ? ' · Tipo ' + t : ''}</span><span class="d">${esc(fecha)}</span></div>`;
       }).join('')
-    : '<span class="empty-note">Aún no hay semanas completadas.</span>';
+    : '<p class="empty-note">Aún no hay semanas completadas. Cuando marques todos los días de una semana va a aparecer acá.</p>';
+}
 
-  // Rutina completa
-  if (rutinaTipoSel === null || !(model.tipos.includes(rutinaTipoSel) || rutinaTipoSel === '')) rutinaTipoSel = tipo;
-  const pills = model.tipos.length > 1
-    ? `<div style="display:flex;gap:8px;margin-bottom:12px">${model.tipos.map(t =>
-        `<button class="week-pill ${t === rutinaTipoSel ? (t === 'A' ? 'wp-a' : 'wp-b') : 'wp-off'}" style="cursor:pointer;border-width:0.5px;font-family:inherit" data-tipo="${esc(t)}">Semana ${esc(t)}</button>`).join('')}</div>`
-    : '';
-  $('body-routine').innerHTML = pills + model.dias.map(d => {
-    const filas = d.porTipo[rutinaTipoSel] || d.porTipo[''] || [];
-    return `
-      <div class="day-tile" style="margin-bottom:8px">
-        <div class="day-head" role="button" tabindex="0" aria-expanded="false">
-          <div class="day-info">
-            <div class="day-name">Día ${d.n}</div>
-            <div class="day-group">${esc(d.nombre)}</div>
-          </div>
-          <span class="ex-chev">&#8964;</span>
-        </div>
-        <div class="day-body">${sectionListHTML(ejercicios, filas) || '<p class="ex-nodata">Sin ejercicios.</p>'}</div>
-      </div>`;
-  }).join('');
-
-  // Calentamiento / estiramientos
-  $('card-warm').style.display = model.calentamiento.length ? '' : 'none';
-  $('body-warm').innerHTML = model.calentamiento.map(r => exerciseRowHTML(ejercicios, r)).join('');
-  $('card-cool').style.display = model.estiramiento.length ? '' : 'none';
-  $('body-cool').innerHTML = model.estiramiento.map(r => exerciseRowHTML(ejercicios, r)).join('');
-
-  // Configuración
+function renderAjustes(c) {
+  $('aj-users').innerHTML = c.users.map(u =>
+    `<button class="user-chip ${normKey(u) === normKey(S.usuario) ? 'active' : ''}" data-user="${esc(u)}">${esc(u)}</button>`).join('')
+    || '<p class="empty-note">Sin usuarios en los datos.</p>';
   $('cfg-sheet').value = S.sheetUrl || '';
-  $('btn-forget').style.display = origen === 'sheet' ? '' : 'none';
-  if (!$('cfg-status').dataset.busy) {
-    $('cfg-status').className = 'cfg-status';
-    $('cfg-status').textContent = origen === 'sheet'
+  $('btn-forget').style.display = c.origen === 'sheet' ? '' : 'none';
+  const st = $('cfg-status');
+  if (!st.dataset.busy) {
+    st.className = 'cfg-status';
+    st.textContent = c.origen === 'sheet'
       ? `Conectado a la planilla. Última sincronización: ${new Date(S.cache.ts).toLocaleString('es-AR')}.`
       : 'Sin planilla conectada: estás viendo los datos de ejemplo.';
   }
@@ -727,16 +849,22 @@ function toggleDia(n) {
   const h = p.hechos[p.semana] = p.hechos[p.semana] || {};
   h[n] = !h[n];
   if (!h[n]) delete h[n];
-  const { rutinas } = activeData();
-  const model = buildModel(rutinas, S.usuario);
+  const model = buildModel(activeData().rutinas, S.usuario);
   const total = model.dias.length;
-  if (total && model.dias.every(d => h[d.n])) {
+  const completa = total && model.dias.every(d => h[d.n]);
+  if (completa && !p.completadas[p.semana]) {
     p.completadas[p.semana] = new Date().toISOString();
+    flash = p.semana;
     p.semana++;
+    if (currentDia != null) { currentDia = null; diaTipoSel = null; } // volver a la lista
+  } else if (!completa && p.completadas[p.semana]) {
+    delete p.completadas[p.semana]; // desmarcaron un día de una semana que figuraba completa
   }
   saveState(); render();
 }
 
+$('btn-back').addEventListener('click', () => history.back());
+$('btn-user').addEventListener('click', () => showView('ajustes'));
 $('btn-prev').addEventListener('click', () => { const p = prog(S.usuario); if (p.semana > 1) { p.semana--; saveState(); render(); } });
 $('btn-next').addEventListener('click', () => { const p = prog(S.usuario); p.semana++; saveState(); render(); });
 $('btn-reset').addEventListener('click', () => {
@@ -746,17 +874,24 @@ $('btn-reset').addEventListener('click', () => {
   }
 });
 
-$('user-row').addEventListener('click', e => {
-  const b = e.target.closest('[data-user]');
-  if (b) { S.usuario = b.dataset.user; saveState(); render(); }
-});
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => { flash = null; showView(t.dataset.view); }));
 
-// Delegación: marcar día, expandir día, expandir ejercicio, pills de tipo.
+// Delegación de clicks
 document.addEventListener('click', e => {
   const mark = e.target.closest('[data-mark]');
   if (mark) { e.stopPropagation(); toggleDia(Number(mark.dataset.mark)); return; }
-  const tipoBtn = e.target.closest('[data-tipo]');
-  if (tipoBtn) { rutinaTipoSel = tipoBtn.dataset.tipo; render(); $('tog-routine').setAttribute('aria-expanded', 'true'); $('body-routine').style.display = ''; return; }
+  if (e.target.closest('[data-dismiss]')) { flash = null; render(); return; }
+  const user = e.target.closest('[data-user]');
+  if (user) { S.usuario = user.dataset.user; saveState(); render(); return; }
+  const dt = e.target.closest('[data-dia-tipo]');
+  if (dt) { diaTipoSel = dt.dataset.diaTipo; render(); return; }
+  const acc = e.target.closest('.acc-head');
+  if (acc) {
+    const body = acc.parentElement.querySelector('.acc-body');
+    const open = body.classList.toggle('open');
+    acc.setAttribute('aria-expanded', open);
+    return;
+  }
   const exHead = e.target.closest('.ex-head[role="button"]');
   if (exHead) {
     const drawer = exHead.parentElement.querySelector('.ex-drawer');
@@ -764,27 +899,14 @@ document.addEventListener('click', e => {
     exHead.setAttribute('aria-expanded', open);
     return;
   }
-  const dayHead = e.target.closest('.day-head');
-  if (dayHead) {
-    const body = dayHead.parentElement.querySelector('.day-body');
-    const open = body.classList.toggle('open');
-    dayHead.setAttribute('aria-expanded', open);
-  }
+  const open = e.target.closest('[data-open-dia]');
+  if (open) { flash = null; showView('rutina', Number(open.dataset.openDia)); }
 });
 document.addEventListener('keydown', e => {
-  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.ex-head[role="button"], .day-head')) {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.ex-head[role="button"], .day-card')) {
     e.preventDefault(); e.target.click();
   }
 });
-
-// Secciones plegables de las cards
-for (const [tid, bid] of [['tog-routine', 'body-routine'], ['tog-warm', 'body-warm'], ['tog-cool', 'body-cool'], ['tog-cfg', 'body-cfg'], ['tog-gloss', 'body-gloss']]) {
-  $(tid).addEventListener('click', () => {
-    const b = $(bid), open = b.style.display !== 'none';
-    b.style.display = open ? 'none' : '';
-    $(tid).setAttribute('aria-expanded', String(!open));
-  });
-}
 
 // Sincronización con la sheet
 $('btn-sync').addEventListener('click', async () => {
