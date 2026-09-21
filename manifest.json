@@ -1,0 +1,16 @@
+{
+  "name": "Rutina Tracker",
+  "short_name": "Rutina",
+  "description": "Tracker de rutina de gimnasio configurable por Google Sheets",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#eeede8",
+  "theme_color": "#3c3489",
+  "lang": "es",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
