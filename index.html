@@ -102,7 +102,6 @@
   .blk { display: flex; gap: 10px; }
   .blk-rail { width: 30px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
   .blk-n { width: 30px; height: 30px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--text2); box-shadow: var(--shadow); }
-  .blk.main .blk-n { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .blk-line { flex: 1; width: 2px; background: var(--border2); margin: 6px 0; border-radius: 1px; min-height: 10px; }
   .blk:last-child .blk-line { visibility: hidden; }
   .blk-card { flex: 1; min-width: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden; }
@@ -191,6 +190,12 @@
   .rpe-table tr:last-child td { border-bottom: none; }
   .rpe-table td:first-child { font-weight: 650; color: var(--text); white-space: nowrap; }
   .about { font-size: 12.5px; color: var(--text3); line-height: 1.7; }
+
+  /* ---------- Toast ---------- */
+  .toast { position: fixed; left: 0; right: 0; bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 12px); z-index: 30; display: flex; justify-content: center; padding: 0 16px; pointer-events: none; }
+  .toast-in { pointer-events: auto; max-width: 488px; width: 100%; display: flex; align-items: center; gap: 10px; background: var(--text); color: var(--page); border-radius: var(--radius-lg); padding: 8px 8px 8px 16px; font-size: 13.5px; font-weight: 600; box-shadow: 0 8px 28px rgba(0,0,0,0.28); animation: fadein 0.18s ease; }
+  .toast-in button { margin-left: auto; background: none; border: none; color: #a3e635; font-size: 13.5px; font-weight: 700; cursor: pointer; padding: 10px 12px; min-height: 40px; }
+  @media (prefers-color-scheme: dark) { .toast-in button { color: #4d7c0f; } }
 
   /* ---------- Tab bar ---------- */
   .tabbar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 20; background: color-mix(in srgb, var(--surface) 90%, transparent); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid var(--border); }
@@ -328,6 +333,8 @@
   </section>
 </main>
 
+<div class="toast" id="toast" aria-live="polite"></div>
+
 <nav class="tabbar">
   <div class="tabbar-in">
     <button class="tab on" data-view="rutina">
@@ -370,6 +377,9 @@ const LEGACY_KEY = 'gym_v5';
  * Mismo formato que la planilla. Sirven de referencia del esquema y de
  * respaldo si nunca se conecta una sheet.
  * Ejercicios: nombre -> { grupo, media, pasos[], tip, alternativa }
+ * media: SOLO si el GIF muestra exactamente ese ejercicio (mismo implemento,
+ * ángulo y posición). Ante la duda va vacío: una técnica equivocada es peor
+ * que ninguna imagen.
  */
 const DEFAULT_EJERCICIOS = {
   // --- Entrada en calor ---
@@ -379,9 +389,9 @@ const DEFAULT_EJERCICIOS = {
   'Serie de activación con barra vacía':   { grupo: 'Activación', media: '' },
   // --- Pecho / tríceps ---
   'Press de banca con barra':              { grupo: 'Pecho', media: '' },
-  'Press inclinado con mancuernas':        { grupo: 'Pecho', media: 'dumbbell_bench_press.gif' },
+  'Press inclinado con mancuernas':        { grupo: 'Pecho', media: '' },
   'Press francés con barra Z':             { grupo: 'Tríceps', media: '' },
-  'Aperturas en polea baja':               { grupo: 'Pecho', media: 'chest_fly.gif' },
+  'Aperturas en polea baja':               { grupo: 'Pecho', media: '' },
   'Extensión de tríceps en polea — cuerda':{ grupo: 'Tríceps', media: 'triceps_pushdown.gif' },
   'Flexiones de brazo':                    { grupo: 'Pecho', media: '' },
   'Press en máquina (Hammer o similar)':   { grupo: 'Pecho', media: 'chest_press.gif' },
@@ -392,38 +402,38 @@ const DEFAULT_EJERCICIOS = {
   'Sentadilla trasera con barra':          { grupo: 'Piernas', media: '' },
   'Prensa de piernas':                     { grupo: 'Piernas', media: 'leg_press.gif' },
   'Extensiones de cuádriceps en máquina':  { grupo: 'Piernas', media: 'leg_extension.gif' },
-  'Estocadas búlgaras con mancuernas':     { grupo: 'Piernas', media: 'split_squat.gif' },
+  'Estocadas búlgaras con mancuernas':     { grupo: 'Piernas', media: '' },
   'Gemelos en prensa de piernas':          { grupo: 'Pantorrillas', media: '' },
   'Gemelos sentado en máquina':            { grupo: 'Pantorrillas', media: '' },
   'Hack squat en máquina':                 { grupo: 'Piernas', media: '' },
-  'Zancadas caminando con mancuernas':     { grupo: 'Piernas', media: 'split_squat.gif' },
+  'Zancadas caminando con mancuernas':     { grupo: 'Piernas', media: '' },
   'Gemelos de pie en máquina':             { grupo: 'Pantorrillas', media: '' },
   // --- Hombros / abdomen ---
   'Press militar con barra de pie':        { grupo: 'Hombros', media: '' },
   'Elevaciones laterales con mancuernas':  { grupo: 'Hombros', media: 'lateral_raise.gif' },
   'Facepulls en polea alta':               { grupo: 'Hombros', media: 'face_pull.gif' },
-  'Press arnold con mancuernas sentado':   { grupo: 'Hombros', media: 'shoulder_press.gif' },
+  'Press arnold con mancuernas sentado':   { grupo: 'Hombros', media: '' },
   'Crunch en polea alta':                  { grupo: 'Abdomen', media: '' },
   'Rueda abdominal o elevación de piernas colgado': { grupo: 'Abdomen', media: '' },
-  'Elevaciones laterales en polea baja':   { grupo: 'Hombros', media: 'lateral_raise.gif' },
+  'Elevaciones laterales en polea baja':   { grupo: 'Hombros', media: '' },
   'Elevación de piernas colgado + crunch en polea': { grupo: 'Abdomen', media: '' },
   // --- Espalda / isquios / bíceps ---
   'Peso muerto convencional':              { grupo: 'Espalda', media: '' },
   'Dominadas o jalón al pecho':            { grupo: 'Espalda', media: 'lat_pulldown.gif' },
   'Remo con barra agarre prono':           { grupo: 'Espalda', media: '' },
   'Curl femoral sentado en máquina':       { grupo: 'Isquios', media: 'leg_curl.gif' },
-  'Curl de bíceps con barra':              { grupo: 'Bíceps', media: 'biceps_curl.gif' },
+  'Curl de bíceps con barra':              { grupo: 'Bíceps', media: '' },
   'Curl martillo con mancuernas':          { grupo: 'Bíceps', media: '' },
   'Peso muerto rumano con barra':          { grupo: 'Isquios', media: 'barbell_rdl.gif' },
   'Remo en polea sentado (agarre neutro)': { grupo: 'Espalda', media: 'seated_row.gif' },
-  'Jalón al pecho agarre supino':          { grupo: 'Espalda', media: 'lat_pulldown.gif' },
-  'Curl femoral acostado en máquina':      { grupo: 'Isquios', media: 'leg_curl.gif' },
+  'Jalón al pecho agarre supino':          { grupo: 'Espalda', media: '' },
+  'Curl femoral acostado en máquina':      { grupo: 'Isquios', media: '' },
   'Curl de bíceps con mancuernas alterno': { grupo: 'Bíceps', media: 'biceps_curl.gif' },
   'Curl martillo en polea baja':           { grupo: 'Bíceps', media: '' },
   // --- Estiramientos ---
   'Pecho en marco de puerta':              { grupo: 'Estiramiento', media: 'stretch_pec.png' },
   'Cuádriceps de pie':                     { grupo: 'Estiramiento', media: 'stretch_quad.png' },
-  'Isquiotibiales sentado':                { grupo: 'Estiramiento', media: 'stretch_hamstring.gif' },
+  'Isquiotibiales sentado':                { grupo: 'Estiramiento', media: '' },
   'Hombro cruzado':                        { grupo: 'Estiramiento', media: '' },
   'Gato-vaca':                             { grupo: 'Estiramiento', media: 'cat_cow.gif' },
 };
@@ -936,23 +946,48 @@ function renderAjustes(c) {
 
 /* ============================== Acciones ============================== */
 
+let toast = null, toastTimer = null;
+
+function showToast(t) {
+  toast = t;
+  $('toast').innerHTML = `<div class="toast-in">${icon('check', 16)}<span>Día ${t.dia} marcado como hecho</span><button data-undo>Deshacer</button></div>`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(hideToast, 6000);
+}
+function hideToast() { toast = null; clearTimeout(toastTimer); $('toast').innerHTML = ''; }
+
+// Marca/desmarca un día. Al marcar vuelve a la lista de días (no tiene sentido
+// quedarse en el entrenamiento terminado); un toque por error se revierte con
+// "Deshacer" en vez de pedir confirmación cada vez.
 function toggleDia(n) {
   const p = prog(S.usuario);
-  const h = p.hechos[p.semana] = p.hechos[p.semana] || {};
-  h[n] = !h[n];
-  if (!h[n]) delete h[n];
+  const semana = p.semana;
+  const h = p.hechos[semana] = p.hechos[semana] || {};
+  const marcando = !h[n];
+  if (marcando) h[n] = true; else delete h[n];
   const model = buildModel(activeData().rutinas, S.usuario);
-  const total = model.dias.length;
-  const completa = total && model.dias.every(d => h[d.n]);
-  if (completa && !p.completadas[p.semana]) {
-    p.completadas[p.semana] = new Date().toISOString();
-    flash = p.semana;
+  const completa = model.dias.length && model.dias.every(d => h[d.n]);
+  if (completa && !p.completadas[semana]) {
+    p.completadas[semana] = new Date().toISOString();
+    flash = semana;
     p.semana++;
-    if (currentDia != null) { currentDia = null; diaTipoSel = null; } // volver a la lista
-  } else if (!completa && p.completadas[p.semana]) {
-    delete p.completadas[p.semana]; // desmarcaron un día de una semana que figuraba completa
+  } else if (!completa && p.completadas[semana]) {
+    delete p.completadas[semana]; // desmarcaron un día de una semana que figuraba completa
   }
-  saveState(); render();
+  saveState();
+  if (marcando) {
+    showToast({ dia: n, semana });
+    if (currentDia != null) { history.back(); return; } // popstate vuelve a la lista y renderiza
+  } else hideToast();
+  render();
+}
+
+function undoMark() {
+  if (!toast) return;
+  const p = prog(S.usuario), t = toast;
+  if (p.hechos[t.semana]) delete p.hechos[t.semana][t.dia];
+  if (p.completadas[t.semana]) { delete p.completadas[t.semana]; p.semana = t.semana; flash = null; }
+  hideToast(); saveState(); render();
 }
 
 $('btn-back').addEventListener('click', () => history.back());
@@ -972,6 +1007,7 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
 document.addEventListener('click', e => {
   const mark = e.target.closest('[data-mark]');
   if (mark) { e.stopPropagation(); toggleDia(Number(mark.dataset.mark)); return; }
+  if (e.target.closest('[data-undo]')) { undoMark(); return; }
   if (e.target.closest('[data-dismiss]')) { flash = null; render(); return; }
   const user = e.target.closest('[data-user]');
   if (user) { S.usuario = user.dataset.user; saveState(); render(); return; }
@@ -1021,6 +1057,8 @@ $('btn-forget').addEventListener('click', () => {
     saveState(); render();
   }
 });
+
+history.replaceState(null, '');
 
 // Al abrir: si hay sheet conectada, refresca en segundo plano (si hay red).
 if (S.sheetUrl) syncSheet(S.sheetUrl).then(render).catch(() => {});
