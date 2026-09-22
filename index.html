@@ -158,6 +158,12 @@
   .stp input::-webkit-outer-spin-button, .stp input::-webkit-inner-spin-button { -webkit-appearance: none; }
   .stp input:focus { outline: none; }
   .set-ok { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border2); background: var(--surface); color: var(--text3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .set-row.timed, .set-hd.timed { grid-template-columns: 14px minmax(0, 1fr) 40px 40px; }
+  .set-play { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border2); background: var(--surface); color: var(--text2); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .set-row.running .set-play { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .set-row.running .stp { background: var(--accent-soft); }
+  .set-row.running .stp input { color: var(--accent-text); }
+  .set-row.done .set-play { opacity: 0.4; }
   .set-row.done .set-ok { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .set-row.done .stp { opacity: 0.55; }
   .tech-toggle { display: flex; align-items: center; gap: 6px; width: 100%; margin-top: 10px; padding: 9px 0 2px; background: none; border: none; border-top: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; }
@@ -771,6 +777,8 @@ const ICONS = {
   gauge: '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
   trendingUp: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
   history: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  stop: '<rect x="5" y="5" width="14" height="14" rx="2"/>',
   info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
   dumbbell: '<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>',
   trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
@@ -783,7 +791,7 @@ function icon(name, size = 16, cls = '') {
 
 const pad2 = n => String(n).padStart(2, '0');
 // Evita que '4 × 6' o '90 seg' se corten entre líneas.
-const nb = s => esc(s).replace(/ × /g, ' × ').replace(/(d) (seg|min|reps?)/g, '$1 $2');
+const nb = s => esc(s).replace(/ × /g, ' × ').replace(/(\d) (seg|min|reps?)\b/g, '$1 $2');
 
 // La media puede ser: un GIF/imagen de assets/, una URL completa, o un par de
 // fotos inicio/fin ("db/Nombre", sin extensión) que la app alterna con un
@@ -886,9 +894,16 @@ function exerciseHTML(ejercicios, r, opts = {}) {
   }
   const info = prev
     ? `<span class="rx-chip">${icon('history', 12)}Última vez: ${kgFmt(prev.sets[0].kg)} kg × ${prev.sets.map(s => s.reps).join(', ')}</span>${goal ? `<span class="rx-chip goal">${icon('trendingUp', 12)}${esc(goal)}</span>` : ''}`
-    : `<span class="rx-chip">${icon('history', 12)}Primera vez: ${/(seg|min)/i.test(r.series) ? 'registrá lo que aguantes' : 'anotá el peso que uses'}</span>`;
+    : `<span class="rx-chip">${icon('history', 12)}Primera vez: ${/\b(seg|min)\b/i.test(r.series) ? 'registrá lo que aguantes' : 'anotá el peso que uses'}</span>`;
   const ej = esc(r.ejercicio);
-  const rows = cur.map((s, i) => `
+  const timed = /\b(seg|min)\b/i.test(r.series);
+  const rows = cur.map((s, i) => timed ? `
+      <div class="set-row timed ${s.ok ? 'done' : ''}" data-ej="${ej}" data-i="${i}">
+        <span class="set-n num">${i + 1}</span>
+        <div class="stp"><button data-adj="reps" data-v="-5" aria-label="Menos segundos">−</button><input type="number" inputmode="numeric" step="1" min="0" value="${s.reps}" data-f="reps" aria-label="Segundos serie ${i + 1}"><button data-adj="reps" data-v="5" aria-label="Más segundos">+</button></div>
+        <button class="set-play" data-play aria-label="Cronometrar serie ${i + 1}">${icon('play', 16)}</button>
+        <button class="set-ok" data-ok aria-label="${s.ok ? 'Desmarcar' : 'Confirmar'} serie ${i + 1}">${icon('check', 18)}</button>
+      </div>` : `
       <div class="set-row ${s.ok ? 'done' : ''}" data-ej="${ej}" data-i="${i}">
         <span class="set-n num">${i + 1}</span>
         <div class="stp"><button data-adj="kg" data-v="-2.5" aria-label="Bajar peso">−</button><input type="number" inputmode="decimal" step="0.5" min="0" value="${s.kg}" data-f="kg" aria-label="Peso serie ${i + 1} (kg)"><button data-adj="kg" data-v="2.5" aria-label="Subir peso">+</button></div>
@@ -900,7 +915,7 @@ function exerciseHTML(ejercicios, r, opts = {}) {
       ${head}
       <div class="ex-body">
         <div class="ex-info">${info}</div>
-        <div class="set-hd" aria-hidden="true"><span></span><span>kg</span><span>${/\b(seg|min)\b/i.test(r.series) ? 'seg' : 'reps'}</span><span></span></div>
+        ${timed ? '<div class="set-hd timed" aria-hidden="true"><span></span><span>seg</span><span></span><span></span></div>' : '<div class="set-hd" aria-hidden="true"><span></span><span>kg</span><span>reps</span><span></span></div>'}
         ${rows}
         ${tech ? `<button class="tech-toggle" aria-expanded="false">${icon('info', 15)}Ver técnica${icon('chevronDown', 16, 'arrow')}</button>${tech}` : ''}
       </div>
@@ -1016,7 +1031,7 @@ function showView(v, dia) {
   render();
   window.scrollTo(0, 0);
 }
-window.addEventListener('popstate', () => { if (currentDia != null) { currentDia = null; diaTipoSel = null; wakeOff(); render(); } });
+window.addEventListener('popstate', () => { if (currentDia != null) { if (H) stopHold(false); currentDia = null; diaTipoSel = null; wakeOff(); render(); } });
 
 /* ============================== Render ============================== */
 
@@ -1299,20 +1314,10 @@ document.addEventListener('click', e => {
     row.querySelector(`input[data-f="${f}"]`).value = s[f];
     saveState(); return;
   }
+  const play = e.target.closest('[data-play]');
+  if (play) { toggleHold(play.closest('.set-row')); return; }
   const ok = e.target.closest('[data-ok]');
-  if (ok) {
-    const row = ok.closest('.set-row'), s = setOf(row);
-    ['kg', 'reps'].forEach(f => { s[f] = Math.max(0, parseFloat(row.querySelector(`input[data-f="${f}"]`).value) || 0); });
-    s.ok = !s.ok;
-    saveState();
-    const blk = row.closest('.blk');
-    if (s.ok && blk && blk.dataset.last === row.dataset.ej) startTimer(+blk.dataset.rest, row.dataset.ej);
-    const ex = row.closest('.ex');
-    const completo = [...ex.querySelectorAll('.set-row')].every(r => r === row || r.classList.contains('done'));
-    render();
-    if (s.ok) avanzarFoco(row.dataset.ej, !!blk?.classList.contains('ss'), completo);
-    return;
-  }
+  if (ok) { if (H) stopHold(false); confirmarSerie(ok.closest('.set-row')); return; }
   const tt = e.target.closest('.tech-toggle');
   if (tt) { const d = tt.nextElementSibling; const open = d.classList.toggle('open'); tt.setAttribute('aria-expanded', open); return; }
   if (e.target.closest('.ex-body')) return; // toques dentro del registro no cierran el panel
@@ -1360,6 +1365,55 @@ function avanzarFoco(nombre, enSuperserie, completo) {
   toggle(target, true);
   const top = target.getBoundingClientRect().top + window.scrollY - 72; // debajo de la barra superior
   window.scrollTo({ top, behavior: 'smooth' });
+}
+
+// Confirma (o desmarca) una serie: guarda, dispara el descanso y avanza el foco.
+function confirmarSerie(row) {
+  const s = setOf(row);
+  row.querySelectorAll('input[data-f]').forEach(inp => { s[inp.dataset.f] = Math.max(0, parseFloat(inp.value) || 0); });
+  s.ok = !s.ok;
+  saveState();
+  const blk = row.closest('.blk');
+  if (s.ok && blk && blk.dataset.last === row.dataset.ej) startTimer(+blk.dataset.rest, row.dataset.ej);
+  const ex = row.closest('.ex');
+  const completo = [...ex.querySelectorAll('.set-row')].every(r => r === row || r.classList.contains('done'));
+  render();
+  if (s.ok) avanzarFoco(row.dataset.ej, !!blk?.classList.contains('ss'), completo);
+}
+
+/* ---- Cronómetro de series por tiempo (hollow, pike, estiramientos…) ----
+ * ▶ cuenta hacia atrás los segundos objetivo; al llegar a 0 vibra, suena y
+ * confirma la serie sola. ■ antes de tiempo deja registrados los segundos
+ * aguantados sin confirmar. */
+let H = null;
+function toggleHold(row) {
+  if (H && H.ej === row.dataset.ej && H.i === row.dataset.i) { stopHold(false); return; }
+  if (H) stopHold(false);
+  const inp = row.querySelector('input[data-f="reps"]');
+  const total = Math.max(1, Math.round(parseFloat(inp.value) || 0));
+  H = { ej: row.dataset.ej, i: row.dataset.i, total, endsAt: Date.now() + total * 1000, iv: null };
+  const paint = () => {
+    const r = holdRow(); if (!r) return;
+    const left = Math.max(0, Math.ceil((H.endsAt - Date.now()) / 1000));
+    r.classList.add('running');
+    r.querySelector('input[data-f="reps"]').value = left;
+    r.querySelector('.set-play').innerHTML = icon('stop', 16);
+    if (!left) { beep(); if (navigator.vibrate) navigator.vibrate([250, 120, 250]); stopHold(true); }
+  };
+  H.iv = setInterval(paint, 250); paint();
+}
+const holdRow = () => H && document.querySelector(`.set-row[data-ej="${CSS.escape(H.ej)}"][data-i="${H.i}"]`);
+function stopHold(completo) {
+  if (!H) return;
+  clearInterval(H.iv);
+  const r = holdRow(), h = H; H = null;
+  if (!r) return;
+  const aguantado = completo ? h.total : Math.min(h.total, Math.round((Date.now() - (h.endsAt - h.total * 1000)) / 1000));
+  r.classList.remove('running');
+  r.querySelector('input[data-f="reps"]').value = aguantado;
+  r.querySelector('.set-play').innerHTML = icon('play', 16);
+  const s = setOf(r); s.reps = aguantado; saveState();
+  if (completo) confirmarSerie(r);
 }
 
 // Serie (objeto de estado) correspondiente a una fila del registro
