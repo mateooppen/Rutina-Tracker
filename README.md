@@ -47,10 +47,10 @@ La app cachea los datos en el teléfono: la planilla solo hace falta cuando camb
 | `Semana` | `A`, `B`… si la rutina alterna tipos de semana; vacío si todas las semanas son iguales. |
 | `Dia` | Número de día (1, 2, 3…). La cantidad de días de la rutina sale de acá. Vacío = fila de calentamiento/estiramiento general. |
 | `DiaNombre` | Nombre del día (ej: "Piernas y glúteos"). |
-| `Seccion` | `Calentamiento`, `Principal`, `Accesorios` o `Estiramiento`. |
+| `Seccion` | `Calentamiento`, `Principal`, `Secundario`, `Accesorios`, `Opcional`, `Estiramiento` u otro nombre (se muestra como título). Las filas de `Calentamiento`/`Estiramiento` con `Dia` vacío valen para todos los días; con un `Dia`, solo para ese día (p. ej. un día en casa con su propio calentamiento). |
 | `Orden` | Orden dentro del día (`1`, `2a`, `2b`…). `2a`/`2b` es la convención para superseries. |
 | `Ejercicio` | Nombre exacto del catálogo `Ejercicios`. |
-| `Series` | Ej: `4 × 6–8`. |
+| `Series` | Ej: `4 × 6–8`. También tiempos: `3 × 20 seg`, `90 seg por pierna`. |
 | `Intensidad` | Ej: `RPE 8` o `RIR 2`. Opcional. |
 | `Descanso` | Ej: `90 seg`. Opcional. |
 | `Tag` | `principal`, `superserie`, `dropset` o `finisher`. Opcional. |

@@ -478,15 +478,44 @@ const DEFAULT_EJERCICIOS = {
   // --- Estiramientos ---
   'Pecho en marco de puerta':              { grupo: 'Estiramiento', media: 'stretch_pec.png' },
   'Cuádriceps de pie':                     { grupo: 'Estiramiento', media: 'stretch_quad.png' },
-  'Isquiotibiales sentado':                { grupo: 'Estiramiento', media: '' },
+  'Isquiotibiales sentado':                { grupo: 'Estiramiento', media: 'db/Seated_Floor_Hamstring_Stretch' },
   'Hombro cruzado':                        { grupo: 'Estiramiento', media: '' },
   'Gato-vaca':                             { grupo: 'Estiramiento', media: 'cat_cow.gif' },
+  // --- Casa: handstand y movilidad ---
+  'Movilidad de muñecas en el piso':       { grupo: 'Muñecas', media: '',
+    pasos: ['En cuadrupedia, manos apoyadas con los dedos hacia adelante: balanceá el peso adelante y atrás 10 veces, sin despegar las palmas.', 'Girá las manos con los dedos hacia las rodillas y repetí el balanceo, suave.', 'Apoyá el dorso de las manos (palmas hacia arriba) y balanceá 10 veces más, con poco peso.', 'Terminá con 10 flexiones de dedos: levantá la palma dejando las yemas apoyadas y volvé.'],
+    tip: 'Las muñecas son lo que más sufre al principio del handstand. Si molestan, hacé este bloque más largo y menos pared.' },
+  'Apertura de hombros con banda':         { grupo: 'Hombros', media: 'db/Band_Pull_Apart',
+    pasos: ['Banda tomada al frente con las manos más abiertas que los hombros, brazos estirados.', 'Separá las manos llevando la banda al pecho y juntando las escápulas; volvé controlado.', 'Después, con el mismo agarre, pasá la banda por encima de la cabeza hasta la espalda baja y volvé (pasadas). Si no llegás sin doblar los codos, tomala más ancha.'],
+    tip: 'Las pasadas son las que abren el hombro para la línea recta del handstand. Nunca con dolor.' },
+  'Hollow body hold':                      { grupo: 'Core', media: '',
+    pasos: ['Acostado boca arriba, pegá la zona lumbar al piso apretando el abdomen.', 'Levantá hombros y piernas unos centímetros, brazos estirados junto a las orejas.', 'El cuerpo queda como una banana suave: lumbar siempre apoyada. Si se despega, flexioná las rodillas o subí más las piernas.', 'Sostené respirando normal.'],
+    tip: 'Es la forma exacta del handstand pero en el piso: costillas cerradas, glúteos apretados, piernas juntas.' },
+  'Pike con pies elevados':                { grupo: 'Hombros', media: '',
+    pasos: ['Pies apoyados en una silla o la cama, manos en el piso al ancho de hombros, dedos abiertos.', 'Caminá las manos hacia atrás hasta que la cadera quede lo más arriba posible de los hombros, en forma de V invertida.', 'Empujá el piso alejando los hombros de las orejas y mirá entre las manos, sin arquear la espalda.', 'Sostené el tiempo indicado y bajá con control.'],
+    tip: 'Cuanto más cerca de la silla las manos, más vertical y más difícil. Empezá lejos y acercate con las semanas.' },
+  'Sapo (frog stand)':                     { grupo: 'Equilibrio', media: '',
+    pasos: ['En cuclillas, manos en el piso al ancho de hombros con los dedos bien abiertos.', 'Apoyá la cara interna de las rodillas sobre los codos o los tríceps.', 'Inclinate hacia adelante mirando el piso delante de las manos hasta que los pies se despeguen solos.', 'Equilibrá con la punta de los dedos: presioná cuando te vas hacia adelante. Si te caés, bajá los pies.'],
+    tip: 'Poné un almohadón adelante las primeras veces. Cuando aguantes 20 s cómodo, pasamos a la caminata a la pared.' },
+  'Isquios acostado con banda':            { grupo: 'Movilidad', media: 'db/Leg-Up_Hamstring_Stretch',
+    pasos: ['Acostado boca arriba, pasá la banda por la planta de un pie y estirá esa pierna hacia el techo; la otra queda extendida en el piso.', 'Tirá suave de la banda hasta sentir el estiramiento atrás del muslo, rodilla lo más recta posible.', 'Contraé 5 segundos empujando el pie contra la banda (sin que se mueva), relajá y ganá un poco de rango. Repetí 3 veces.', 'Cambiá de pierna.'] },
+  'Estocada baja (flexor de cadera)':      { grupo: 'Movilidad', media: 'db/Kneeling_Hip_Flexor',
+    pasos: ['Rodilla de atrás apoyada (usá algo blando), pie de adelante bien adelante, torso erguido.', 'Apretá el glúteo de la pierna de atrás y llevá la cadera hacia adelante, sin arquear la lumbar.', 'Para sumar, levantá el brazo del lado de la rodilla apoyada e inclinate apenas al lado contrario.', 'Contraé 5 s empujando la rodilla contra el piso, relajá, profundizá. 3 veces por lado.'] },
+  'Rana (aductores)':                      { grupo: 'Movilidad', media: '',
+    pasos: ['En cuadrupedia, abrí las rodillas lo más que puedas, pies hacia afuera con la cara interna apoyada.', 'Bajá a los antebrazos y llevá la cadera hacia atrás, hacia los talones, hasta sentir la cara interna de los muslos.', 'Contraé 5 s apretando las rodillas contra el piso, relajá y ganá rango. 3 veces.', 'Salí despacio juntando las rodillas con las manos.'],
+    tip: 'Es la base para la apertura lateral. Progresá abriendo las rodillas, no forzando la cadera hacia abajo.' },
+  'Sentadilla profunda sostenida':         { grupo: 'Movilidad', media: '',
+    pasos: ['Pies al ancho de hombros o un poco más, puntas apenas hacia afuera.', 'Bajá hasta el fondo, talones en el piso; si se levantan, poné un libro debajo o agarrate de algo al frente.', 'Con los codos empujá suavemente las rodillas hacia afuera y mantené el pecho arriba.', 'Sostené respirando; movete un poco de lado a lado.'] },
+  'Colgarse de la barra':                  { grupo: 'Hombros', media: '',
+    pasos: ['Agarre al ancho de hombros, cuerpo colgando relajado, pies sin tocar el piso.', 'Dejá que los hombros suban hacia las orejas: es una descompresión, no un ejercicio de fuerza.', 'Respirá lento y sentí cómo se abre la espalda y los hombros.'],
+    tip: 'Si el agarre no aguanta, apoyá las puntas de los pies en una silla y descargá parte del peso.' },
 };
 
 /* Rutinas: filas con el mismo esquema que la pestaña "Rutinas".
  * [usuario, semana(A/B/''), dia(nº o '' p/ secciones generales), diaNombre,
  *  seccion, orden, ejercicio, series, intensidad, descanso, tag, nota]
- * seccion: Calentamiento | Principal | Secundario | Accesorios | Opcional | Estiramiento
+ * seccion: Calentamiento | Principal | Secundario | Accesorios | Opcional | Estiramiento (u otra: se usa como título)
+ * Calentamiento/Estiramiento con dia vacío valen para todos los días; con dia, solo para ese día.
  * tag: principal | superserie | opcional | dropset | finisher | ''
  */
 const DEFAULT_RUTINAS = [
@@ -525,6 +554,17 @@ const DEFAULT_RUTINAS = [
   ['Mateo','','3','Peso muerto y pecho','Accesorios','4a','Extensiones de cuádriceps en máquina','3 × 12–15','RIR 1–2','','superserie',''],
   ['Mateo','','3','Peso muerto y pecho','Accesorios','4b','Extensión de tríceps en polea — cuerda','3 × 10–12','RIR 1–2','60 seg tras el par','superserie',''],
   ['Mateo','','3','Peso muerto y pecho','Opcional','5','Gemelos de pie en máquina','3 × 10–15','','60 seg','opcional','Si sobra tiempo'],
+  // ---- Día 4 en casa: handstand desde cero + movilidad (~20 min, repetible 2–3 veces por semana) ----
+  ['Mateo','','4','Casa · Handstand y movilidad','Calentamiento','1','Movilidad de muñecas en el piso','2 min','','','',''],
+  ['Mateo','','4','Casa · Handstand y movilidad','Calentamiento','2','Apertura de hombros con banda','2 × 10','','','','10 separaciones + 10 pasadas'],
+  ['Mateo','','4','Casa · Handstand y movilidad','Handstand','1','Hollow body hold','3 × 20 seg','','45 seg','principal','Sumá 5 seg cuando completes 3 × 20'],
+  ['Mateo','','4','Casa · Handstand y movilidad','Handstand','2','Pike con pies elevados','3 × 20 seg','','60 seg','','Sumá 5 seg cuando completes 3 × 20'],
+  ['Mateo','','4','Casa · Handstand y movilidad','Handstand','3','Sapo (frog stand)','3 × 10 seg','','60 seg','','Con 20 seg cómodo pasamos a la pared'],
+  ['Mateo','','4','Casa · Handstand y movilidad','Movilidad','4','Isquios acostado con banda','90 seg por pierna','','','','Contraer 5 s y relajar, 3 veces'],
+  ['Mateo','','4','Casa · Handstand y movilidad','Movilidad','5','Estocada baja (flexor de cadera)','90 seg por lado','','','','Contraer 5 s y relajar, 3 veces'],
+  ['Mateo','','4','Casa · Handstand y movilidad','Movilidad','6','Rana (aductores)','90 seg','','','','Contraer 5 s y relajar, 3 veces'],
+  ['Mateo','','4','Casa · Handstand y movilidad','Opcional','7','Sentadilla profunda sostenida','60 seg','','','opcional','Si sobra tiempo'],
+  ['Mateo','','4','Casa · Handstand y movilidad','Estiramiento','1','Colgarse de la barra','2 × 30 seg','','30 seg','',''],
 ];
 
 const RUTINA_COLS = ['usuario','semana','dia','dianombre','seccion','orden','ejercicio','series','intensidad','descanso','tag','nota'];
@@ -613,9 +653,15 @@ function getEjercicio(ejercicios, nombre) {
  * { dias: [{ n, nombre, porTipo: {tipo: [filas]} }], calentamiento, estiramiento, tipos } */
 function buildModel(rutinas, usuario) {
   const rs = rutinas.filter(r => normKey(r.usuario) === normKey(usuario));
-  const cal = rs.filter(r => normKey(r.seccion) === 'calentamiento');
-  const est = rs.filter(r => normKey(r.seccion).startsWith('estiramiento'));
-  const main = rs.filter(r => r.dia !== '' && !isNaN(Number(r.dia)) && Number(r.dia) > 0);
+  const esCal = r => normKey(r.seccion) === 'calentamiento';
+  const esEst = r => normKey(r.seccion).startsWith('estiramiento');
+  const conDia = r => r.dia !== '' && !isNaN(Number(r.dia)) && Number(r.dia) > 0;
+  const cal = rs.filter(r => esCal(r) && !conDia(r));
+  const est = rs.filter(r => esEst(r) && !conDia(r));
+  const main = rs.filter(r => conDia(r) && !esCal(r) && !esEst(r));
+  // Calentamiento/estiramiento propios de un día (reemplazan a los generales)
+  const calDia = {}, estDia = {};
+  for (const r of rs.filter(r => conDia(r) && (esCal(r) || esEst(r)))) ((esCal(r) ? calDia : estDia)[Number(r.dia)] ||= []).push(r);
   const tipos = [...new Set(main.map(r => r.semana.toUpperCase()).filter(Boolean))].sort();
   const byDia = new Map();
   for (const r of main) {
@@ -628,7 +674,7 @@ function buildModel(rutinas, usuario) {
   }
   const dias = [...byDia.values()].sort((a, b) => a.n - b.n);
   const ordenar = arr => arr.sort((a, b) => String(a.orden).localeCompare(String(b.orden), 'es', { numeric: true }));
-  dias.forEach(d => Object.values(d.porTipo).forEach(ordenar));
+  dias.forEach(d => { Object.values(d.porTipo).forEach(ordenar); d.calentamiento = ordenar(calDia[d.n] || []); d.estiramiento = ordenar(estDia[d.n] || []); });
   ordenar(cal); ordenar(est);
   return { dias, calentamiento: cal, estiramiento: est, tipos };
 }
@@ -763,7 +809,10 @@ function parseSeries(s) {
   const m = String(s).match(/^\s*(\d+)\s*(?:×|x)\s*(\d+)(?:\s*[–-]\s*(\d+))?/i);
   if (m) return { sets: +m[1], min: +m[2], max: +(m[3] || m[2]) };
   const n = String(s).match(/^\s*(\d+)\s*series/i);
-  return n ? { sets: +n[1], min: 0, max: 0 } : { sets: 1, min: 0, max: 0 };
+  if (n) return { sets: +n[1], min: 0, max: 0 };
+  const t = String(s).match(/^\s*(\d+)(?:\s*[–-]\s*(\d+))?\s*(seg|min)\b/i); // "90 seg", "60–90 seg", "2 min"
+  if (t) { const f = /min/i.test(t[3]) ? 60 : 1; return { sets: 1, min: +t[1] * f, max: +(t[2] || t[1]) * f }; }
+  return { sets: 1, min: 0, max: 0 };
 }
 // "2–3 min" -> 150 s; "90 seg tras el par" -> 90; "" -> 0
 function parseRest(s) {
@@ -837,7 +886,7 @@ function exerciseHTML(ejercicios, r, opts = {}) {
   }
   const info = prev
     ? `<span class="rx-chip">${icon('history', 12)}Última vez: ${kgFmt(prev.sets[0].kg)} kg × ${prev.sets.map(s => s.reps).join(', ')}</span>${goal ? `<span class="rx-chip goal">${icon('trendingUp', 12)}${esc(goal)}</span>` : ''}`
-    : `<span class="rx-chip">${icon('history', 12)}Primera vez: anotá el peso que uses</span>`;
+    : `<span class="rx-chip">${icon('history', 12)}Primera vez: ${/(seg|min)/i.test(r.series) ? 'registrá lo que aguantes' : 'anotá el peso que uses'}</span>`;
   const ej = esc(r.ejercicio);
   const rows = cur.map((s, i) => `
       <div class="set-row ${s.ok ? 'done' : ''}" data-ej="${ej}" data-i="${i}">
@@ -851,7 +900,7 @@ function exerciseHTML(ejercicios, r, opts = {}) {
       ${head}
       <div class="ex-body">
         <div class="ex-info">${info}</div>
-        <div class="set-hd" aria-hidden="true"><span></span><span>kg</span><span>reps</span><span></span></div>
+        <div class="set-hd" aria-hidden="true"><span></span><span>kg</span><span>${/\b(seg|min)\b/i.test(r.series) ? 'seg' : 'reps'}</span><span></span></div>
         ${rows}
         ${tech ? `<button class="tech-toggle" aria-expanded="false">${icon('info', 15)}Ver técnica${icon('chevronDown', 16, 'arrow')}</button>${tech}` : ''}
       </div>
@@ -1062,14 +1111,16 @@ function renderDia(c, d) {
       `<button role="tab" aria-selected="${t === diaTipoSel}" class="${t === diaTipoSel ? 'on' : ''}" data-dia-tipo="${esc(t)}">Semana ${esc(t)}${t === tipoActual ? ' · actual' : ''}</button>`).join('')}
     </div>` : '';
 
-  $('dia-warm').innerHTML = model.calentamiento.length
-    ? accHTML('sunrise', 'Entrada en calor', model.calentamiento.length + ' ejercicios', simpleListHTML(ejercicios, model.calentamiento))
+  const cal = d.calentamiento.length ? d.calentamiento : model.calentamiento;
+  const est = d.estiramiento.length ? d.estiramiento : model.estiramiento;
+  $('dia-warm').innerHTML = cal.length
+    ? accHTML('sunrise', 'Entrada en calor', cal.length + ' ejercicios', simpleListHTML(ejercicios, cal))
     : '';
 
   $('dia-main').innerHTML = workoutHTML(ejercicios, filas, { ses, key }) || '<p class="ex-nodata">Sin ejercicios cargados para este día.</p>';
 
-  $('dia-cool').innerHTML = model.estiramiento.length
-    ? accHTML('stretch', 'Estiramientos', model.estiramiento.length + ' ejercicios', simpleListHTML(ejercicios, model.estiramiento))
+  $('dia-cool').innerHTML = est.length
+    ? accHTML('stretch', est.length === 1 ? 'Cierre' : 'Estiramientos', est.length + (est.length === 1 ? ' ejercicio' : ' ejercicios'), simpleListHTML(ejercicios, est))
     : '';
 
   const btn = $('btn-dia-mark');
