@@ -129,6 +129,7 @@
   .ex-drawer.open { display: block; }
   .ex-media { border-radius: var(--radius); overflow: hidden; background: #fff; margin-bottom: 10px; }
   .ex-media img { width: 100%; display: block; }
+  .ex-media img[src*="/rep/"] { max-height: 300px; object-fit: contain; background: #e8f1fb; }
   .ex-media.pair { position: relative; }
   .ex-media.pair .f2 { position: absolute; inset: 0; animation: pair 2.4s ease-in-out infinite; }
   @keyframes pair { 0%, 35% { opacity: 0; } 50%, 85% { opacity: 1; } 100% { opacity: 0; } }
@@ -388,7 +389,9 @@
     <div class="h-section">Acerca de</div>
     <div class="card about">
       Rutina Tracker · app familiar de rutinas de gimnasio.<br>
-      La rutina se configura desde Google Sheets; el progreso se guarda en cada teléfono.
+      La rutina se configura desde Google Sheets; el progreso se guarda en cada teléfono.<br><br>
+      Fotos de técnica: <a href="https://github.com/yuhonas/free-exercise-db" style="color:var(--accent-text)">free-exercise-db</a> (dominio público).<br>
+      Ilustraciones: <a href="https://repdb.co" style="color:var(--accent-text)">Exercise data by RepDB (repdb.co)</a>.
     </div>
   </section>
 </main>
@@ -443,8 +446,8 @@ const LEGACY_KEY = 'gym_v5';
  */
 const DEFAULT_EJERCICIOS = {
   // --- Entrada en calor ---
-  'Rotaciones de hombros y cuello':        { grupo: 'Movilidad', media: '' },
-  'Rotaciones de cadera y rodillas':       { grupo: 'Movilidad', media: '' },
+  'Rotaciones de hombros y cuello':        { grupo: 'Movilidad', media: 'db/Arm_Circles' },
+  'Rotaciones de cadera y rodillas':       { grupo: 'Movilidad', media: 'db/Standing_Hip_Circles' },
   'Sentadilla de peso corporal':           { grupo: 'Activación', media: 'bodyweight_squat.png' },
   'Serie de aproximación con barra vacía': { grupo: 'Activación', media: '', tip: 'Después de la barra vacía, 2–3 series subiendo el peso hasta llegar al de trabajo, sin acumular fatiga.' },
   // --- Básicos con barra ---
@@ -483,16 +486,16 @@ const DEFAULT_EJERCICIOS = {
   'Crunch en polea alta':                  { grupo: 'Abdomen', media: 'db/Cable_Crunch' },
   // --- Estiramientos ---
   'Pecho en marco de puerta':              { grupo: 'Estiramiento', media: 'stretch_pec.png' },
-  'Cuádriceps de pie':                     { grupo: 'Estiramiento', media: 'stretch_quad.png' },
+  'Cuádriceps de pie':                     { grupo: 'Estiramiento', media: 'rep/standing-quad-stretch-main.webp' },
   'Isquiotibiales sentado':                { grupo: 'Estiramiento', media: 'db/Seated_Floor_Hamstring_Stretch' },
-  'Hombro cruzado':                        { grupo: 'Estiramiento', media: '' },
+  'Hombro cruzado':                        { grupo: 'Estiramiento', media: 'db/Shoulder_Stretch' },
   'Gato-vaca':                             { grupo: 'Estiramiento', media: 'cat_cow.gif' },
   // ============ Vero: rutina en casa (femenino, técnica de su app original) ============
   'Movilidad articular de pie': { grupo: 'Movilidad', media: '', 
     pasos: ['Empezá con 10 círculos de hombros hacia atrás y 10 círculos amplios de brazos.', 'Seguí con 10 rotaciones suaves de torso hacia cada lado, con la cadera quieta.', 'Hacé 10 medias sentadillas suaves, bajando solo hasta donde te resulte cómodo.', 'Cerrá con 10 elevaciones de talones y 8 círculos de tobillo por pie, apoyada en la silla.'] },
   'Puente de glúteos sin peso': { grupo: 'Activación', media: 'glute_bridge.gif', 
     pasos: ['Acostate boca arriba con las rodillas flexionadas y los pies apoyados al ancho de cadera.', 'Apoyá la cabeza relajada en la colchoneta, sin empujar con la nuca.', 'Subí la cadera apretando los glúteos hasta alinear rodillas, cadera y hombros.', 'Bajá lento y controlado, vértebra por vértebra.'] },
-  'Sentadilla a la silla con peso corporal': { grupo: 'Activación', media: '', 
+  'Sentadilla a la silla con peso corporal': { grupo: 'Activación', media: 'db/Dumbbell_Squat_To_A_Bench', 
     pasos: ['Parate de espaldas a la silla, pies al ancho de hombros y brazos al frente.', 'Separá los pies con las puntas apenas hacia afuera.', 'Bajá lento empujando la cadera hacia atrás hasta apoyarte apenas en la silla.', 'Subí empujando el piso con todo el pie, sin que las rodillas caigan hacia adentro.'], 
     tip: 'La silla marca el límite del rango: no bajes más profundo. Rodillas siempre apuntando a la punta de los pies.' },
   'Movilidad de hombros y cadera con apoyo': { grupo: 'Movilidad', media: '', 
@@ -510,7 +513,7 @@ const DEFAULT_EJERCICIOS = {
   'Sentadilla goblet a la silla': { grupo: 'Piernas', media: 'goblet_squat.gif', 
     pasos: ['Parate de espaldas a la silla con un disco agarrado contra el pecho.', 'Separá los pies al ancho de hombros, con las puntas apenas hacia afuera.', 'Bajá lento empujando la cadera hacia atrás hasta rozar la silla, sin sentarte del todo.', 'Subí empujando con toda la planta del pie, cuidando que las rodillas no caigan hacia adentro.'], 
     tip: 'Sostené el disco pegado al pecho y el torso erguido: si te vas hacia adelante, usá menos peso.' },
-  'Press de pecho en el piso con mancuernas': { grupo: 'Pecho', media: '', 
+  'Press de pecho en el piso con mancuernas': { grupo: 'Pecho', media: 'db/Dumbbell_Floor_Press', 
     pasos: ['Acostate boca arriba con las rodillas flexionadas y un disco en cada mano.', 'Con los codos apoyados en el piso, ubicá los mancuernas a la altura del pecho.', 'Empujá los mancuernas hacia el techo hasta estirar los brazos, sin despegar la cabeza.', 'Bajá lento hasta que los codos toquen suave el piso.'], 
     tip: 'La cabeza y la espalda quedan siempre apoyadas: es la posición más segura para tu cervical.' },
   'Remo a un brazo con mancuerna': { grupo: 'Espalda', media: 'dumbbell_row.gif', 
@@ -524,7 +527,7 @@ const DEFAULT_EJERCICIOS = {
     tip: 'Reemplaza al jalón del gimnasio: es la tracción vertical que le faltaba a la rutina. Si la banda queda floja, alejate un poco.' },
   'Pallof press con banda': { grupo: 'Core', media: 'pallof_press.gif', 
     pasos: ['Enganchá una banda elástica a un punto fijo a la altura del pecho.', 'Parada de costado a la banda, tomala con las dos manos y separate un paso para tensarla.', 'Estirá los brazos al frente resistiendo que la banda te rote el torso.', 'Volvé con control al pecho y, al terminar las reps, cambiá de lado.'] },
-  'Press de hombros sentada con espalda en la pared': { grupo: 'Hombros', media: '', 
+  'Press de hombros sentada con espalda en la pared': { grupo: 'Hombros', media: 'db/Dumbbell_Shoulder_Press', 
     pasos: ['Sentate en el piso o en la silla con la espalda y la cabeza apoyadas en la pared.', 'Agarrá un disco en cada mano a la altura de los hombros, codos apuntando abajo.', 'Empujá los discos hacia arriba sin despegar la espalda de la pared.', 'Bajá lento hasta la altura de los hombros, manteniendo el cuello relajado.'], 
     tip: 'La espalda y la cabeza se apoyan en la pared: subí solo hasta donde no encojas los hombros.' },
   'Separaciones con banda (face pull)': { grupo: 'Espalda alta', media: 'db/Band_Pull_Apart', 
@@ -533,13 +536,13 @@ const DEFAULT_EJERCICIOS = {
   'Zancada estática corta con apoyo en silla': { grupo: 'Piernas', media: 'split_squat.gif', 
     pasos: ['Parate al lado de la silla y apoyá una mano en el respaldo.', 'Dá un paso corto hacia atrás con una pierna y quedate en esa posición.', 'Bajá un poco flexionando ambas rodillas, sin que la de adelante pase la punta del pie.', 'Subí empujando con la pierna de adelante y completá las repeticiones antes de cambiar.'], 
     tip: 'Paso corto y rango parcial: la rodilla de adelante no pasa la punta del pie ni cae hacia adentro.' },
-  'Paseo lateral con banda': { grupo: 'Glúteo medio', media: '', 
+  'Paseo lateral con banda': { grupo: 'Glúteo medio', media: 'rep/banded-lateral-walk', 
     pasos: ['Banda alrededor de las piernas, justo arriba de las rodillas (o en los tobillos si querés más intensidad).', 'Rodillas apenas flexionadas, cadera un poco atrás, pies al ancho de cadera con la banda tensa.', 'Da pasos laterales cortos manteniendo la tensión: el pie que sigue no se junta del todo con el otro.', 'Hacé las repeticiones hacia un lado y volvé hacia el otro. Las rodillas siempre apuntan hacia adelante, sin caer hacia adentro.'], 
     tip: 'Glúteo medio: el músculo que estabiliza la rodilla. Es de los que más protege si hay molestias.' },
-  'Peso muerto rumano a una pierna con apoyo': { grupo: 'Cadena posterior', media: '', 
+  'Peso muerto rumano a una pierna con apoyo': { grupo: 'Cadena posterior', media: 'db/Kettlebell_One-Legged_Deadlift', 
     pasos: ['De pie con una mancuerna en la mano contraria a la pierna de apoyo; la otra mano apoyada en la silla o la pared.', 'Rodilla de apoyo apenas flexionada. Llevá la cadera hacia atrás inclinando el torso, mientras la pierna libre se estira hacia atrás en línea con el cuerpo.', 'La mancuerna baja pegada a la pierna hasta sentir el estiramiento atrás del muslo; espalda recta y cadera sin abrirse.', 'Volvé apretando el glúteo de la pierna de apoyo. Terminá las reps y cambiá de lado.'], 
     tip: 'Con el apoyo de la mano no hace falta equilibrar: concentrate en la bisagra de cadera. Es el trabajo unilateral que equilibra ambas piernas.' },
-  'Flexiones inclinadas en silla o mesa': { grupo: 'Pecho', media: '', 
+  'Flexiones inclinadas en silla o mesa': { grupo: 'Pecho', media: 'db/Incline_Push-Up', 
     pasos: ['Manos apoyadas en el borde de una mesa o silla firme (contra la pared), un poco más abiertas que los hombros, cuerpo en línea recta de cabeza a talones.', 'Bajá el pecho hacia el apoyo flexionando los codos a unos 45° del cuerpo, con el abdomen firme.', 'Empujá hasta estirar los brazos sin bloquear de golpe.', 'Cuanto más bajo el apoyo, más difícil: empezá en la mesa y con las semanas pasá a la silla.'], 
     tip: 'Es la progresión de las flexiones en la pared, que ya quedaron cortas. El objetivo a mediano plazo son flexiones en el piso con rodillas.' },
   'Remo con banda sentada': { grupo: 'Espalda', media: '', 
@@ -551,10 +554,10 @@ const DEFAULT_EJERCICIOS = {
   'Puente de glúteos con marcha': { grupo: 'Glúteos', media: 'glute_bridge_march.gif', 
     pasos: ['Acostate boca arriba con las rodillas flexionadas y los pies apoyados al ancho de cadera.', 'Subí la cadera apretando los glúteos y mantenela arriba.', 'Despegá un pie del piso llevando la rodilla hacia el pecho, sin que caiga la cadera.', 'Apoyá y alterná con la otra pierna, con el cuello relajado en la colchoneta.'], 
     tip: 'Mantené la cadera arriba y pareja: si se te cae de un lado, bajá el rango o apoyá el pie antes.' },
-  'Extensión de tríceps sobre la cabeza con mancuerna': { grupo: 'Tríceps', media: '', 
+  'Extensión de tríceps sobre la cabeza con mancuerna': { grupo: 'Tríceps', media: 'db/Seated_Triceps_Press', 
     pasos: ['Sentada o de pie, tomá una mancuerna con las dos manos por debajo del disco superior y llevala por encima de la cabeza.', 'Codos apuntando al techo y cerca de las orejas; bajá la mancuerna detrás de la cabeza flexionando solo los codos.', 'Estirá los brazos apretando el tríceps arriba, sin mover los codos hacia afuera.'], 
     tip: 'Abdomen firme para no arquear la espalda baja.' },
-  'Gemelos de pie con apoyo': { grupo: 'Pantorrillas', media: '', 
+  'Gemelos de pie con apoyo': { grupo: 'Pantorrillas', media: 'rep/bodyweight-calf-raise', 
     pasos: ['De pie, manos apoyadas en la pared o la silla, pies al ancho de cadera.', 'Subí sobre las puntas de los pies lo más alto que puedas y hacé una pausa de 1 segundo arriba.', 'Bajá lento hasta apoyar los talones. Para más intensidad, hacelo de a una pierna o con una mancuerna en la mano.'] },
   'Gato-camello suave': { grupo: 'Movilidad', media: 'cat_cow.gif', 
     pasos: ['Ponete en cuatro apoyos con las manos bajo los hombros.', 'Al exhalar, redondeá la espalda mirando hacia el ombligo, sin tirar del cuello.', 'Al inhalar, dejá caer suave la panza y llevá la mirada apenas al frente, sin extender el cuello al máximo.'] },
@@ -563,7 +566,7 @@ const DEFAULT_EJERCICIOS = {
     tip: 'Movilidad de la columna dorsal: lo que suele estar rígido por estar sentada. Ayuda a hombros y cuello.' },
   'Dead bug': { grupo: 'Core', media: 'dead_bug.gif', 
     pasos: ['Acostate boca arriba con brazos al techo y rodillas a 90 grados.', 'Aplaná firme la espalda baja contra el piso.', 'Extendé un brazo atrás y la pierna contraria al frente a la vez.', 'Volvé al centro lento y cambiá de lado sin despegar la lumbar.'] },
-  'Sentadilla isométrica en pared': { grupo: 'Rodillas', media: '', 
+  'Sentadilla isométrica en pared': { grupo: 'Rodillas', media: 'rep/wall-sit-main.webp', 
     pasos: ['Espalda apoyada en la pared, pies adelante al ancho de cadera.', 'Deslizate hacia abajo hasta un ángulo cómodo de rodilla (no hace falta llegar a 90°; con 60° alcanza si molesta).', 'Rodillas alineadas con los pies, peso en los talones, manos fuera de los muslos.', 'Sostené el tiempo indicado respirando normal y subí deslizando.'], 
     tip: 'Fortalece el cuádriceps sin mover la rodilla: ideal cuando hay molestias. Buscá un ángulo sin dolor y sostené ahí.' },
   'Movilidad 90/90 de cadera': { grupo: 'Movilidad', media: '', 
@@ -571,7 +574,7 @@ const DEFAULT_EJERCICIOS = {
     tip: 'Trabaja la rotación de cadera hacia adentro y hacia afuera a la vez. Sin forzar las rodillas: si molestan, abrí un poco los ángulos.' },
   'Estiramiento de glúteo acostada (figura 4)': { grupo: 'Estiramiento', media: '', 
     pasos: ['Acostate boca arriba y cruzá un tobillo sobre la rodilla contraria.', 'Agarrá el muslo de la pierna de apoyo y llevalo suave hacia el pecho.', 'Mantené la cabeza y los hombros apoyados, sin levantar el cuello.'] },
-  'Estiramiento de isquiotibiales con talón en la silla': { grupo: 'Estiramiento', media: '', 
+  'Estiramiento de isquiotibiales con talón en la silla': { grupo: 'Estiramiento', media: 'rep/bench-hamstring-stretch-main.webp', 
     pasos: ['Apoyá un talón sobre el asiento de la silla con la pierna casi estirada.', 'Con la espalda recta, inclinate apenas hacia adelante desde la cadera.', 'Mantené la posición respirando profundo, sin forzar la rodilla.'] },
   'Deslizamientos en la pared (wall slides)': { grupo: 'Movilidad', media: '', 
     pasos: ['De pie con la espalda, la nuca y los brazos apoyados en la pared, codos a 90° como una "W".', 'Deslizá los brazos hacia arriba manteniendo antebrazos y muñecas en contacto con la pared, hasta donde llegues sin despegar la espalda baja.', 'Bajá lento a la posición inicial juntando los omóplatos.'], 
@@ -581,17 +584,17 @@ const DEFAULT_EJERCICIOS = {
     tip: 'Con las semanas, estirá un poco las piernas para sumar dificultad, siempre con la lumbar pegada.' },
   'Puente de glúteos sostenido': { grupo: 'Glúteos', media: 'glute_bridge.gif', 
     pasos: ['Acostada boca arriba, rodillas flexionadas, pies al ancho de cadera.', 'Subí la cadera apretando los glúteos hasta la línea rodillas-hombros y quedate ahí.', 'Sostené el tiempo indicado sin arquear la espalda baja; el trabajo lo hacen los glúteos, no la lumbar.'] },
-  'Extensión terminal de rodilla con banda': { grupo: 'Rodillas', media: '', 
+  'Extensión terminal de rodilla con banda': { grupo: 'Rodillas', media: 'rep/banded-terminal-knee-extension', 
     pasos: ['Banda enganchada a algo firme a la altura de la rodilla; pasala por detrás de la rodilla de la pierna a trabajar, de frente al anclaje.', 'Con la banda tensa y la rodilla apenas flexionada, estirá la pierna del todo apretando el cuádriceps 2 segundos.', 'Volvé a flexionar apenas, controlando la banda, y repetí. Cambiá de pierna.'], 
     tip: 'Fortalece el cuádriceps en los últimos grados de extensión, donde suele fallar la estabilidad de la rodilla. Es un ejercicio de kinesiología clásico.' },
   'Estiramiento de pecho en la pared': { grupo: 'Estiramiento', media: 'stretch_pec.png', 
     pasos: ['Apoyá el antebrazo en la pared con el codo a la altura del hombro.', 'Girá el cuerpo despacio hacia el lado contrario hasta sentir el estiramiento en el pecho.', 'Respirá profundo y mantené los hombros bajos, lejos de las orejas.'] },
   'Estiramiento de dorsales con manos en la silla': { grupo: 'Estiramiento', media: '', 
     pasos: ['Apoyá las dos manos en el asiento de la silla y caminá los pies hacia atrás.', 'Bajá el pecho entre los brazos con la espalda larga, cadera hacia atrás.', 'Dejá la cabeza alineada entre los brazos, respirando profundo.'] },
-  'Estiramiento suave de cuello': { grupo: 'Estiramiento', media: '', 
+  'Estiramiento suave de cuello': { grupo: 'Estiramiento', media: 'db/Side_Neck_Stretch', 
     pasos: ['Sentada erguida, inclinó la cabeza llevando la oreja hacia el hombro; la mano del mismo lado puede sumar un peso muy suave.', 'El hombro contrario baja, lejos de la oreja. Sostené respirando.', 'Cambiá de lado. Después llevá el mentón hacia el pecho unos segundos.'], 
     tip: 'Nunca con tirones ni rebotes: es el cuello.' },
-  'Estiramiento de cuádriceps de pie con apoyo': { grupo: 'Estiramiento', media: '', 
+  'Estiramiento de cuádriceps de pie con apoyo': { grupo: 'Estiramiento', media: 'rep/standing-quad-stretch-main.webp', 
     pasos: ['Apoyá una mano en la pared para mantener el equilibrio.', 'Llevá un talón hacia el glúteo agarrando el empeine con la mano libre.', 'Mantené las rodillas juntas y la cadera apenas adelante, sin arquear la espalda.'] },
 
   'Puente de glúteos con mancuerna': { grupo: 'Glúteos', media: 'glute_bridge.gif',
@@ -603,27 +606,27 @@ const DEFAULT_EJERCICIOS = {
   'Elevaciones de cadera de lado con rodillas apoyadas': { grupo: 'Core', media: '',
     pasos: ['Acostada de lado con el antebrazo apoyado, codo debajo del hombro, rodillas flexionadas una sobre otra.', 'Subí la cadera hasta formar una línea recta de rodillas a cabeza, y bajala controlada hasta casi tocar el piso.', 'El hombro de apoyo activo, lejos de la oreja; el movimiento sale de la cintura, no del brazo.', 'Terminá las repeticiones y cambiá de lado.'],
     tip: 'Es la plancha lateral en movimiento: trabaja los oblicuos y el glúteo medio sin sostener la posición.' },
-  'Leñador con banda': { grupo: 'Core', media: '',
+  'Leñador con banda': { grupo: 'Core', media: 'db/Standing_Cable_Wood_Chop',
     pasos: ['Banda enganchada arriba (marco de puerta o barra alta). Arrodillate de costado al anclaje, o de pie con las rodillas apenas flexionadas.', 'Tomá la banda con las dos manos, brazos estirados, y llevala en diagonal hacia la cadera contraria, girando el tronco con control.', 'Las caderas quedan firmes mirando al frente: gira la parte alta del cuerpo, no la cintura.', 'Volvé lento resistiendo la banda. Terminá las reps y cambiá de lado.'],
     tip: 'Core en rotación, el patrón que le faltaba a la rutina. Sin impulso: si tenés que tirar con los brazos, aflojá la banda.' },
 
   // --- Casa: handstand y movilidad ---
-  'Movilidad de muñecas en el piso':       { grupo: 'Muñecas', media: '',
+  'Movilidad de muñecas en el piso':       { grupo: 'Muñecas', media: 'rep/kneeling-wrist-stretch-main.webp',
     pasos: ['En cuadrupedia, manos apoyadas con los dedos hacia adelante: balanceá el peso adelante y atrás 10 veces, sin despegar las palmas.', 'Girá las manos con los dedos hacia las rodillas y repetí el balanceo, suave.', 'Apoyá el dorso de las manos (palmas hacia arriba) y balanceá 10 veces más, con poco peso.', 'Terminá con 10 flexiones de dedos: levantá la palma dejando las yemas apoyadas y volvé.'],
     tip: 'Las muñecas son lo que más sufre al principio del handstand. Si molestan, hacé este bloque más largo y menos pared.' },
   'Apertura de hombros con banda':         { grupo: 'Hombros', media: 'db/Band_Pull_Apart',
     pasos: ['Banda tomada al frente con las manos más abiertas que los hombros, brazos estirados.', 'Separá las manos llevando la banda al pecho y juntando las escápulas; volvé controlado.', 'Después, con el mismo agarre, pasá la banda por encima de la cabeza hasta la espalda baja y volvé (pasadas). Si no llegás sin doblar los codos, tomala más ancha.'],
     tip: 'Las pasadas son las que abren el hombro para la línea recta del handstand. Nunca con dolor.' },
-  'Hollow body hold':                      { grupo: 'Core', media: '',
+  'Hollow body hold':                      { grupo: 'Core', media: 'rep/hollow-body-hold-main.webp',
     pasos: ['Acostado boca arriba, pegá la zona lumbar al piso apretando el abdomen.', 'Levantá hombros y piernas unos centímetros, brazos estirados junto a las orejas.', 'El cuerpo queda como una banana suave: lumbar siempre apoyada. Si se despega, flexioná las rodillas o subí más las piernas.', 'Sostené respirando normal.'],
     tip: 'Es la forma exacta del handstand pero en el piso: costillas cerradas, glúteos apretados, piernas juntas.' },
-  'Pike con pies elevados':                { grupo: 'Hombros', media: '',
+  'Pike con pies elevados':                { grupo: 'Hombros', media: 'rep/pike-push-ups-start.webp',
     pasos: ['Pies apoyados en una silla o la cama, manos en el piso al ancho de hombros, dedos abiertos.', 'Caminá las manos hacia atrás hasta que la cadera quede lo más arriba posible de los hombros, en forma de V invertida.', 'Empujá el piso alejando los hombros de las orejas y mirá entre las manos, sin arquear la espalda.', 'Sostené el tiempo indicado y bajá con control.'],
     tip: 'Cuanto más cerca de la silla las manos, más vertical y más difícil. Empezá lejos y acercate con las semanas.' },
-  'Sapo (frog stand)':                     { grupo: 'Equilibrio', media: '',
+  'Sapo (frog stand)':                     { grupo: 'Equilibrio', media: 'rep/crow-pose-main.webp',
     pasos: ['En cuclillas, manos en el piso al ancho de hombros con los dedos bien abiertos.', 'Apoyá la cara interna de las rodillas sobre los codos o los tríceps.', 'Inclinate hacia adelante mirando el piso delante de las manos hasta que los pies se despeguen solos.', 'Equilibrá con la punta de los dedos: presioná cuando te vas hacia adelante. Si te caés, bajá los pies.'],
     tip: 'Poné un almohadón adelante las primeras veces. Cuando aguantes 20 s cómodo, pasamos a la caminata a la pared.' },
-  'Isquios acostado con banda':            { grupo: 'Movilidad', media: 'db/Leg-Up_Hamstring_Stretch',
+  'Isquios acostado con banda':            { grupo: 'Movilidad', media: 'rep/banded-hamstring-stretch-main.webp',
     pasos: ['Acostado boca arriba, pasá la banda por la planta de un pie y estirá esa pierna hacia el techo; la otra queda extendida en el piso.', 'Tirá suave de la banda hasta sentir el estiramiento atrás del muslo, rodilla lo más recta posible.', 'Contraé 5 segundos empujando el pie contra la banda (sin que se mueva), relajá y ganá un poco de rango. Repetí 3 veces.', 'Cambiá de pierna.'] },
   'Estocada baja (flexor de cadera)':      { grupo: 'Movilidad', media: 'db/Kneeling_Hip_Flexor',
     pasos: ['Rodilla de atrás apoyada (usá algo blando), pie de adelante bien adelante, torso erguido.', 'Apretá el glúteo de la pierna de atrás y llevá la cadera hacia adelante, sin arquear la lumbar.', 'Para sumar, levantá el brazo del lado de la rodilla apoyada e inclinate apenas al lado contrario.', 'Contraé 5 s empujando la rodilla contra el piso, relajá, profundizá. 3 veces por lado.'] },
@@ -632,7 +635,7 @@ const DEFAULT_EJERCICIOS = {
     tip: 'Es la base para la apertura lateral. Progresá abriendo las rodillas, no forzando la cadera hacia abajo.' },
   'Sentadilla profunda sostenida':         { grupo: 'Movilidad', media: '',
     pasos: ['Pies al ancho de hombros o un poco más, puntas apenas hacia afuera.', 'Bajá hasta el fondo, talones en el piso; si se levantan, poné un libro debajo o agarrate de algo al frente.', 'Con los codos empujá suavemente las rodillas hacia afuera y mantené el pecho arriba.', 'Sostené respirando; movete un poco de lado a lado.'] },
-  'Colgarse de la barra':                  { grupo: 'Hombros', media: '',
+  'Colgarse de la barra':                  { grupo: 'Hombros', media: 'rep/dead-hang-main.webp',
     pasos: ['Agarre al ancho de hombros, cuerpo colgando relajado, pies sin tocar el piso.', 'Dejá que los hombros suban hacia las orejas: es una descompresión, no un ejercicio de fuerza.', 'Respirá lento y sentí cómo se abre la espalda y los hombros.'],
     tip: 'Si el agarre no aguanta, apoyá las puntas de los pies en una silla y descargá parte del peso.' },
 };
@@ -977,15 +980,22 @@ const nb = s => esc(s).replace(/ × /g, ' × ').replace(/(\d) (seg|min|reps?)\
 // fotos inicio/fin ("db/Nombre", sin extensión) que la app alterna con un
 // fundido. Los pares vienen de free-exercise-db (dominio público) y se guardan
 // como assets/db/Nombre_0.jpg y _1.jpg, con miniatura en thumbs/db_Nombre.jpg.
-const isPair = f => /^db\//.test(f) && !/\.[a-z0-9]+$/i.test(f);
+// Ilustraciones de RepDB (assets/rep/, atribución en Ajustes): 'rep/<id>' sin
+// extensión = par <id>-start.webp / <id>-peak.webp; 'rep/<archivo>.webp' = una sola.
+const noExt = f => !/\.[a-z0-9]+$/i.test(f);
+const isPair = f => /^db\//.test(f) && noExt(f);
+const isRepPair = f => /^rep\//.test(f) && noExt(f);
 const mediaSrc = f => /^https?:\/\//.test(f) ? f : MEDIA_PATH + f;
 const thumbSrc = f => /^https?:\/\//.test(f) ? f
   : isPair(f) ? MEDIA_PATH + 'thumbs/db_' + f.slice(3) + '.jpg'
+  : isRepPair(f) ? MEDIA_PATH + f + '-peak.webp'
+  : /^rep\//.test(f) ? MEDIA_PATH + f
   : MEDIA_PATH + 'thumbs/' + f.replace(/\.[a-z0-9]+$/i, '.jpg');
 function mediaHTML(f, alt) {
-  if (isPair(f)) {
+  if (isPair(f) || isRepPair(f)) {
     const base = MEDIA_PATH + f;
-    return `<div class="ex-media pair"><img src="${esc(base)}_0.jpg" alt="${esc(alt)} — inicio" loading="lazy"><img class="f2" src="${esc(base)}_1.jpg" alt="${esc(alt)} — final" loading="lazy"></div>`;
+    const [a, b] = isPair(f) ? ['_0.jpg', '_1.jpg'] : ['-start.webp', '-peak.webp'];
+    return `<div class="ex-media pair"><img src="${esc(base + a)}" alt="${esc(alt)} — inicio" loading="lazy"><img class="f2" src="${esc(base + b)}" alt="${esc(alt)} — final" loading="lazy"></div>`;
   }
   return `<div class="ex-media"><img src="${esc(mediaSrc(f))}" alt="${esc(alt)}" loading="lazy"></div>`;
 }

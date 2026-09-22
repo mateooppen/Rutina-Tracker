@@ -71,3 +71,5 @@ Al modificar `index.html` u otros archivos del shell, subí la versión de `CACH
 Los GIFs de técnica vienen del repo [rutina](https://github.com/mateooppen/rutina).
 
 Las fotos de `assets/db/` (pares inicio/final) vienen de [free-exercise-db](https://github.com/yuhonas/free-exercise-db), dominio público (Unlicense). En la planilla se referencian como `db/Nombre` (sin extensión) y la app las alterna con un fundido.
+
+Las ilustraciones de `assets/rep/` son de RepDB: "Exercise data by RepDB (repdb.co)", uso libre dentro de aplicaciones con atribución (ver su [LICENSE-DATA](https://github.com/RepDB/exercise-dataset/blob/main/LICENSE-DATA.md)). En la planilla se referencian como `rep/<id>` (par inicio/fin) o `rep/<archivo>.webp` (imagen única).
