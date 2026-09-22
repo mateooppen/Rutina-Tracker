@@ -139,6 +139,48 @@
   .ex-nodata { font-size: 13px; color: var(--text3); padding: 8px 0; }
   .ex-sep { border: none; border-top: 1px solid var(--border); margin: 0 14px; }
 
+  /* Bloque en curso / terminado */
+  .blk.cur .blk-n { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .blk.done .blk-n { color: var(--accent-text); }
+  .blk.done .blk-card { opacity: 0.7; }
+
+  /* Registro de series */
+  .ex-body { display: none; padding: 0 14px 14px; }
+  .ex-body.open { display: block; }
+  .ex-info { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .ex-info .rx-chip.goal { background: var(--accent-soft); color: var(--accent-text); }
+  .set-row { display: grid; grid-template-columns: 18px 1fr 1fr 40px; gap: 8px; align-items: center; padding: 5px 0; }
+  .set-row .set-n { font-size: 12px; color: var(--text3); font-weight: 650; text-align: center; }
+  .stp { display: flex; align-items: center; background: var(--inset); border-radius: 10px; height: 40px; }
+  .stp button { width: 32px; height: 40px; border: none; background: none; font-size: 18px; color: var(--text2); cursor: pointer; flex-shrink: 0; }
+  .stp .val { flex: 1; min-width: 0; display: flex; align-items: baseline; justify-content: center; gap: 3px; }
+  .stp input { width: 2.8em; min-width: 0; text-align: right; border: none; background: none; color: var(--text); font: inherit; font-size: 14.5px; font-weight: 700; padding: 0; -moz-appearance: textfield; }
+  .stp input::-webkit-outer-spin-button, .stp input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .stp input:focus { outline: none; }
+  .stp .u { font-size: 11px; color: var(--text3); }
+  .set-ok { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border2); background: var(--surface); color: var(--text3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .set-row.done .set-ok { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .set-row.done .stp { opacity: 0.55; }
+  .tech-toggle { display: flex; align-items: center; gap: 6px; width: 100%; margin-top: 10px; padding: 9px 0 2px; background: none; border: none; border-top: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; }
+  .tech-toggle .arrow { margin-left: auto; color: var(--text3); transition: transform 0.2s; }
+  .tech-toggle[aria-expanded="true"] .arrow { transform: rotate(180deg); }
+  .ex-body .ex-drawer { padding: 10px 0 0; }
+
+  /* Dock inferior: timer + toast */
+  .dock { position: fixed; left: 0; right: 0; bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 12px); z-index: 30; display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0 16px; pointer-events: none; }
+  .dock > * { pointer-events: auto; max-width: 488px; width: 100%; }
+  body.has-timer main { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 120px); }
+  .timer { background: var(--surface); border: 1px solid var(--accent); border-radius: var(--radius-lg); padding: 10px 12px 10px 14px; box-shadow: 0 8px 28px rgba(0,0,0,0.25); animation: fadein 0.18s ease; }
+  .timer .row { display: flex; align-items: center; gap: 10px; }
+  .timer .row > div { flex: 1; min-width: 0; }
+  .timer .lbl { font-size: 11.5px; font-weight: 650; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .timer .time { font-size: 22px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.1; }
+  .timer .time.over { color: var(--accent-text); }
+  .timer .acts { flex: none !important; display: flex; gap: 6px; }
+  .timer .acts button { height: 36px; padding: 0 10px; border-radius: 10px; border: 1px solid var(--border2); background: var(--inset); font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .timer .bar { height: 4px; background: var(--inset); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .timer .bar i { display: block; height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.25s linear; }
+
   .acc { border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 14px; background: var(--surface); box-shadow: var(--shadow); overflow: hidden; }
   .acc-head { width: 100%; display: flex; align-items: center; gap: 10px; padding: 14px 16px; min-height: 54px; background: none; border: none; font-size: 14.5px; font-weight: 650; cursor: pointer; text-align: left; }
   .acc-head .lead { color: var(--text3); }
@@ -196,8 +238,7 @@
   .about { font-size: 12.5px; color: var(--text3); line-height: 1.7; }
 
   /* ---------- Toast ---------- */
-  .toast { position: fixed; left: 0; right: 0; bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom) + 12px); z-index: 30; display: flex; justify-content: center; padding: 0 16px; pointer-events: none; }
-  .toast-in { pointer-events: auto; max-width: 488px; width: 100%; display: flex; align-items: center; gap: 10px; background: var(--text); color: var(--page); border-radius: var(--radius-lg); padding: 8px 8px 8px 16px; font-size: 13.5px; font-weight: 600; box-shadow: 0 8px 28px rgba(0,0,0,0.28); animation: fadein 0.18s ease; }
+  .toast-in { display: flex; align-items: center; gap: 10px; background: var(--text); color: var(--page); border-radius: var(--radius-lg); padding: 8px 8px 8px 16px; font-size: 13.5px; font-weight: 600; box-shadow: 0 8px 28px rgba(0,0,0,0.28); animation: fadein 0.18s ease; }
   .toast-in button { margin-left: auto; background: none; border: none; color: #a3e635; font-size: 13.5px; font-weight: 700; cursor: pointer; padding: 10px 12px; min-height: 40px; }
   @media (prefers-color-scheme: dark) { .toast-in button { color: #4d7c0f; } }
 
@@ -290,6 +331,16 @@
       <p class="cfg-help">La planilla debe estar compartida como <b>"Cualquier persona con el enlace puede ver"</b> y tener las pestañas <b>Ejercicios</b> y <b>Rutinas</b> (formato en el README del repositorio). Los datos quedan guardados en este teléfono: en el gimnasio funciona sin conexión.</p>
     </div>
 
+    <div class="h-section">Respaldo</div>
+    <div class="card">
+      <div class="cfg-btns" style="margin-top:0">
+        <button class="btn" id="btn-export">Exportar respaldo</button>
+        <button class="btn" id="btn-import">Importar respaldo</button>
+        <input type="file" id="import-file" accept="application/json,.json" style="display:none">
+      </div>
+      <p class="cfg-help">El progreso y los pesos registrados viven en este teléfono. Exportá un archivo cada tanto para no perderlos si cambiás de equipo.</p>
+    </div>
+
     <div class="h-section">Referencia</div>
     <div class="acc">
       <button class="acc-head" aria-expanded="false">Glosario de términos <span class="count"></span><svg class="ic arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
@@ -337,7 +388,7 @@
   </section>
 </main>
 
-<div class="toast" id="toast" aria-live="polite"></div>
+<div class="dock"><div id="timer" aria-live="polite"></div><div id="toast" aria-live="polite"></div></div>
 
 <nav class="tabbar">
   <div class="tabbar-in">
@@ -515,6 +566,26 @@ function migrateLegacy(s) {
 
 let S = loadState();
 
+/* Sesiones: pesos y reps registrados por serie.
+ * S.sesiones[usuario][semana:dia] = { fecha, sets: { [ejercicio]: [{kg, reps, ok}] } } */
+function sesion(usuario, semana, dia) {
+  S.sesiones = S.sesiones || {};
+  const u = S.sesiones[usuario] = S.sesiones[usuario] || {};
+  const k = semana + ':' + dia;
+  if (!u[k]) u[k] = { fecha: new Date().toISOString(), sets: {} };
+  return u[k];
+}
+// Series confirmadas de la última sesión (distinta de la actual) con ese ejercicio.
+function ultimaVez(usuario, ejercicio, actualKey) {
+  const u = (S.sesiones || {})[usuario] || {};
+  const keys = Object.keys(u).filter(k => k !== actualKey).sort((a, b) => (u[b].fecha || '').localeCompare(u[a].fecha || ''));
+  for (const k of keys) {
+    const sets = (u[k].sets[ejercicio] || []).filter(s => s.ok);
+    if (sets.length) return { sets, fecha: u[k].fecha };
+  }
+  return null;
+}
+
 function prog(usuario) {
   if (!S.progreso[usuario]) S.progreso[usuario] = { semana: 1, hechos: {}, completadas: {} };
   return S.progreso[usuario];
@@ -654,6 +725,7 @@ const ICONS = {
   flag: '<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/>',
   gauge: '<path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/>',
   trendingUp: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  history: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/>',
   info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>',
   dumbbell: '<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>',
   trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
@@ -687,39 +759,102 @@ function mediaHTML(f, alt) {
 
 const PLACEHOLDER = icon('dumbbell', 22);
 
-/* Fila de ejercicio. opts: { letter: 'A'|'B'… (superserie), hideRest: bool } */
-function exerciseHTML(ejercicios, r, opts = {}) {
-  const e = getEjercicio(ejercicios, r.ejercicio) || {};
-  const media = e.media || '';
-  const pasos = e.pasos || [];
-  const hasDrawer = !!(media || pasos.length || e.tip || e.alternativa);
-  // Las notas tipo "Superserie con 3b" son redundantes: el bloque ya lo muestra.
-  const nota = /^(superserie|si sobra tiempo)/i.test(r.nota || '') ? '' : (r.nota || '');
+// "3 × 4–6" -> { sets: 3, min: 4, max: 6 }; "2 series al fallo" -> { sets: 2 }
+function parseSeries(s) {
+  const m = String(s).match(/^\s*(\d+)\s*(?:×|x)\s*(\d+)(?:\s*[–-]\s*(\d+))?/i);
+  if (m) return { sets: +m[1], min: +m[2], max: +(m[3] || m[2]) };
+  const n = String(s).match(/^\s*(\d+)\s*series/i);
+  return n ? { sets: +n[1], min: 0, max: 0 } : { sets: 1, min: 0, max: 0 };
+}
+// "2–3 min" -> 150 s; "90 seg tras el par" -> 90; "" -> 0
+function parseRest(s) {
+  const m = String(s).match(/(\d+)(?:\s*[–-]\s*(\d+))?\s*(min|seg|s\b)/i);
+  if (!m) return 0;
+  const v = m[2] ? (+m[1] + +m[2]) / 2 : +m[1];
+  return Math.round(/min/i.test(m[3]) ? v * 60 : v);
+}
+const kgFmt = k => (Math.round(k * 100) / 100).toString().replace('.', ',');
+const incFromNota = nota => { const m = String(nota).match(/(\d+(?:[.,]\d+)?)\s*kg/i); return m ? parseFloat(m[1].replace(',', '.')) : 0; };
 
-  const thumb = PLACEHOLDER + (media ? `<img src="${esc(thumbSrc(media))}" alt="" loading="lazy" onerror="this.remove()">` : '');
-  const chips = [
-    r.intensidad ? `<span class="rx-chip">${esc(r.intensidad)}</span>` : '',
-    (r.descanso && !opts.hideRest) ? `<span class="rx-chip">${icon('timer', 12)}${esc(r.descanso)}</span>` : '',
-  ].join('');
-  const drawer = hasDrawer ? `
+function technicaHTML(e, r) {
+  const media = e.media || '', pasos = e.pasos || [];
+  if (!(media || pasos.length || e.tip || e.alternativa)) return '';
+  return `
     <div class="ex-drawer">
       ${media ? mediaHTML(media, 'Técnica: ' + r.ejercicio) : ''}
       ${pasos.length ? `<ol class="ex-steps">${pasos.map(p => `<li>${esc(p)}</li>`).join('')}</ol>` : ''}
       ${e.tip ? `<div class="ex-tip"><b>Tip:</b> ${esc(e.tip)}</div>` : ''}
       ${e.alternativa ? `<div class="ex-tip"><b>Alternativa:</b> ${esc(e.alternativa)}</div>` : ''}
-    </div>` : '';
-  return `
-    <div class="ex">
-      <div class="ex-head" ${hasDrawer ? `role="button" tabindex="0" aria-expanded="false"` : ''}>
+    </div>`;
+}
+
+/* Fila de ejercicio.
+ * opts.letter: 'A'/'B' en superseries · opts.hideRest · opts.log: { ses, key }
+ * Con log, el toque abre el registro de series y la técnica queda en un panel
+ * secundario; sin log (calentamiento, estiramientos) abre la técnica directo. */
+function exerciseHTML(ejercicios, r, opts = {}) {
+  const e = getEjercicio(ejercicios, r.ejercicio) || {};
+  const media = e.media || '';
+  const tech = technicaHTML(e, r);
+  const nota = /^(superserie|si sobra tiempo)/i.test(r.nota || '') ? '' : (r.nota || '');
+  const thumb = PLACEHOLDER + (media ? `<img src="${esc(thumbSrc(media))}" alt="" loading="lazy" onerror="this.remove()">` : '');
+  const chips = [
+    r.intensidad ? `<span class="rx-chip">${esc(r.intensidad)}</span>` : '',
+    (r.descanso && !opts.hideRest) ? `<span class="rx-chip">${icon('timer', 12)}${esc(r.descanso)}</span>` : '',
+  ].join('');
+  const expandable = opts.log || !!tech;
+  const head = `
+      <div class="ex-head" ${expandable ? `role="button" tabindex="0" aria-expanded="false"` : ''}>
         <div class="ex-thumb">${thumb}${opts.letter ? `<span class="ex-letter">${esc(opts.letter)}</span>` : ''}</div>
         <div class="ex-main">
           <p class="ex-nm">${esc(r.ejercicio)}</p>
           <div class="rx"><span class="rx-main num">${nb(r.series)}</span>${chips}</div>
           ${nota ? `<p class="ex-note">${icon(r.tag === 'principal' ? 'trendingUp' : 'info', 13)}<span>${nb(nota)}</span></p>` : ''}
         </div>
-        ${hasDrawer ? icon('chevronDown', 18, 'ex-chev') : ''}
+        ${expandable ? icon('chevronDown', 18, 'ex-chev') : ''}
+      </div>`;
+  if (!opts.log) return `<div class="ex">${head}${tech}</div>`;
+
+  // --- registro de series ---
+  const { ses, key } = opts.log;
+  const spec = parseSeries(r.series);
+  const prev = ultimaVez(S.usuario, r.ejercicio, key);
+  const cur = ses.sets[r.ejercicio] = ses.sets[r.ejercicio] || [];
+  // Completa filas hasta la cantidad prescripta con valores de la última vez
+  for (let i = cur.length; i < spec.sets; i++) {
+    const p = prev && (prev.sets[i] || prev.sets[prev.sets.length - 1]);
+    const before = cur[i - 1];
+    cur.push({ kg: p ? p.kg : (before ? before.kg : 0), reps: p ? p.reps : (before ? before.reps : spec.max), ok: false });
+  }
+  const done = cur.filter(s => s.ok).length;
+  let goal = '';
+  if (prev && spec.max) {
+    const topped = prev.sets.length >= spec.sets && prev.sets.every(s => s.reps >= spec.max);
+    const inc = incFromNota(r.nota);
+    const lastKg = prev.sets[prev.sets.length - 1].kg;
+    goal = topped
+      ? (inc ? `Meta: subí a ${kgFmt(lastKg + inc)} kg` : 'Meta: subí el peso')
+      : `Meta: ${spec.sets} × ${spec.max} con ${kgFmt(lastKg)} kg`;
+  }
+  const info = prev
+    ? `<span class="rx-chip">${icon('history', 12)}Última vez: ${kgFmt(prev.sets[0].kg)} kg × ${prev.sets.map(s => s.reps).join(', ')}</span>${goal ? `<span class="rx-chip goal">${icon('trendingUp', 12)}${esc(goal)}</span>` : ''}`
+    : `<span class="rx-chip">${icon('history', 12)}Primera vez: anotá el peso que uses</span>`;
+  const ej = esc(r.ejercicio);
+  const rows = cur.map((s, i) => `
+      <div class="set-row ${s.ok ? 'done' : ''}" data-ej="${ej}" data-i="${i}">
+        <span class="set-n num">${i + 1}</span>
+        <div class="stp"><button data-adj="kg" data-v="-2.5" aria-label="Bajar peso">−</button><span class="val"><input type="number" inputmode="decimal" step="0.5" min="0" value="${s.kg}" data-f="kg" aria-label="Peso serie ${i + 1}"><span class="u">kg</span></span><button data-adj="kg" data-v="2.5" aria-label="Subir peso">+</button></div>
+        <div class="stp"><button data-adj="reps" data-v="-1" aria-label="Menos reps">−</button><span class="val"><input type="number" inputmode="numeric" step="1" min="0" value="${s.reps}" data-f="reps" aria-label="Reps serie ${i + 1}"><span class="u">reps</span></span><button data-adj="reps" data-v="1" aria-label="Más reps">+</button></div>
+        <button class="set-ok" data-ok aria-label="${s.ok ? 'Desmarcar' : 'Confirmar'} serie ${i + 1}">${icon('check', 18)}</button>
+      </div>`).join('');
+  return `
+    <div class="ex" data-done="${done}" data-total="${cur.length}">
+      ${head}
+      <div class="ex-body">
+        <div class="ex-info">${info}</div>
+        ${rows}
+        ${tech ? `<button class="tech-toggle" aria-expanded="false">${icon('info', 15)}Ver técnica${icon('chevronDown', 16, 'arrow')}</button>${tech}` : ''}
       </div>
-      ${drawer}
     </div>`;
 }
 
@@ -744,37 +879,56 @@ const TAG_TOP = {
   dropset: ['zap', 'Drop set en la última serie'],
 };
 
-function blockHTML(ejercicios, b, idx) {
+// Descanso que corresponde al bloque: el del último ejercicio que lo indique.
+function blockRest(b) {
+  const r = [...b.rows].reverse().find(x => x.descanso);
+  return r ? parseRest(r.descanso) : 0;
+}
+
+function blockHTML(ejercicios, b, idx, log) {
   const isSS = b.rows.length > 1;
   const first = b.rows[0];
   let top = '';
   if (isSS) {
-    const rondas = (String(first.series).match(/^\s*(\d+)\s*[×x]/) || [])[1];
+    const rondas = parseSeries(first.series).sets;
     const rest = ([...b.rows].reverse().find(r => r.descanso) || {}).descanso || '';
     const restTxt = rest.replace(/\s*tras el par/i, '').trim();
-    top = `<div class="blk-top">${icon('repeat', 14)}Superserie${rondas ? ` · ${esc(rondas)} rondas` : ''}${restTxt ? `<span class="sp">${icon('timer', 13)}${esc(restTxt)} al terminar</span>` : ''}</div>`;
+    top = `<div class="blk-top">${icon('repeat', 14)}Superserie${rondas ? ` · ${rondas} rondas` : ''}${restTxt ? `<span class="sp">${icon('timer', 13)}${esc(restTxt)} al terminar</span>` : ''}</div>`;
   } else if (TAG_TOP[first.tag]) {
     const [ic, label] = TAG_TOP[first.tag];
     top = `<div class="blk-top">${icon(ic, 14)}${label}</div>`;
   }
   const body = b.rows.map((r, i) =>
     (i > 0 ? `<div class="ss-link">sin descanso</div>` : '') +
-    exerciseHTML(ejercicios, r, isSS ? { letter: String.fromCharCode(65 + i), hideRest: true } : {})
+    exerciseHTML(ejercicios, r, { letter: isSS ? String.fromCharCode(65 + i) : '', hideRest: isSS, log })
   ).join('');
+  // Estado del bloque según series confirmadas
+  let state = '';
+  if (log) {
+    const tot = b.rows.reduce((a, r) => a + parseSeries(r.series).sets, 0);
+    const done = b.rows.reduce((a, r) => a + (log.ses.sets[r.ejercicio] || []).filter(s => s.ok).length, 0);
+    state = done >= tot ? 'done' : (done > 0 ? 'cur' : '');
+  }
   return `
-    <div class="blk ${first.tag === 'principal' ? 'main' : ''} ${isSS ? 'ss' : ''}">
-      <div class="blk-rail"><span class="blk-n num">${pad2(idx)}</span><i class="blk-line"></i></div>
+    <div class="blk ${first.tag === 'principal' ? 'main' : ''} ${isSS ? 'ss' : ''} ${state}" data-blk="${idx}" data-rest="${blockRest(b)}" data-last="${esc(b.rows[b.rows.length - 1].ejercicio)}">
+      <div class="blk-rail"><span class="blk-n num">${state === 'done' ? icon('check', 15) : pad2(idx)}</span><i class="blk-line"></i></div>
       <div class="blk-card">${top}${body}</div>
     </div>`;
 }
 
-function workoutHTML(ejercicios, rows) {
+function workoutHTML(ejercicios, rows, log) {
   const blocks = toBlocks(rows);
   let html = '', sec = null;
   blocks.forEach((b, i) => {
     if (b.seccion && b.seccion !== sec) { html += `<div class="sec-label">${esc(b.seccion)}</div>`; sec = b.seccion; }
-    html += blockHTML(ejercicios, b, i + 1);
+    html += blockHTML(ejercicios, b, i + 1, log);
   });
+  // Un solo bloque "en curso": el primero a medias o, si no hay, el primero sin terminar
+  if (log) {
+    let seen = false;
+    html = html.replace(/class="blk ([^"]*)\bcur\b/g, (m, pre) => seen ? 'class="blk ' + pre : (seen = true, m));
+    if (!seen) html = html.replace(/class="blk (?![^"]*\bdone\b)/, 'class="blk cur ');
+  }
   return html;
 }
 
@@ -809,10 +963,11 @@ function showView(v, dia) {
   currentDia = (v === 'rutina' && dia != null) ? dia : null;
   if (currentDia == null) diaTipoSel = null;
   if (currentDia != null && !history.state?.dia) history.pushState({ dia: currentDia }, '');
+  if (currentDia != null) wakeOn(); else wakeOff();
   render();
   window.scrollTo(0, 0);
 }
-window.addEventListener('popstate', () => { if (currentDia != null) { currentDia = null; diaTipoSel = null; render(); } });
+window.addEventListener('popstate', () => { if (currentDia != null) { currentDia = null; diaTipoSel = null; wakeOff(); render(); } });
 
 /* ============================== Render ============================== */
 
@@ -884,6 +1039,10 @@ function renderDia(c, d) {
   const isDone = !!(p.hechos[p.semana] || {})[d.n];
   const { titulo, contexto } = splitNombre(d.nombre);
   const nSS = toBlocks(filas).filter(b => b.rows.length > 1).length;
+  const key = p.semana + ':' + d.n;
+  const ses = sesion(S.usuario, p.semana, d.n);
+  const totSets = filas.reduce((a, r) => a + parseSeries(r.series).sets, 0);
+  const doneSets = filas.reduce((a, r) => a + (ses.sets[r.ejercicio] || []).filter(s => s.ok).length, 0);
 
   $('dia-hero').innerHTML = `
     <div class="dia-hero">
@@ -892,6 +1051,7 @@ function renderDia(c, d) {
       <div class="stats">
         <span class="stat">${icon('dumbbell', 14)}${filas.length} ejercicios</span>
         ${nSS ? `<span class="stat">${icon('repeat', 14)}${nSS} superserie${nSS === 1 ? '' : 's'}</span>` : ''}
+        ${doneSets ? `<span class="stat" style="color:var(--accent-text)">${icon('check', 14)}${doneSets} de ${totSets} series</span>` : ''}
         ${isDone ? `<span class="stat" style="color:var(--accent-text)">${icon('check', 14)}Completado</span>` : ''}
       </div>
     </div>`;
@@ -906,7 +1066,7 @@ function renderDia(c, d) {
     ? accHTML('sunrise', 'Entrada en calor', model.calentamiento.length + ' ejercicios', simpleListHTML(ejercicios, model.calentamiento))
     : '';
 
-  $('dia-main').innerHTML = workoutHTML(ejercicios, filas) || '<p class="ex-nodata">Sin ejercicios cargados para este día.</p>';
+  $('dia-main').innerHTML = workoutHTML(ejercicios, filas, { ses, key }) || '<p class="ex-nodata">Sin ejercicios cargados para este día.</p>';
 
   $('dia-cool').innerHTML = model.estiramiento.length
     ? accHTML('stretch', 'Estiramientos', model.estiramiento.length + ' ejercicios', simpleListHTML(ejercicios, model.estiramiento))
@@ -967,6 +1127,54 @@ function showToast(t) {
 }
 function hideToast() { toast = null; clearTimeout(toastTimer); $('toast').innerHTML = ''; }
 
+/* ---- Timer de descanso ---- */
+let T = null, tickIv = null, audioCtx = null;
+const fmtT = s => Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+function beep() {
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.18, 0.36].forEach(t => {
+      const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.frequency.value = 880; o.connect(g); g.connect(audioCtx.destination);
+      g.gain.setValueAtTime(0.0001, audioCtx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.4, audioCtx.currentTime + t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + t + 0.15);
+      o.start(audioCtx.currentTime + t); o.stop(audioCtx.currentTime + t + 0.16);
+    });
+  } catch (e) {}
+}
+function startTimer(secs, label) {
+  if (!secs) return;
+  T = { endsAt: Date.now() + secs * 1000, total: secs, label, fired: false };
+  $('timer').innerHTML = `
+    <div class="timer">
+      <div class="row">${icon('timer', 20)}<div><div class="lbl">Descanso · ${esc(label)}</div><div class="time num" id="t-time">${fmtT(secs)}</div></div>
+        <div class="acts"><button data-t="-15">−15 s</button><button data-t="15">+15 s</button><button data-t="skip">Saltar</button></div></div>
+      <div class="bar"><i id="t-bar" style="width:100%"></i></div>
+    </div>`;
+  document.body.classList.add('has-timer');
+  clearInterval(tickIv); tickIv = setInterval(tickTimer, 250); tickTimer();
+}
+function tickTimer() {
+  if (!T) return;
+  const left = Math.max(0, Math.ceil((T.endsAt - Date.now()) / 1000));
+  const el = $('t-time'), bar = $('t-bar');
+  if (el) { el.textContent = left ? fmtT(left) : '¡Vamos!'; el.classList.toggle('over', !left); }
+  if (bar) bar.style.width = Math.round(left / T.total * 100) + '%';
+  if (!left && !T.fired) {
+    T.fired = true; beep();
+    if (navigator.vibrate) navigator.vibrate([250, 120, 250]);
+    setTimeout(stopTimer, 4000);
+  }
+}
+function stopTimer() { T = null; clearInterval(tickIv); $('timer').innerHTML = ''; document.body.classList.remove('has-timer'); }
+
+/* ---- Pantalla encendida durante el entrenamiento ---- */
+let wakeLock = null;
+async function wakeOn() { try { if ('wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch (e) {} }
+function wakeOff() { if (wakeLock) { wakeLock.release().catch(() => {}); wakeLock = null; } }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && currentDia != null) wakeOn(); });
+
 // Marca/desmarca un día. Al marcar vuelve a la lista de días (no tiene sentido
 // quedarse en el entrenamiento terminado); un toque por error se revierte con
 // "Deshacer" en vez de pedir confirmación cada vez.
@@ -1024,6 +1232,35 @@ document.addEventListener('click', e => {
   if (user) { S.usuario = user.dataset.user; saveState(); render(); return; }
   const dt = e.target.closest('[data-dia-tipo]');
   if (dt) { diaTipoSel = dt.dataset.diaTipo; render(); return; }
+  // Timer
+  const tb = e.target.closest('[data-t]');
+  if (tb && T) {
+    if (tb.dataset.t === 'skip') stopTimer();
+    else { T.endsAt += +tb.dataset.t * 1000; T.total = Math.max(T.total, Math.ceil((T.endsAt - Date.now()) / 1000)); tickTimer(); }
+    return;
+  }
+  // Registro de series
+  const adj = e.target.closest('[data-adj]');
+  if (adj) {
+    const row = adj.closest('.set-row'), s = setOf(row);
+    const f = adj.dataset.adj, v = +adj.dataset.v;
+    s[f] = Math.max(0, Math.round((s[f] + v) * 100) / 100);
+    row.querySelector(`input[data-f="${f}"]`).value = s[f];
+    saveState(); return;
+  }
+  const ok = e.target.closest('[data-ok]');
+  if (ok) {
+    const row = ok.closest('.set-row'), s = setOf(row);
+    ['kg', 'reps'].forEach(f => { s[f] = Math.max(0, parseFloat(row.querySelector(`input[data-f="${f}"]`).value) || 0); });
+    s.ok = !s.ok;
+    saveState();
+    const blk = row.closest('.blk');
+    if (s.ok && blk && blk.dataset.last === row.dataset.ej) startTimer(+blk.dataset.rest, row.dataset.ej);
+    render(); return;
+  }
+  const tt = e.target.closest('.tech-toggle');
+  if (tt) { const d = tt.nextElementSibling; const open = d.classList.toggle('open'); tt.setAttribute('aria-expanded', open); return; }
+  if (e.target.closest('.ex-body')) return; // toques dentro del registro no cierran el panel
   const acc = e.target.closest('.acc-head');
   if (acc) {
     const body = acc.parentElement.querySelector('.acc-body');
@@ -1033,14 +1270,41 @@ document.addEventListener('click', e => {
   }
   const exHead = e.target.closest('.ex-head[role="button"]');
   if (exHead) {
-    const drawer = exHead.parentElement.querySelector('.ex-drawer');
-    const open = drawer.classList.toggle('open');
+    const panel = exHead.parentElement.querySelector('.ex-body') || exHead.parentElement.querySelector('.ex-drawer');
+    const open = panel.classList.toggle('open');
     exHead.setAttribute('aria-expanded', open);
     return;
   }
   const open = e.target.closest('[data-open-dia]');
   if (open) { flash = null; showView('rutina', Number(open.dataset.openDia)); }
 });
+// Serie (objeto de estado) correspondiente a una fila del registro
+function setOf(row) {
+  const c = ctx(); const d = c.model.dias.find(x => x.n === currentDia);
+  return sesion(S.usuario, c.p.semana, d.n).sets[row.dataset.ej][+row.dataset.i];
+}
+// Edición directa de los números
+document.addEventListener('change', e => {
+  const inp = e.target.closest('.set-row input[data-f]');
+  if (!inp) return;
+  const s = setOf(inp.closest('.set-row'));
+  s[inp.dataset.f] = Math.max(0, parseFloat(inp.value) || 0);
+  saveState();
+});
+
+// Al re-renderizar, conservar qué ejercicios estaban abiertos
+const _render = render;
+render = function () {
+  const open = [...document.querySelectorAll('.ex-head[aria-expanded="true"]')].map(h => h.querySelector('.ex-nm')?.textContent);
+  const techOpen = [...document.querySelectorAll('.tech-toggle[aria-expanded="true"]')].map(t => t.closest('.ex').querySelector('.ex-nm')?.textContent);
+  _render();
+  document.querySelectorAll('.ex').forEach(ex => {
+    const nm = ex.querySelector('.ex-nm')?.textContent;
+    if (open.includes(nm)) { ex.querySelector('.ex-head')?.setAttribute('aria-expanded', 'true'); (ex.querySelector('.ex-body') || ex.querySelector('.ex-drawer'))?.classList.add('open'); }
+    if (techOpen.includes(nm)) { const t = ex.querySelector('.tech-toggle'); if (t) { t.setAttribute('aria-expanded', 'true'); t.nextElementSibling.classList.add('open'); } }
+  });
+};
+
 document.addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.ex-head[role="button"], .day-card')) {
     e.preventDefault(); e.target.click();
@@ -1070,6 +1334,28 @@ $('btn-forget').addEventListener('click', () => {
 });
 
 history.replaceState(null, '');
+
+// Respaldo del progreso y las sesiones
+$('btn-export').addEventListener('click', () => {
+  const data = { app: 'rutina-tracker', version: 1, fecha: new Date().toISOString(), progreso: S.progreso, sesiones: S.sesiones || {} };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'rutina-respaldo-' + new Date().toISOString().slice(0, 10) + '.json';
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+$('btn-import').addEventListener('click', () => $('import-file').click());
+$('import-file').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    const data = JSON.parse(await f.text());
+    if (data.app !== 'rutina-tracker' || !data.progreso) throw new Error('El archivo no es un respaldo de Rutina Tracker.');
+    if (!confirm('¿Reemplazar el progreso y los pesos de este teléfono por los del respaldo?')) return;
+    S.progreso = data.progreso; S.sesiones = data.sesiones || {};
+    saveState(); render();
+  } catch (err) { alert('No se pudo importar: ' + err.message); }
+  e.target.value = '';
+});
 
 // Al abrir: si hay sheet conectada, refresca en segundo plano (si hay red).
 if (S.sheetUrl) syncSheet(S.sheetUrl).then(render).catch(() => {});
