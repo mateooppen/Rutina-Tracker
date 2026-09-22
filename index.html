@@ -129,6 +129,10 @@
   .ex-drawer.open { display: block; }
   .ex-media { border-radius: var(--radius); overflow: hidden; background: #fff; margin-bottom: 10px; }
   .ex-media img { width: 100%; display: block; }
+  .ex-media.pair { position: relative; }
+  .ex-media.pair .f2 { position: absolute; inset: 0; animation: pair 2.4s ease-in-out infinite; }
+  @keyframes pair { 0%, 35% { opacity: 0; } 50%, 85% { opacity: 1; } 100% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .ex-media.pair .f2 { animation: none; opacity: 0; } .ex-media.pair:active .f2 { opacity: 1; } }
   .ex-steps { padding-left: 20px; font-size: 13.5px; color: var(--text2); line-height: 1.7; }
   .ex-tip { font-size: 13px; color: var(--text2); background: var(--inset); border-radius: var(--radius); padding: 9px 12px; margin-top: 8px; line-height: 1.6; }
   .ex-tip b { color: var(--text); font-weight: 650; }
@@ -377,7 +381,7 @@ const LEGACY_KEY = 'gym_v5';
  * Mismo formato que la planilla. Sirven de referencia del esquema y de
  * respaldo si nunca se conecta una sheet.
  * Ejercicios: nombre -> { grupo, media, pasos[], tip, alternativa }
- * media: SOLO si el GIF muestra exactamente ese ejercicio (mismo implemento,
+ * media: SOLO si la imagen muestra exactamente ese ejercicio (mismo implemento,
  * ángulo y posición). Ante la duda va vacío: una técnica equivocada es peor
  * que ninguna imagen.
  */
@@ -386,50 +390,41 @@ const DEFAULT_EJERCICIOS = {
   'Rotaciones de hombros y cuello':        { grupo: 'Movilidad', media: '' },
   'Rotaciones de cadera y rodillas':       { grupo: 'Movilidad', media: '' },
   'Sentadilla de peso corporal':           { grupo: 'Activación', media: 'bodyweight_squat.png' },
-  'Serie de activación con barra vacía':   { grupo: 'Activación', media: '' },
-  // --- Pecho / tríceps ---
-  'Press de banca con barra':              { grupo: 'Pecho', media: '' },
-  'Press inclinado con mancuernas':        { grupo: 'Pecho', media: '' },
-  'Press francés con barra Z':             { grupo: 'Tríceps', media: '' },
-  'Aperturas en polea baja':               { grupo: 'Pecho', media: '' },
-  'Extensión de tríceps en polea — cuerda':{ grupo: 'Tríceps', media: 'triceps_pushdown.gif' },
-  'Flexiones de brazo':                    { grupo: 'Pecho', media: '' },
-  'Press en máquina (Hammer o similar)':   { grupo: 'Pecho', media: 'chest_press.gif' },
-  'Aperturas con mancuernas en banco plano':{ grupo: 'Pecho', media: 'chest_fly.gif' },
-  'Dips en paralelas':                     { grupo: 'Tríceps', media: '' },
-  'Kickbacks de tríceps con mancuerna':    { grupo: 'Tríceps', media: '' },
+  'Serie de aproximación con barra vacía': { grupo: 'Activación', media: '', tip: 'Después de la barra vacía, 2–3 series subiendo el peso hasta llegar al de trabajo, sin acumular fatiga.' },
+  // --- Básicos con barra ---
+  'Sentadilla trasera con barra':          { grupo: 'Piernas', media: 'db/Barbell_Squat',
+    pasos: ['Barra apoyada sobre los trapecios, pies al ancho de hombros con las puntas apenas hacia afuera.', 'Inspirá, endurecé el abdomen y bajá llevando la cadera atrás y abajo, rodillas en línea con los pies.', 'Bajá hasta que el muslo quede paralelo al piso o un poco más, manteniendo el pecho arriba.', 'Subí empujando el piso con toda la planta; exhalá al pasar el punto más difícil.'],
+    tip: 'Nunca al fallo: si dudás de completar la última repetición con buena técnica, terminá la serie ahí.' },
+  'Press de banca con barra':              { grupo: 'Pecho', media: 'db/Barbell_Bench_Press_-_Medium_Grip',
+    pasos: ['Acostado con los pies firmes en el piso, escápulas juntas y apoyadas, arco lumbar natural.', 'Agarre algo más ancho que los hombros; sacá la barra y sostenela sobre el pecho con los brazos estirados.', 'Bajá controlado hasta tocar la parte baja del pecho, con los codos a unos 45° del cuerpo.', 'Empujá hacia arriba y un poco atrás hasta estirar los brazos, sin despegar los glúteos del banco.'],
+    tip: 'Pedí ayuda para sacar la barra si el peso es alto y dejá siempre los seguros puestos.' },
+  'Peso muerto convencional':              { grupo: 'Cadena posterior', media: 'db/Barbell_Deadlift',
+    pasos: ['Barra sobre la mitad del pie, pies al ancho de cadera. Agarrá la barra apenas por fuera de las piernas.', 'Bajá la cadera hasta que las canillas toquen la barra, pecho arriba y espalda neutra.', 'Inspirá, endurecé el abdomen y empujá el piso: la barra sube pegada a las piernas.', 'Terminá de pie con la cadera extendida y bajá controlado por el mismo camino.'],
+    tip: 'Es el ejercicio que más fatiga genera: 3 series alcanzan. Si la espalda se redondea, bajá el peso.' },
+  'Press militar con barra de pie':        { grupo: 'Hombros', media: 'db/Standing_Military_Press',
+    pasos: ['Barra a la altura de las clavículas, agarre apenas más ancho que los hombros, codos adelante.', 'Apretá glúteos y abdomen para no arquear la espalda baja.', 'Empujá la barra hacia arriba en línea recta, moviendo apenas la cabeza hacia atrás para dejarla pasar.', 'Arriba, bloqueá con la barra sobre la mitad del pie y bajá controlado a las clavículas.'] },
   // --- Piernas ---
-  'Sentadilla trasera con barra':          { grupo: 'Piernas', media: '' },
-  'Prensa de piernas':                     { grupo: 'Piernas', media: 'leg_press.gif' },
+  'Hack squat en máquina':                 { grupo: 'Piernas', media: 'db/Hack_Squat',
+    pasos: ['Espalda y cadera bien apoyadas en el respaldo, pies al ancho de hombros en el centro de la plataforma.', 'Bajá controlado hasta que el muslo pase la paralela, sin despegar la cadera del respaldo.', 'Subí empujando con toda la planta, sin bloquear las rodillas de golpe arriba.'],
+    tip: 'Reemplaza a las estocadas búlgaras: mismo estímulo de cuádriceps sin cargar la espalda baja.' },
+  'Curl femoral sentado en máquina':       { grupo: 'Isquios', media: 'leg_curl.gif', tip: 'La variante sentada trabaja el isquiotibial estirado: por eso va dos veces por semana.' },
   'Extensiones de cuádriceps en máquina':  { grupo: 'Piernas', media: 'leg_extension.gif' },
-  'Estocadas búlgaras con mancuernas':     { grupo: 'Piernas', media: '' },
-  'Gemelos en prensa de piernas':          { grupo: 'Pantorrillas', media: '' },
-  'Gemelos sentado en máquina':            { grupo: 'Pantorrillas', media: '' },
-  'Hack squat en máquina':                 { grupo: 'Piernas', media: '' },
-  'Zancadas caminando con mancuernas':     { grupo: 'Piernas', media: '' },
-  'Gemelos de pie en máquina':             { grupo: 'Pantorrillas', media: '' },
-  // --- Hombros / abdomen ---
-  'Press militar con barra de pie':        { grupo: 'Hombros', media: '' },
+  'Gemelos de pie en máquina':             { grupo: 'Pantorrillas', media: 'db/Standing_Calf_Raises', tip: 'Pausa de 1–2 segundos abajo, bien estirado, antes de subir.' },
+  // --- Empuje ---
+  'Press inclinado con mancuernas':        { grupo: 'Pecho', media: 'db/Incline_Dumbbell_Press', tip: 'Banco a 30°: más que eso pasa a ser un ejercicio de hombro.' },
+  'Aperturas en poleas':                   { grupo: 'Pecho', media: 'db/Cable_Crossover', tip: 'Poleas a la altura del pecho o un poco más abajo. Codos apenas flexionados y fijos; el movimiento sale del hombro.' },
+  'Elevaciones laterales en polea':        { grupo: 'Hombros', media: 'db/Cable_Seated_Lateral_Raise', tip: 'Polea baja, el cable pasa por delante del cuerpo. Sin impulso: si tenés que balancearte, bajá el peso.' },
   'Elevaciones laterales con mancuernas':  { grupo: 'Hombros', media: 'lateral_raise.gif' },
-  'Facepulls en polea alta':               { grupo: 'Hombros', media: 'face_pull.gif' },
-  'Press arnold con mancuernas sentado':   { grupo: 'Hombros', media: '' },
-  'Crunch en polea alta':                  { grupo: 'Abdomen', media: '' },
-  'Rueda abdominal o elevación de piernas colgado': { grupo: 'Abdomen', media: '' },
-  'Elevaciones laterales en polea baja':   { grupo: 'Hombros', media: '' },
-  'Elevación de piernas colgado + crunch en polea': { grupo: 'Abdomen', media: '' },
-  // --- Espalda / isquios / bíceps ---
-  'Peso muerto convencional':              { grupo: 'Espalda', media: '' },
-  'Dominadas o jalón al pecho':            { grupo: 'Espalda', media: 'lat_pulldown.gif' },
-  'Remo con barra agarre prono':           { grupo: 'Espalda', media: '' },
-  'Curl femoral sentado en máquina':       { grupo: 'Isquios', media: 'leg_curl.gif' },
-  'Curl de bíceps con barra':              { grupo: 'Bíceps', media: '' },
-  'Curl martillo con mancuernas':          { grupo: 'Bíceps', media: '' },
-  'Peso muerto rumano con barra':          { grupo: 'Isquios', media: 'barbell_rdl.gif' },
+  'Extensión de tríceps sobre la cabeza en polea': { grupo: 'Tríceps', media: 'db/Cable_Rope_Overhead_Triceps_Extension', tip: 'De espaldas a la polea baja con la cuerda detrás de la cabeza. Trabaja la porción larga, la más grande del tríceps.' },
+  'Extensión de tríceps en polea — cuerda':{ grupo: 'Tríceps', media: 'triceps_pushdown.gif' },
+  // --- Tracción ---
+  'Remo con apoyo de pecho':               { grupo: 'Espalda', media: 'db/Lying_T-Bar_Row', tip: 'Máquina o banco inclinado con el pecho apoyado: la espalda trabaja sin cargar la zona lumbar.' },
+  'Jalón al pecho':                        { grupo: 'Espalda', media: 'lat_pulldown.gif' },
   'Remo en polea sentado (agarre neutro)': { grupo: 'Espalda', media: 'seated_row.gif' },
-  'Jalón al pecho agarre supino':          { grupo: 'Espalda', media: '' },
-  'Curl femoral acostado en máquina':      { grupo: 'Isquios', media: '' },
-  'Curl de bíceps con mancuernas alterno': { grupo: 'Bíceps', media: 'biceps_curl.gif' },
-  'Curl martillo en polea baja':           { grupo: 'Bíceps', media: '' },
+  'Facepulls en polea alta':               { grupo: 'Hombros', media: 'face_pull.gif' },
+  'Curl de bíceps con mancuernas':         { grupo: 'Bíceps', media: 'biceps_curl.gif' },
+  // --- Abdomen ---
+  'Crunch en polea alta':                  { grupo: 'Abdomen', media: 'db/Cable_Crunch' },
   // --- Estiramientos ---
   'Pecho en marco de puerta':              { grupo: 'Estiramiento', media: 'stretch_pec.png' },
   'Cuádriceps de pie':                     { grupo: 'Estiramiento', media: 'stretch_quad.png' },
@@ -441,43 +436,45 @@ const DEFAULT_EJERCICIOS = {
 /* Rutinas: filas con el mismo esquema que la pestaña "Rutinas".
  * [usuario, semana(A/B/''), dia(nº o '' p/ secciones generales), diaNombre,
  *  seccion, orden, ejercicio, series, intensidad, descanso, tag, nota]
- * seccion: Calentamiento | Principal | Accesorios | Estiramiento
- * tag: principal | superserie | dropset | finisher | ''
+ * seccion: Calentamiento | Principal | Secundario | Accesorios | Opcional | Estiramiento
+ * tag: principal | superserie | opcional | dropset | finisher | ''
  */
 const DEFAULT_RUTINAS = [
   // ---- Generales (todos los días) ----
   ['Mateo','','','','Calentamiento','1','Rotaciones de hombros y cuello','10 por lado','','', '','Despacio, en cada dirección'],
   ['Mateo','','','','Calentamiento','2','Rotaciones de cadera y rodillas','10 por dirección','','', '','Pies al ancho de hombros'],
   ['Mateo','','','','Calentamiento','3','Sentadilla de peso corporal','2 × 10','','', '','Sin peso, controlado'],
-  ['Mateo','','','','Calentamiento','4','Serie de activación con barra vacía','1 × 10','','', '','Del ejercicio principal del día, lento'],
+  ['Mateo','','','','Calentamiento','4','Serie de aproximación con barra vacía','1 × 10','','', '','Del ejercicio principal del día, lento'],
   ['Mateo','','','','Estiramiento','1','Pecho en marco de puerta','30 seg por lado','','', '','Antebrazo apoyado, girar el cuerpo'],
   ['Mateo','','','','Estiramiento','2','Cuádriceps de pie','30 seg por lado','','', '','Doblar pierna atrás, agarrar tobillo'],
   ['Mateo','','','','Estiramiento','3','Isquiotibiales sentado','30–40 seg','','', '','Piernas extendidas, inclinarse adelante'],
   ['Mateo','','','','Estiramiento','4','Hombro cruzado','30 seg por lado','','', '','Brazo extendido delante del pecho'],
   ['Mateo','','','','Estiramiento','5','Gato-vaca','10 reps lentas','','', '','En cuatro apoyos, arquear y redondear'],
-  // ---- Full-body 3 días (mixto fuerza + hipertrofia, ~45–60 min) ----
-  // Progresión doble: al completar el tope de reps en todas las series con
-  // buena técnica, subir el peso la próxima sesión.
-  ['Mateo','','1','Cuerpo completo · Sentadilla','Principal','1','Sentadilla trasera con barra','4 × 4–6','RPE 8','2–3 min','principal','Subí el peso cuando completes 4 × 6'],
-  ['Mateo','','1','Cuerpo completo · Sentadilla','Accesorios','2','Press inclinado con mancuernas','3 × 8–10','RIR 2','90 seg','',''],
-  ['Mateo','','1','Cuerpo completo · Sentadilla','Accesorios','3a','Remo en polea sentado (agarre neutro)','3 × 10–12','RIR 2','','superserie','Superserie con 3b'],
-  ['Mateo','','1','Cuerpo completo · Sentadilla','Accesorios','3b','Elevaciones laterales con mancuernas','3 × 12–15','RIR 1–2','90 seg tras el par','superserie',''],
-  ['Mateo','','1','Cuerpo completo · Sentadilla','Accesorios','4a','Curl de bíceps con barra','3 × 10–12','RIR 2','','superserie','Superserie con 4b'],
-  ['Mateo','','1','Cuerpo completo · Sentadilla','Accesorios','4b','Extensión de tríceps en polea — cuerda','3 × 10–12','RIR 2','60 seg tras el par','superserie',''],
-  ['Mateo','','1','Cuerpo completo · Sentadilla','Accesorios','5','Gemelos de pie en máquina','3 × 12–15','','60 seg','finisher','Opcional si hay tiempo'],
-  ['Mateo','','2','Cuerpo completo · Press de banca','Principal','1','Press de banca con barra','4 × 4–6','RPE 8','2–3 min','principal','Subí el peso cuando completes 4 × 6'],
-  ['Mateo','','2','Cuerpo completo · Press de banca','Accesorios','2','Prensa de piernas','3 × 8–10','RIR 2','90 seg','',''],
-  ['Mateo','','2','Cuerpo completo · Press de banca','Accesorios','3a','Dominadas o jalón al pecho','3 × 8–10','RIR 2','','superserie','Superserie con 3b'],
-  ['Mateo','','2','Cuerpo completo · Press de banca','Accesorios','3b','Facepulls en polea alta','3 × 12–15','RIR 1–2','90 seg tras el par','superserie',''],
-  ['Mateo','','2','Cuerpo completo · Press de banca','Accesorios','4a','Curl femoral sentado en máquina','3 × 10–12','RIR 2','','superserie','Superserie con 4b'],
-  ['Mateo','','2','Cuerpo completo · Press de banca','Accesorios','4b','Crunch en polea alta','3 × 12–15','','60 seg tras el par','superserie',''],
-  ['Mateo','','2','Cuerpo completo · Press de banca','Accesorios','5','Flexiones de brazo','2 series al fallo','','','finisher','Opcional si hay tiempo'],
-  ['Mateo','','3','Cuerpo completo · Peso muerto','Principal','1','Peso muerto convencional','4 × 3–5','RPE 8','2–3 min','principal','Subí el peso cuando completes 4 × 5'],
-  ['Mateo','','3','Cuerpo completo · Peso muerto','Accesorios','2','Press militar con barra de pie','3 × 6–8','RIR 2','90–120 seg','',''],
-  ['Mateo','','3','Cuerpo completo · Peso muerto','Accesorios','3','Estocadas búlgaras con mancuernas','3 × 10 por pierna','RIR 2','90 seg','',''],
-  ['Mateo','','3','Cuerpo completo · Peso muerto','Accesorios','4a','Aperturas en polea baja','3 × 12–15','RIR 1–2','','superserie','Superserie con 4b'],
-  ['Mateo','','3','Cuerpo completo · Peso muerto','Accesorios','4b','Curl martillo con mancuernas','3 × 10–12','RIR 2','60 seg tras el par','superserie',''],
-  ['Mateo','','3','Cuerpo completo · Peso muerto','Accesorios','5','Rueda abdominal o elevación de piernas colgado','3 × 10–15','','','finisher','Opcional si hay tiempo'],
+  // ---- Full-body 3 días · nivel inicial-intermedio · ~50 min ----
+  // Cada patrón se entrena 2 veces por semana: una pesada (4–6) y una
+  // moderada (8–15). Progresión doble: al completar el tope de reps en
+  // todas las series con buena técnica, subir el peso la próxima sesión.
+  ['Mateo','','1','Sentadilla y hombros','Principal','1','Sentadilla trasera con barra','3 × 4–6','RIR 2–3','2–3 min','principal','Subí 5 kg cuando completes 3 × 6'],
+  ['Mateo','','1','Sentadilla y hombros','Secundario','2','Press militar con barra de pie','3 × 6–8','RIR 2–3','2 min','','Subí 2,5 kg cuando completes 3 × 8'],
+  ['Mateo','','1','Sentadilla y hombros','Accesorios','3a','Remo con apoyo de pecho','3 × 8–12','RIR 1–2','','superserie',''],
+  ['Mateo','','1','Sentadilla y hombros','Accesorios','3b','Aperturas en poleas','3 × 12–15','RIR 1–2','90 seg tras el par','superserie',''],
+  ['Mateo','','1','Sentadilla y hombros','Accesorios','4a','Curl femoral sentado en máquina','3 × 10–12','RIR 1–2','','superserie',''],
+  ['Mateo','','1','Sentadilla y hombros','Accesorios','4b','Elevaciones laterales en polea','3 × 12–15','RIR 1–2','60 seg tras el par','superserie',''],
+  ['Mateo','','1','Sentadilla y hombros','Opcional','5','Crunch en polea alta','2 × 12–15','','60 seg','opcional','Si sobra tiempo'],
+  ['Mateo','','2','Banca y tracción','Principal','1','Press de banca con barra','4 × 4–6','RIR 2–3','2–3 min','principal','Subí 2,5 kg cuando completes 4 × 6'],
+  ['Mateo','','2','Banca y tracción','Secundario','2','Hack squat en máquina','3 × 8–12','RIR 2–3','2 min','','Subí el peso cuando completes 3 × 12'],
+  ['Mateo','','2','Banca y tracción','Accesorios','3a','Jalón al pecho','3 × 8–12','RIR 1–2','','superserie',''],
+  ['Mateo','','2','Banca y tracción','Accesorios','3b','Extensión de tríceps sobre la cabeza en polea','3 × 10–12','RIR 1–2','90 seg tras el par','superserie',''],
+  ['Mateo','','2','Banca y tracción','Accesorios','4a','Curl femoral sentado en máquina','3 × 10–12','RIR 1–2','','superserie',''],
+  ['Mateo','','2','Banca y tracción','Accesorios','4b','Curl de bíceps con mancuernas','3 × 10–12','RIR 1–2','60 seg tras el par','superserie',''],
+  ['Mateo','','2','Banca y tracción','Opcional','5','Facepulls en polea alta','2 × 15','','60 seg','opcional','Si sobra tiempo'],
+  ['Mateo','','3','Peso muerto y pecho','Principal','1','Peso muerto convencional','3 × 4–6','RIR 2–3','2–3 min','principal','Subí 5 kg cuando completes 3 × 6'],
+  ['Mateo','','3','Peso muerto y pecho','Secundario','2','Press inclinado con mancuernas','3 × 8–12','RIR 2–3','2 min','','Subí de mancuerna cuando completes 3 × 12'],
+  ['Mateo','','3','Peso muerto y pecho','Accesorios','3a','Remo en polea sentado (agarre neutro)','3 × 10–12','RIR 1–2','','superserie',''],
+  ['Mateo','','3','Peso muerto y pecho','Accesorios','3b','Elevaciones laterales con mancuernas','3 × 12–15','RIR 1–2','90 seg tras el par','superserie',''],
+  ['Mateo','','3','Peso muerto y pecho','Accesorios','4a','Extensiones de cuádriceps en máquina','3 × 12–15','RIR 1–2','','superserie',''],
+  ['Mateo','','3','Peso muerto y pecho','Accesorios','4b','Extensión de tríceps en polea — cuerda','3 × 10–12','RIR 1–2','60 seg tras el par','superserie',''],
+  ['Mateo','','3','Peso muerto y pecho','Opcional','5','Gemelos de pie en máquina','3 × 10–15','','60 seg','opcional','Si sobra tiempo'],
 ];
 
 const RUTINA_COLS = ['usuario','semana','dia','dianombre','seccion','orden','ejercicio','series','intensidad','descanso','tag','nota'];
@@ -671,9 +668,22 @@ const pad2 = n => String(n).padStart(2, '0');
 // Evita que '4 × 6' o '90 seg' se corten entre líneas.
 const nb = s => esc(s).replace(/ × /g, ' × ').replace(/(d) (seg|min|reps?)/g, '$1 $2');
 
-// La media puede ser un archivo local de assets/ o una URL completa.
+// La media puede ser: un GIF/imagen de assets/, una URL completa, o un par de
+// fotos inicio/fin ("db/Nombre", sin extensión) que la app alterna con un
+// fundido. Los pares vienen de free-exercise-db (dominio público) y se guardan
+// como assets/db/Nombre_0.jpg y _1.jpg, con miniatura en thumbs/db_Nombre.jpg.
+const isPair = f => /^db\//.test(f) && !/\.[a-z0-9]+$/i.test(f);
 const mediaSrc = f => /^https?:\/\//.test(f) ? f : MEDIA_PATH + f;
-const thumbSrc = f => /^https?:\/\//.test(f) ? f : MEDIA_PATH + 'thumbs/' + f.replace(/\.[a-z0-9]+$/i, '.jpg');
+const thumbSrc = f => /^https?:\/\//.test(f) ? f
+  : isPair(f) ? MEDIA_PATH + 'thumbs/db_' + f.slice(3) + '.jpg'
+  : MEDIA_PATH + 'thumbs/' + f.replace(/\.[a-z0-9]+$/i, '.jpg');
+function mediaHTML(f, alt) {
+  if (isPair(f)) {
+    const base = MEDIA_PATH + f;
+    return `<div class="ex-media pair"><img src="${esc(base)}_0.jpg" alt="${esc(alt)} — inicio" loading="lazy"><img class="f2" src="${esc(base)}_1.jpg" alt="${esc(alt)} — final" loading="lazy"></div>`;
+  }
+  return `<div class="ex-media"><img src="${esc(mediaSrc(f))}" alt="${esc(alt)}" loading="lazy"></div>`;
+}
 
 const PLACEHOLDER = icon('dumbbell', 22);
 
@@ -684,7 +694,7 @@ function exerciseHTML(ejercicios, r, opts = {}) {
   const pasos = e.pasos || [];
   const hasDrawer = !!(media || pasos.length || e.tip || e.alternativa);
   // Las notas tipo "Superserie con 3b" son redundantes: el bloque ya lo muestra.
-  const nota = /^superserie/i.test(r.nota || '') ? '' : (r.nota || '');
+  const nota = /^(superserie|si sobra tiempo)/i.test(r.nota || '') ? '' : (r.nota || '');
 
   const thumb = PLACEHOLDER + (media ? `<img src="${esc(thumbSrc(media))}" alt="" loading="lazy" onerror="this.remove()">` : '');
   const chips = [
@@ -693,7 +703,7 @@ function exerciseHTML(ejercicios, r, opts = {}) {
   ].join('');
   const drawer = hasDrawer ? `
     <div class="ex-drawer">
-      ${media ? `<div class="ex-media"><img src="${esc(mediaSrc(media))}" alt="Técnica: ${esc(r.ejercicio)}" loading="lazy"></div>` : ''}
+      ${media ? mediaHTML(media, 'Técnica: ' + r.ejercicio) : ''}
       ${pasos.length ? `<ol class="ex-steps">${pasos.map(p => `<li>${esc(p)}</li>`).join('')}</ol>` : ''}
       ${e.tip ? `<div class="ex-tip"><b>Tip:</b> ${esc(e.tip)}</div>` : ''}
       ${e.alternativa ? `<div class="ex-tip"><b>Alternativa:</b> ${esc(e.alternativa)}</div>` : ''}
@@ -729,6 +739,7 @@ function toBlocks(rows) {
 
 const TAG_TOP = {
   principal: ['flame', 'Levantamiento principal'],
+  opcional: ['flag', 'Opcional · si sobra tiempo'],
   finisher: ['flag', 'Finisher'],
   dropset: ['zap', 'Drop set en la última serie'],
 };

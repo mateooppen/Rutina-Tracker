@@ -61,3 +61,5 @@ Al modificar `index.html` u otros archivos del shell, subí la versión de `CACH
 ## Créditos
 
 Los GIFs de técnica vienen del repo [rutina](https://github.com/mateooppen/rutina).
+
+Las fotos de `assets/db/` (pares inicio/final) vienen de [free-exercise-db](https://github.com/yuhonas/free-exercise-db), dominio público (Unlicense). En la planilla se referencian como `db/Nombre` (sin extensión) y la app las alterna con un fundido.
