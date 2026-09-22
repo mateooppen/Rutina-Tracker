@@ -145,19 +145,18 @@
   .blk.done .blk-card { opacity: 0.7; }
 
   /* Registro de series */
-  .ex-body { display: none; padding: 0 14px 14px; }
+  .ex-body { display: none; padding: 0 12px 12px; }
   .ex-body.open { display: block; }
   .ex-info { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
   .ex-info .rx-chip.goal { background: var(--accent-soft); color: var(--accent-text); }
-  .set-row { display: grid; grid-template-columns: 18px 1fr 1fr 40px; gap: 8px; align-items: center; padding: 5px 0; }
+  .set-row { display: grid; grid-template-columns: 14px minmax(0, 1.15fr) minmax(0, 1fr) 40px; gap: 6px; align-items: center; padding: 4px 0; }
   .set-row .set-n { font-size: 12px; color: var(--text3); font-weight: 650; text-align: center; }
-  .stp { display: flex; align-items: center; background: var(--inset); border-radius: 10px; height: 40px; }
-  .stp button { width: 32px; height: 40px; border: none; background: none; font-size: 18px; color: var(--text2); cursor: pointer; flex-shrink: 0; }
-  .stp .val { flex: 1; min-width: 0; display: flex; align-items: baseline; justify-content: center; gap: 3px; }
-  .stp input { width: 2.8em; min-width: 0; text-align: right; border: none; background: none; color: var(--text); font: inherit; font-size: 14.5px; font-weight: 700; padding: 0; -moz-appearance: textfield; }
+  .stp { display: flex; align-items: center; background: var(--inset); border-radius: 10px; height: 40px; min-width: 0; }
+  .stp button { width: 28px; height: 40px; border: none; background: none; font-size: 18px; color: var(--text2); cursor: pointer; flex-shrink: 0; }
+  .set-hd { display: grid; grid-template-columns: 14px minmax(0, 1.15fr) minmax(0, 1fr) 40px; gap: 6px; font-size: 10.5px; font-weight: 650; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; text-align: center; margin-bottom: 2px; }
+  .stp input { flex: 1; width: 100%; min-width: 0; text-align: center; border: none; background: none; color: var(--text); font: inherit; font-size: 14.5px; font-weight: 700; padding: 0; -moz-appearance: textfield; }
   .stp input::-webkit-outer-spin-button, .stp input::-webkit-inner-spin-button { -webkit-appearance: none; }
   .stp input:focus { outline: none; }
-  .stp .u { font-size: 11px; color: var(--text3); }
   .set-ok { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--border2); background: var(--surface); color: var(--text3); cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .set-row.done .set-ok { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .set-row.done .stp { opacity: 0.55; }
@@ -843,8 +842,8 @@ function exerciseHTML(ejercicios, r, opts = {}) {
   const rows = cur.map((s, i) => `
       <div class="set-row ${s.ok ? 'done' : ''}" data-ej="${ej}" data-i="${i}">
         <span class="set-n num">${i + 1}</span>
-        <div class="stp"><button data-adj="kg" data-v="-2.5" aria-label="Bajar peso">−</button><span class="val"><input type="number" inputmode="decimal" step="0.5" min="0" value="${s.kg}" data-f="kg" aria-label="Peso serie ${i + 1}"><span class="u">kg</span></span><button data-adj="kg" data-v="2.5" aria-label="Subir peso">+</button></div>
-        <div class="stp"><button data-adj="reps" data-v="-1" aria-label="Menos reps">−</button><span class="val"><input type="number" inputmode="numeric" step="1" min="0" value="${s.reps}" data-f="reps" aria-label="Reps serie ${i + 1}"><span class="u">reps</span></span><button data-adj="reps" data-v="1" aria-label="Más reps">+</button></div>
+        <div class="stp"><button data-adj="kg" data-v="-2.5" aria-label="Bajar peso">−</button><input type="number" inputmode="decimal" step="0.5" min="0" value="${s.kg}" data-f="kg" aria-label="Peso serie ${i + 1} (kg)"><button data-adj="kg" data-v="2.5" aria-label="Subir peso">+</button></div>
+        <div class="stp"><button data-adj="reps" data-v="-1" aria-label="Menos reps">−</button><input type="number" inputmode="numeric" step="1" min="0" value="${s.reps}" data-f="reps" aria-label="Reps serie ${i + 1}"><button data-adj="reps" data-v="1" aria-label="Más reps">+</button></div>
         <button class="set-ok" data-ok aria-label="${s.ok ? 'Desmarcar' : 'Confirmar'} serie ${i + 1}">${icon('check', 18)}</button>
       </div>`).join('');
   return `
@@ -852,6 +851,7 @@ function exerciseHTML(ejercicios, r, opts = {}) {
       ${head}
       <div class="ex-body">
         <div class="ex-info">${info}</div>
+        <div class="set-hd" aria-hidden="true"><span></span><span>kg</span><span>reps</span><span></span></div>
         ${rows}
         ${tech ? `<button class="tech-toggle" aria-expanded="false">${icon('info', 15)}Ver técnica${icon('chevronDown', 16, 'arrow')}</button>${tech}` : ''}
       </div>
