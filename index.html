@@ -1257,9 +1257,9 @@ document.addEventListener('click', e => {
     const blk = row.closest('.blk');
     if (s.ok && blk && blk.dataset.last === row.dataset.ej) startTimer(+blk.dataset.rest, row.dataset.ej);
     const ex = row.closest('.ex');
-    const completo = s.ok && [...ex.querySelectorAll('.set-row')].every(r => r === row || r.classList.contains('done'));
+    const completo = [...ex.querySelectorAll('.set-row')].every(r => r === row || r.classList.contains('done'));
     render();
-    if (completo) avanzarEjercicio(row.dataset.ej);
+    if (s.ok) avanzarFoco(row.dataset.ej, !!blk?.classList.contains('ss'), completo);
     return;
   }
   const tt = e.target.closest('.tech-toggle');
@@ -1282,19 +1282,32 @@ document.addEventListener('click', e => {
   const open = e.target.closest('[data-open-dia]');
   if (open) { flash = null; showView('rutina', Number(open.dataset.openDia)); }
 });
-// Al completar la última serie de un ejercicio: lo contrae y abre el
-// siguiente con series pendientes, llevándolo a la vista.
-function avanzarEjercicio(nombre) {
+// Qué ejercicio abrir después de confirmar una serie:
+// - Ejercicio simple: al completar todas sus series, el siguiente con pendientes.
+// - Superserie (A, B…): tras una serie de A se abre B (misma ronda); tras la
+//   del último se vuelve al primero con pendientes (próxima ronda) y, si no
+//   queda ninguna, se pasa al siguiente bloque.
+function avanzarFoco(nombre, enSuperserie, completo) {
   const exs = [...document.querySelectorAll('#dia-main .ex')];
+  const pendiente = ex => +ex.dataset.done < +ex.dataset.total;
   const i = exs.findIndex(ex => ex.querySelector('.ex-nm')?.textContent === nombre);
   if (i < 0) return;
-  const cerrar = ex => { ex.querySelector('.ex-head')?.setAttribute('aria-expanded', 'false'); ex.querySelector('.ex-body')?.classList.remove('open'); };
-  cerrar(exs[i]);
-  const next = exs.slice(i + 1).find(ex => +ex.dataset.done < +ex.dataset.total);
-  if (!next) return;
-  next.querySelector('.ex-head')?.setAttribute('aria-expanded', 'true');
-  next.querySelector('.ex-body')?.classList.add('open');
-  const top = next.getBoundingClientRect().top + window.scrollY - 72; // debajo de la barra superior
+  const actual = exs[i];
+  let target = null;
+  if (enSuperserie) {
+    const blk = actual.closest('.blk');
+    const enBloque = exs.filter(ex => ex.closest('.blk') === blk);
+    const j = enBloque.indexOf(actual);
+    target = enBloque.slice(j + 1).find(pendiente) || enBloque.find(pendiente) || exs.slice(i + 1).find(pendiente) || null;
+  } else if (completo) {
+    target = exs.slice(i + 1).find(pendiente) || null;
+  } else return;
+  if (target === actual) return;
+  const toggle = (ex, open) => { ex.querySelector('.ex-head')?.setAttribute('aria-expanded', String(open)); ex.querySelector('.ex-body')?.classList.toggle('open', open); };
+  toggle(actual, false);
+  if (!target) return;
+  toggle(target, true);
+  const top = target.getBoundingClientRect().top + window.scrollY - 72; // debajo de la barra superior
   window.scrollTo({ top, behavior: 'smooth' });
 }
 
