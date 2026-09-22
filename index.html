@@ -1256,7 +1256,11 @@ document.addEventListener('click', e => {
     saveState();
     const blk = row.closest('.blk');
     if (s.ok && blk && blk.dataset.last === row.dataset.ej) startTimer(+blk.dataset.rest, row.dataset.ej);
-    render(); return;
+    const ex = row.closest('.ex');
+    const completo = s.ok && [...ex.querySelectorAll('.set-row')].every(r => r === row || r.classList.contains('done'));
+    render();
+    if (completo) avanzarEjercicio(row.dataset.ej);
+    return;
   }
   const tt = e.target.closest('.tech-toggle');
   if (tt) { const d = tt.nextElementSibling; const open = d.classList.toggle('open'); tt.setAttribute('aria-expanded', open); return; }
@@ -1278,6 +1282,22 @@ document.addEventListener('click', e => {
   const open = e.target.closest('[data-open-dia]');
   if (open) { flash = null; showView('rutina', Number(open.dataset.openDia)); }
 });
+// Al completar la última serie de un ejercicio: lo contrae y abre el
+// siguiente con series pendientes, llevándolo a la vista.
+function avanzarEjercicio(nombre) {
+  const exs = [...document.querySelectorAll('#dia-main .ex')];
+  const i = exs.findIndex(ex => ex.querySelector('.ex-nm')?.textContent === nombre);
+  if (i < 0) return;
+  const cerrar = ex => { ex.querySelector('.ex-head')?.setAttribute('aria-expanded', 'false'); ex.querySelector('.ex-body')?.classList.remove('open'); };
+  cerrar(exs[i]);
+  const next = exs.slice(i + 1).find(ex => +ex.dataset.done < +ex.dataset.total);
+  if (!next) return;
+  next.querySelector('.ex-head')?.setAttribute('aria-expanded', 'true');
+  next.querySelector('.ex-body')?.classList.add('open');
+  const top = next.getBoundingClientRect().top + window.scrollY - 72; // debajo de la barra superior
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
 // Serie (objeto de estado) correspondiente a una fila del registro
 function setOf(row) {
   const c = ctx(); const d = c.model.dias.find(x => x.n === currentDia);
