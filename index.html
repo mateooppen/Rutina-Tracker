@@ -244,6 +244,21 @@
   .rpe-table td:first-child { font-weight: 650; color: var(--text); white-space: nowrap; }
   .about { font-size: 12.5px; color: var(--text3); line-height: 1.7; }
 
+  /* ---------- Bienvenida (elegir usuario) ---------- */
+  .welcome { position: fixed; inset: 0; z-index: 100; background: var(--page); display: flex; align-items: center; justify-content: center; padding: 24px; padding-top: max(24px, env(safe-area-inset-top)); padding-bottom: max(24px, env(safe-area-inset-bottom)); overflow-y: auto; }
+  .welcome[hidden] { display: none; }
+  .welcome-in { width: 100%; max-width: 420px; text-align: center; }
+  .welcome-logo { width: 64px; height: 64px; border-radius: 20px; background: var(--text); display: inline-flex; align-items: center; justify-content: center; color: var(--accent); margin-bottom: 20px; }
+  .welcome-in h1 { font-size: 26px; font-weight: 750; letter-spacing: -0.03em; margin-bottom: 6px; }
+  .welcome-in .sub { font-size: 15px; color: var(--text2); margin-bottom: 28px; }
+  .welcome-users { display: flex; flex-direction: column; gap: 10px; }
+  .welcome-user { display: flex; align-items: center; gap: 14px; width: 100%; text-align: left; padding: 14px 16px; min-height: 68px; border-radius: var(--radius-lg); border: 1px solid var(--border); background: var(--surface); box-shadow: var(--shadow); cursor: pointer; }
+  .welcome-user:active { transform: scale(0.985); }
+  .welcome-user .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 700; flex-shrink: 0; }
+  .welcome-user .nm { font-size: 16px; font-weight: 650; flex: 1; }
+  .welcome-user .chev { color: var(--text3); }
+  .welcome-note { font-size: 12.5px; color: var(--text3); margin-top: 22px; line-height: 1.6; }
+
   /* ---------- Toast ---------- */
   .toast-in { display: flex; align-items: center; gap: 10px; background: var(--text); color: var(--page); border-radius: var(--radius-lg); padding: 8px 8px 8px 16px; font-size: 13.5px; font-weight: 600; box-shadow: 0 8px 28px rgba(0,0,0,0.28); animation: fadein 0.18s ease; }
   .toast-in button { margin-left: auto; background: none; border: none; color: #a3e635; font-size: 13.5px; font-weight: 700; cursor: pointer; padding: 10px 12px; min-height: 40px; }
@@ -259,6 +274,18 @@
 </style>
 </head>
 <body>
+
+<div class="welcome" id="welcome" hidden>
+  <div class="welcome-in">
+    <span class="welcome-logo">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>
+    </span>
+    <h1>Rutina Tracker</h1>
+    <p class="sub">¿Quién va a entrenar?</p>
+    <div class="welcome-users" id="welcome-users"></div>
+    <p class="welcome-note">Se guarda en este teléfono. Podés cambiarlo cuando quieras desde Ajustes.</p>
+  </div>
+</div>
 
 <header class="topbar" id="topbar">
   <div class="topbar-in">
@@ -777,7 +804,7 @@ function loadState() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch (e) { /* estado corrupto: se arranca de cero */ }
-  const s = { sheetUrl: '', usuario: '', cache: null, progreso: {} };
+  const s = { sheetUrl: '', usuario: '', elegido: false, cache: null, progreso: {} };
   migrateLegacy(s);
   return s;
 }
@@ -940,7 +967,7 @@ async function syncSheet(url) {
   if (!rutinas.length) throw new Error('La pestaña "Rutinas" no tiene filas válidas (necesita al menos usuario y ejercicio).');
   S.sheetUrl = url;
   S.cache = { ejercicios, rutinas, ts: Date.now() };
-  if (!usuarios(rutinas).some(u => normKey(u) === normKey(S.usuario))) S.usuario = usuarios(rutinas)[0];
+  if (!usuarios(rutinas).some(u => normKey(u) === normKey(S.usuario))) { S.usuario = usuarios(rutinas)[0]; S.elegido = false; }
   saveState();
 }
 
@@ -1231,8 +1258,26 @@ window.addEventListener('popstate', () => { if (currentDia != null) { if (H) sto
 
 /* ============================== Render ============================== */
 
+/* Primer arranque: elegir usuario antes de mostrar la rutina, para que nadie
+ * vea la rutina de otra persona sin saber cómo cambiarla. Con un solo usuario
+ * en los datos no hay nada que preguntar. */
+function renderWelcome(users) {
+  $('welcome').hidden = false;
+  $('welcome-users').innerHTML = users.map(u => `
+    <button class="welcome-user" data-pick="${esc(u)}">
+      <span class="avatar">${esc(u.charAt(0).toUpperCase())}</span>
+      <span class="nm">${esc(u)}</span>
+      ${icon('chevronRight', 20, 'chev')}
+    </button>`).join('');
+}
+
 function render() {
   const c = ctx();
+  if (!S.elegido) {
+    if (c.users.length > 1) { renderWelcome(c.users); return; }
+    if (c.users.length === 1) { S.usuario = c.users[0]; S.elegido = true; saveState(); }
+  }
+  $('welcome').hidden = true;
   const tipo = weekTipo(c.model, c.p.semana);
 
   // Topbar
@@ -1490,8 +1535,10 @@ document.addEventListener('click', e => {
   if (mark) { e.stopPropagation(); toggleDia(Number(mark.dataset.mark)); return; }
   if (e.target.closest('[data-undo]')) { undoMark(); return; }
   if (e.target.closest('[data-dismiss]')) { flash = null; render(); return; }
+  const pick = e.target.closest('[data-pick]');
+  if (pick) { S.usuario = pick.dataset.pick; S.elegido = true; saveState(); render(); return; }
   const user = e.target.closest('[data-user]');
-  if (user) { S.usuario = user.dataset.user; saveState(); render(); return; }
+  if (user) { S.usuario = user.dataset.user; S.elegido = true; saveState(); render(); return; }
   const dt = e.target.closest('[data-dia-tipo]');
   if (dt) { diaTipoSel = dt.dataset.diaTipo; render(); return; }
   // Timer

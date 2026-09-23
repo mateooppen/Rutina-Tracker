@@ -6,6 +6,7 @@ Funciona como PWA: se puede instalar en la pantalla de inicio y anda sin conexi�
 
 ## Qué hace
 
+- **Primer arranque**: pantalla de selección de usuario; la elección se guarda en el teléfono y no vuelve a preguntar (se cambia desde Ajustes).
 - **Rutina**: tus días de entrenamiento; cada día abre su pantalla con calentamiento, bloques de ejercicios (las superseries son un bloque) y estiramientos.
 - **Registro de series**: al tocar un ejercicio aparecen sus series con peso y reps precargados de la última vez; confirmás cada serie con un toque. Muestra "Última vez" y la meta del día (te avisa cuándo subir el peso). La técnica (fotos + pasos) queda en un panel "Ver técnica".
 - **Timer de descanso**: arranca solo al confirmar una serie (en superseries, después del ejercicio B), con ±15 s y saltar; vibra y suena al terminar. La pantalla no se apaga mientras entrenás.
