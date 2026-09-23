@@ -2,7 +2,7 @@
  * - Precachea el shell de la app para que funcione offline.
  * - Cachea los GIFs de assets/ a medida que se ven (cache-first).
  * Al publicar cambios, subí la versión de CACHE para invalidar lo viejo. */
-const CACHE = 'rtm-v21';
+const CACHE = 'rtm-v22';
 const SHELL = ['./', 'manifest.json', 'logo.png', 'icon-180.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
