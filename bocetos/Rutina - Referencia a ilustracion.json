@@ -1,0 +1,757 @@
+{
+ "last_node_id": 15,
+ "last_link_id": 19,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "UNETLoader",
+   "pos": [
+    40,
+    80
+   ],
+   "size": [
+    420,
+    82
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      1
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "UNETLoader"
+   },
+   "widgets_values": [
+    "qwen_image_edit_2509_fp8_e4m3fn.safetensors",
+    "default"
+   ],
+   "title": "1. Modelo Qwen Image Edit (no tocar)"
+  },
+  {
+   "id": 2,
+   "type": "LoraLoaderModelOnly",
+   "pos": [
+    40,
+    200
+   ],
+   "size": [
+    420,
+    82
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 1
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      2
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LoraLoaderModelOnly"
+   },
+   "widgets_values": [
+    "Qwen-Edit-2509-Lightning-4steps.safetensors",
+    1
+   ],
+   "title": "2. Acelerador Lightning 4 pasos (no tocar)"
+  },
+  {
+   "id": 3,
+   "type": "ModelSamplingAuraFlow",
+   "pos": [
+    40,
+    320
+   ],
+   "size": [
+    420,
+    58
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 2
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      3
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "ModelSamplingAuraFlow"
+   },
+   "widgets_values": [
+    3
+   ]
+  },
+  {
+   "id": 4,
+   "type": "CFGNorm",
+   "pos": [
+    40,
+    410
+   ],
+   "size": [
+    420,
+    58
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 3
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "links": [
+      4
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "CFGNorm"
+   },
+   "widgets_values": [
+    1
+   ]
+  },
+  {
+   "id": 5,
+   "type": "CLIPLoader",
+   "pos": [
+    40,
+    510
+   ],
+   "size": [
+    420,
+    106
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "links": [
+      5,
+      6
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "CLIPLoader"
+   },
+   "widgets_values": [
+    "qwen_2.5_vl_7b_fp8_scaled.safetensors",
+    "qwen_image",
+    "default"
+   ],
+   "title": "3. Codificador de texto (no tocar)"
+  },
+  {
+   "id": 6,
+   "type": "VAELoader",
+   "pos": [
+    40,
+    650
+   ],
+   "size": [
+    420,
+    58
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "links": [
+      7,
+      8,
+      9,
+      10
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAELoader"
+   },
+   "widgets_values": [
+    "qwen_image_vae.safetensors"
+   ],
+   "title": "4. VAE (no tocar)"
+  },
+  {
+   "id": 7,
+   "type": "LoadImage",
+   "pos": [
+    520,
+    80
+   ],
+   "size": [
+    400,
+    420
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      11
+     ]
+    },
+    {
+     "name": "MASK",
+     "type": "MASK",
+     "links": []
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "LoadImage"
+   },
+   "widgets_values": [
+    "foto_inicio.png",
+    "image"
+   ],
+   "title": "A. REFERENCIA - imagen del ejercicio (cualquier tamaño)"
+  },
+  {
+   "id": 8,
+   "type": "ImageScaleToTotalPixels",
+   "pos": [
+    520,
+    520
+   ],
+   "size": [
+    400,
+    82
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "image",
+     "type": "IMAGE",
+     "link": 11
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      12,
+      13,
+      14
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "ImageScaleToTotalPixels"
+   },
+   "widgets_values": [
+    "lanczos",
+    1
+   ],
+   "title": "Escalar referencia a 1 MP (no tocar)"
+  },
+  {
+   "id": 9,
+   "type": "TextEncodeQwenImageEditPlus",
+   "pos": [
+    520,
+    640
+   ],
+   "size": [
+    400,
+    260
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 5
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 7
+    },
+    {
+     "name": "image1",
+     "type": "IMAGE",
+     "link": 12
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      15
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "TextEncodeQwenImageEditPlus"
+   },
+   "widgets_values": [
+    "Redraw this image as a simple flat fitness pictogram. Keep the exact same pose, limb angles, body orientation and camera angle. Replace the anatomical figure with a simplified cartoon woman: dark hair in a ponytail, plain dark gray t-shirt, dark gray leggings, light gray sneakers, smooth head with no facial features (no eyes, no nose, no mouth), simple body shapes with no muscle definition. Clean dark outlines, flat colors. Add a bright lime green exercise mat under her, the only colored element. Plain off-white background. No shadows, no gradients, no text."
+   ],
+   "title": "B. INSTRUCCIÓN - estilo de la app"
+  },
+  {
+   "id": 10,
+   "type": "TextEncodeQwenImageEditPlus",
+   "pos": [
+    520,
+    940
+   ],
+   "size": [
+    400,
+    120
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 6
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 8
+    },
+    {
+     "name": "image1",
+     "type": "IMAGE",
+     "link": 13
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CONDITIONING",
+     "type": "CONDITIONING",
+     "links": [
+      16
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "TextEncodeQwenImageEditPlus"
+   },
+   "widgets_values": [
+    ""
+   ],
+   "title": "Negativo (dejar vacío)"
+  },
+  {
+   "id": 11,
+   "type": "VAEEncode",
+   "pos": [
+    980,
+    80
+   ],
+   "size": [
+    260,
+    58
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "pixels",
+     "type": "IMAGE",
+     "link": 14
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 9
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      17
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAEEncode"
+   },
+   "widgets_values": [],
+   "title": "Foto -> latente"
+  },
+  {
+   "id": 12,
+   "type": "KSampler",
+   "pos": [
+    980,
+    180
+   ],
+   "size": [
+    340,
+    262
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 4
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 15
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 16
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 17
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "links": [
+      18
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    77001,
+    "fixed",
+    4,
+    1,
+    "euler",
+    "simple",
+    1
+   ],
+   "title": "C. GENERAR - seed fijo, 4 pasos, cfg 1"
+  },
+  {
+   "id": 13,
+   "type": "VAEDecode",
+   "pos": [
+    980,
+    480
+   ],
+   "size": [
+    260,
+    58
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 18
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "links": [
+      19
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 14,
+   "type": "SaveImage",
+   "pos": [
+    1380,
+    80
+   ],
+   "size": [
+    520,
+    560
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 19
+    }
+   ],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "rutina/ejercicio"
+   ],
+   "title": "RESULTADO"
+  },
+  {
+   "id": 15,
+   "type": "MarkdownNote",
+   "pos": [
+    1380,
+    680
+   ],
+   "size": [
+    520,
+    300
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "MarkdownNote"
+   },
+   "widgets_values": [
+    "## Referencia -> ilustración (Qwen Image Edit)\n\n1. **A. REFERENCIA**: subí una imagen donde la pose se vea clara. Se escala sola a 1 MP.\n2. **C. GENERAR**: corré. Si sale con cara o con rasgos, **cambiá el seed** y probá de nuevo: varía entre semillas.\n3. La pose sale de la referencia, no del texto: si la referencia es ambigua, el resultado va a ser ambiguo.\n4. Guardá los buenos como <ejercicio>-inicio.png / <ejercicio>-final.png."
+   ],
+   "title": "LEEME"
+  }
+ ],
+ "links": [
+  [
+   1,
+   1,
+   0,
+   2,
+   0,
+   "MODEL"
+  ],
+  [
+   2,
+   2,
+   0,
+   3,
+   0,
+   "MODEL"
+  ],
+  [
+   3,
+   3,
+   0,
+   4,
+   0,
+   "MODEL"
+  ],
+  [
+   4,
+   4,
+   0,
+   12,
+   0,
+   "MODEL"
+  ],
+  [
+   5,
+   5,
+   0,
+   9,
+   0,
+   "CLIP"
+  ],
+  [
+   6,
+   5,
+   0,
+   10,
+   0,
+   "CLIP"
+  ],
+  [
+   7,
+   6,
+   0,
+   9,
+   1,
+   "VAE"
+  ],
+  [
+   8,
+   6,
+   0,
+   10,
+   1,
+   "VAE"
+  ],
+  [
+   9,
+   6,
+   0,
+   11,
+   1,
+   "VAE"
+  ],
+  [
+   10,
+   6,
+   0,
+   13,
+   1,
+   "VAE"
+  ],
+  [
+   11,
+   7,
+   0,
+   8,
+   0,
+   "IMAGE"
+  ],
+  [
+   12,
+   8,
+   0,
+   9,
+   2,
+   "IMAGE"
+  ],
+  [
+   13,
+   8,
+   0,
+   10,
+   2,
+   "IMAGE"
+  ],
+  [
+   14,
+   8,
+   0,
+   11,
+   0,
+   "IMAGE"
+  ],
+  [
+   15,
+   9,
+   0,
+   12,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   16,
+   10,
+   0,
+   12,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   17,
+   11,
+   0,
+   12,
+   3,
+   "LATENT"
+  ],
+  [
+   18,
+   12,
+   0,
+   13,
+   0,
+   "LATENT"
+  ],
+  [
+   19,
+   13,
+   0,
+   14,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.6,
+   "offset": [
+    0,
+    0
+   ]
+  }
+ },
+ "version": 0.4
+}

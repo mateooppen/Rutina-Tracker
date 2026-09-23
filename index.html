@@ -130,6 +130,7 @@
   .ex-media { border-radius: var(--radius); overflow: hidden; background: #fff; margin-bottom: 10px; }
   .ex-media img { width: 100%; display: block; }
   .ex-media img[src*="/rep/"] { max-height: 300px; object-fit: contain; background: #e8f1fb; }
+  .ex-media img[src*="/gen/"] { max-height: 300px; object-fit: contain; background: #fff; }
   .ex-media.pair { position: relative; }
   .ex-media.pair .f2 { position: absolute; inset: 0; animation: pair 2.4s ease-in-out infinite; }
   @keyframes pair { 0%, 35% { opacity: 0; } 50%, 85% { opacity: 1; } 100% { opacity: 0; } }
@@ -522,7 +523,7 @@ const DEFAULT_EJERCICIOS = {
   'Peso muerto rumano con mancuernas': { grupo: 'Cadena posterior', media: 'rdl.gif', 
     pasos: ['Parada con mancuernas al frente de los muslos, rodillas levemente flexionadas.', 'Llevá la cadera hacia atrás bajando las mancuernas pegadas a las piernas.', 'Mantené la espalda recta; vas a sentir el estiramiento atrás del muslo.', 'Subí empujando la cadera adelante apretando los glúteos, sin redondear la espalda.'], 
     tip: 'La bisagra nace de la cadera con la espalda recta, nunca desde la zona lumbar.' },
-  'Jalón con banda': { grupo: 'Espalda', media: '', 
+  'Jalón con banda': { grupo: 'Espalda', media: 'gen/jalon-banda', 
     pasos: ['Enganchá la banda arriba (marco de puerta con el anclaje, o una barra alta) y arrodillate o sentate de frente.', 'Tomá la banda con los brazos estirados arriba, más abiertos que los hombros.', 'Tirá llevando los codos hacia abajo y atrás, hasta que las manos queden a la altura del pecho; juntá los omóplatos.', 'Volvé arriba controlada hasta estirar bien la espalda.'], 
     tip: 'Reemplaza al jalón del gimnasio: es la tracción vertical que le faltaba a la rutina. Si la banda queda floja, alejate un poco.' },
   'Pallof press con banda': { grupo: 'Core', media: 'pallof_press.gif', 
@@ -545,7 +546,7 @@ const DEFAULT_EJERCICIOS = {
   'Flexiones inclinadas en silla o mesa': { grupo: 'Pecho', media: 'db/Incline_Push-Up', 
     pasos: ['Manos apoyadas en el borde de una mesa o silla firme (contra la pared), un poco más abiertas que los hombros, cuerpo en línea recta de cabeza a talones.', 'Bajá el pecho hacia el apoyo flexionando los codos a unos 45° del cuerpo, con el abdomen firme.', 'Empujá hasta estirar los brazos sin bloquear de golpe.', 'Cuanto más bajo el apoyo, más difícil: empezá en la mesa y con las semanas pasá a la silla.'], 
     tip: 'Es la progresión de las flexiones en la pared, que ya quedaron cortas. El objetivo a mediano plazo son flexiones en el piso con rodillas.' },
-  'Remo con banda sentada': { grupo: 'Espalda', media: '', 
+  'Remo con banda sentada': { grupo: 'Espalda', media: 'gen/remo-banda', 
     pasos: ['Sentada en el piso con las piernas estiradas (rodillas apenas flexionadas), la banda pasada por las plantas de los pies.', 'Tomá los extremos con los brazos estirados al frente y la espalda recta.', 'Traccioná llevando los codos hacia atrás pegados al cuerpo, juntando los omóplatos al final.', 'Volvé controlada estirando los brazos sin redondear la espalda.'], 
     tip: 'Si la banda queda floja, dale una vuelta más a las manos.' },
   'Pullover con mancuerna en el piso': { grupo: 'Pecho y dorsales', media: 'pullover.gif', 
@@ -572,7 +573,7 @@ const DEFAULT_EJERCICIOS = {
   'Movilidad 90/90 de cadera': { grupo: 'Movilidad', media: '', 
     pasos: ['Sentada en el piso, una pierna adelante con la rodilla a 90° y la otra hacia el costado también a 90°.', 'Torso erguido; inclinate sobre la pierna de adelante hasta sentir el glúteo, y sostené.', 'Después girá la cadera para cambiar de lado sin usar las manos, si podés. Si no, ayudate.', 'Alterná lados con calma.'], 
     tip: 'Trabaja la rotación de cadera hacia adentro y hacia afuera a la vez. Sin forzar las rodillas: si molestan, abrí un poco los ángulos.' },
-  'Estiramiento de glúteo acostada (figura 4)': { grupo: 'Estiramiento', media: '', 
+  'Estiramiento de glúteo acostada (figura 4)': { grupo: 'Estiramiento', media: 'gen/figura4.png', 
     pasos: ['Acostate boca arriba y cruzá un tobillo sobre la rodilla contraria.', 'Agarrá el muslo de la pierna de apoyo y llevalo suave hacia el pecho.', 'Mantené la cabeza y los hombros apoyados, sin levantar el cuello.'] },
   'Estiramiento de isquiotibiales con talón en la silla': { grupo: 'Estiramiento', media: 'rep/bench-hamstring-stretch-main.webp', 
     pasos: ['Apoyá un talón sobre el asiento de la silla con la pierna casi estirada.', 'Con la espalda recta, inclinate apenas hacia adelante desde la cadera.', 'Mantené la posición respirando profundo, sin forzar la rodilla.'] },
@@ -606,7 +607,7 @@ const DEFAULT_EJERCICIOS = {
   'Bird-dog simplificado (solo pierna)': { grupo: 'Core', media: 'db/Rear_Leg_Raises',
     pasos: ['En cuadrupedia, manos bajo los hombros y rodillas bajo la cadera, espalda neutra.', 'Estirá una pierna hacia atrás hasta la altura de la cadera, sin arquear la espalda baja ni girar la pelvis; las dos manos siguen apoyadas.', 'Sostené 2 segundos y volvé con control. Alterná piernas.'],
     tip: 'Es la versión previa al bird-dog completo: la misma estabilidad de columna sin la coordinación cruzada. Cuando salga fácil, sumá el brazo contrario.' },
-  'Elevaciones de cadera de lado con rodillas apoyadas': { grupo: 'Core', media: '',
+  'Elevaciones de cadera de lado con rodillas apoyadas': { grupo: 'Core', media: 'gen/cadera-lado.png',
     pasos: ['Acostada de lado con el antebrazo apoyado, codo debajo del hombro, rodillas flexionadas una sobre otra.', 'Subí la cadera hasta formar una línea recta de rodillas a cabeza, y bajala controlada hasta casi tocar el piso.', 'El hombro de apoyo activo, lejos de la oreja; el movimiento sale de la cintura, no del brazo.', 'Terminá las repeticiones y cambiá de lado.'],
     tip: 'Es la plancha lateral en movimiento: trabaja los oblicuos y el glúteo medio sin sostener la posición.' },
   'Leñador con banda': { grupo: 'Core', media: 'db/Standing_Cable_Wood_Chop',
@@ -633,7 +634,7 @@ const DEFAULT_EJERCICIOS = {
     pasos: ['Acostado boca arriba, pasá la banda por la planta de un pie y estirá esa pierna hacia el techo; la otra queda extendida en el piso.', 'Tirá suave de la banda hasta sentir el estiramiento atrás del muslo, rodilla lo más recta posible.', 'Contraé 5 segundos empujando el pie contra la banda (sin que se mueva), relajá y ganá un poco de rango. Repetí 3 veces.', 'Cambiá de pierna.'] },
   'Estocada baja (flexor de cadera)':      { grupo: 'Movilidad', media: 'db/Kneeling_Hip_Flexor',
     pasos: ['Rodilla de atrás apoyada (usá algo blando), pie de adelante bien adelante, torso erguido.', 'Apretá el glúteo de la pierna de atrás y llevá la cadera hacia adelante, sin arquear la lumbar.', 'Para sumar, levantá el brazo del lado de la rodilla apoyada e inclinate apenas al lado contrario.', 'Contraé 5 s empujando la rodilla contra el piso, relajá, profundizá. 3 veces por lado.'] },
-  'Rana (aductores)':                      { grupo: 'Movilidad', media: '',
+  'Rana (aductores)':                      { grupo: 'Movilidad', media: 'gen/rana.png',
     pasos: ['En cuadrupedia, abrí las rodillas lo más que puedas, pies hacia afuera con la cara interna apoyada.', 'Bajá a los antebrazos y llevá la cadera hacia atrás, hacia los talones, hasta sentir la cara interna de los muslos.', 'Contraé 5 s apretando las rodillas contra el piso, relajá y ganá rango. 3 veces.', 'Salí despacio juntando las rodillas con las manos.'],
     tip: 'Es la base para la apertura lateral. Progresá abriendo las rodillas, no forzando la cadera hacia abajo.' },
   'Sentadilla profunda sostenida':         { grupo: 'Movilidad', media: 'rep/garland-pose-main.webp',
@@ -988,16 +989,18 @@ const nb = s => esc(s).replace(/ × /g, ' × ').replace(/(\d) (seg|min|reps?)\
 const noExt = f => !/\.[a-z0-9]+$/i.test(f);
 const isPair = f => /^db\//.test(f) && noExt(f);
 const isRepPair = f => /^rep\//.test(f) && noExt(f);
+const isGenPair = f => /^gen\//.test(f) && noExt(f);
 const mediaSrc = f => /^https?:\/\//.test(f) ? f : MEDIA_PATH + f;
 const thumbSrc = f => /^https?:\/\//.test(f) ? f
   : isPair(f) ? MEDIA_PATH + 'thumbs/db_' + f.slice(3) + '.jpg'
   : isRepPair(f) ? MEDIA_PATH + f + '-peak.webp'
+  : /^gen\//.test(f) ? MEDIA_PATH + 'thumbs/gen_' + f.slice(4).replace(/-(inicio|final)$/, '').replace(/\.[a-z0-9]+$/i, '') + '.jpg'
   : /^rep\//.test(f) ? MEDIA_PATH + f
   : MEDIA_PATH + 'thumbs/' + f.replace(/\.[a-z0-9]+$/i, '.jpg');
 function mediaHTML(f, alt) {
-  if (isPair(f) || isRepPair(f)) {
+  if (isPair(f) || isRepPair(f) || isGenPair(f)) {
     const base = MEDIA_PATH + f;
-    const [a, b] = isPair(f) ? ['_0.jpg', '_1.jpg'] : ['-start.webp', '-peak.webp'];
+    const [a, b] = isPair(f) ? ['_0.jpg', '_1.jpg'] : isGenPair(f) ? ['-inicio.png', '-final.png'] : ['-start.webp', '-peak.webp'];
     return `<div class="ex-media pair"><img src="${esc(base + a)}" alt="${esc(alt)} — inicio" loading="lazy"><img class="f2" src="${esc(base + b)}" alt="${esc(alt)} — final" loading="lazy"></div>`;
   }
   return `<div class="ex-media"><img src="${esc(mediaSrc(f))}" alt="${esc(alt)}" loading="lazy"></div>`;

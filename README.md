@@ -73,3 +73,5 @@ Los GIFs de técnica vienen del repo [rutina](https://github.com/mateooppen/ruti
 Las fotos de `assets/db/` (pares inicio/final) vienen de [free-exercise-db](https://github.com/yuhonas/free-exercise-db), dominio público (Unlicense). En la planilla se referencian como `db/Nombre` (sin extensión) y la app las alterna con un fundido.
 
 Las ilustraciones de `assets/rep/` son de RepDB: "Exercise data by RepDB (repdb.co)", uso libre dentro de aplicaciones con atribución (ver su [LICENSE-DATA](https://github.com/RepDB/exercise-dataset/blob/main/LICENSE-DATA.md)). En la planilla se referencian como `rep/<id>` (par inicio/fin) o `rep/<archivo>.webp` (imagen única).
+
+Las ilustraciones de `assets/gen/` son propias, generadas localmente con ComfyUI (Qwen Image Edit) a partir de referencias de pose. En la planilla se referencian como `gen/<nombre>` (par `-inicio.png`/`-final.png`) o `gen/<archivo>.png` (imagen única).
