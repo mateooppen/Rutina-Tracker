@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)">
 <title>Rutina Tracker</title>
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-180.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -248,7 +248,7 @@
   .welcome { position: fixed; inset: 0; z-index: 100; background: var(--page); display: flex; align-items: center; justify-content: center; padding: 24px; padding-top: max(24px, env(safe-area-inset-top)); padding-bottom: max(24px, env(safe-area-inset-bottom)); overflow-y: auto; }
   .welcome[hidden] { display: none; }
   .welcome-in { width: 100%; max-width: 420px; text-align: center; }
-  .welcome-logo { width: 64px; height: 64px; border-radius: 20px; background: var(--text); display: inline-flex; align-items: center; justify-content: center; color: var(--accent); margin-bottom: 20px; }
+  .welcome-logo { width: 112px; height: 112px; border-radius: 26px; display: block; margin: 0 auto 20px; object-fit: cover; }
   .welcome-in h1 { font-size: 26px; font-weight: 750; letter-spacing: -0.03em; margin-bottom: 6px; }
   .welcome-in .sub { font-size: 15px; color: var(--text2); margin-bottom: 28px; }
   .welcome-users { display: flex; flex-direction: column; gap: 10px; }
@@ -277,9 +277,7 @@
 
 <div class="welcome" id="welcome" hidden>
   <div class="welcome-in">
-    <span class="welcome-logo">
-      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>
-    </span>
+    <img class="welcome-logo" src="logo.png" alt="" width="112" height="112">
     <h1>Rutina Tracker</h1>
     <p class="sub">¿Quién va a entrenar?</p>
     <div class="welcome-users" id="welcome-users"></div>
