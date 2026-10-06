@@ -1,7 +1,7 @@
 {
   "name": "Rutina Tracker",
   "short_name": "Rutina",
-  "description": "Tracker de rutina de gimnasio configurable por Google Sheets",
+  "description": "Tracker de rutina de gimnasio",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",

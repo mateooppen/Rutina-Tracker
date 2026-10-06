@@ -223,15 +223,10 @@
   .user-list { display: flex; gap: 8px; flex-wrap: wrap; }
   .user-chip { padding: 10px 18px; min-height: 42px; border-radius: 999px; border: 1px solid var(--border); background: var(--inset); color: var(--text2); font-size: 13.5px; font-weight: 600; cursor: pointer; }
   .user-chip.active { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
-  .cfg-field label { display: block; font-size: 12.5px; font-weight: 550; color: var(--text2); margin-bottom: 6px; }
-  .cfg-input { width: 100%; padding: 12px; min-height: 46px; border-radius: var(--radius); border: 1px solid var(--border2); background: var(--inset); color: var(--text); font-size: 13px; font-family: inherit; }
-  .cfg-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
   .cfg-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
   .btn { padding: 11px 18px; min-height: 44px; border-radius: var(--radius); border: 1px solid var(--border2); background: var(--surface); color: var(--text); font-size: 13.5px; font-weight: 600; cursor: pointer; }
   .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .btn:active { opacity: 0.8; }
-  .cfg-status { font-size: 12.5px; color: var(--text2); margin-top: 10px; line-height: 1.6; }
-  .cfg-status.err { color: var(--danger); }
   .cfg-help { font-size: 12.5px; color: var(--text3); line-height: 1.6; margin-top: 12px; }
   .gloss-item { padding: 11px 0; border-bottom: 1px solid var(--border); }
   .gloss-item:last-child { border-bottom: none; }
@@ -349,20 +344,6 @@
     <div class="h-section">Usuario</div>
     <div class="card"><div class="user-list" id="aj-users"></div></div>
 
-    <div class="h-section">Datos de la rutina</div>
-    <div class="card">
-      <div class="cfg-field">
-        <label for="cfg-sheet">Planilla de Google Sheets</label>
-        <input class="cfg-input" id="cfg-sheet" type="url" placeholder="https://docs.google.com/spreadsheets/d/..." autocomplete="off">
-      </div>
-      <div class="cfg-btns">
-        <button class="btn primary" id="btn-sync">Sincronizar</button>
-        <button class="btn" id="btn-forget" style="display:none">Desconectar</button>
-      </div>
-      <p class="cfg-status" id="cfg-status"></p>
-      <p class="cfg-help">La planilla debe estar compartida como <b>"Cualquier persona con el enlace puede ver"</b> y tener las pestañas <b>Ejercicios</b> y <b>Rutinas</b> (formato en el README del repositorio). Los datos quedan guardados en este teléfono: en el gimnasio funciona sin conexión.</p>
-    </div>
-
     <div class="h-section">Respaldo</div>
     <div class="card">
       <div class="cfg-btns" style="margin-top:0">
@@ -415,7 +396,7 @@
     <div class="h-section">Acerca de</div>
     <div class="card about">
       Rutina Tracker · app familiar de rutinas de gimnasio.<br>
-      La rutina se configura desde Google Sheets; el progreso se guarda en cada teléfono.<br><br>
+      El progreso se guarda en cada teléfono.<br><br>
       Fotos de técnica: <a href="https://github.com/yuhonas/free-exercise-db" style="color:var(--accent-text)">free-exercise-db</a> (dominio público).<br>
       Ilustraciones: <a href="https://repdb.co" style="color:var(--accent-text)">Exercise data by RepDB (repdb.co)</a>.
     </div>
@@ -444,13 +425,10 @@
 <script>
 'use strict';
 /* =====================================================================
- * Rutina Tracker — app configurable por Google Sheets
+ * Rutina Tracker
  *
- * Fuente de datos:
- *   1. Google Sheet (pestañas "Ejercicios" y "Rutinas") si el usuario
- *      conectó una en Ajustes. Se cachea en localStorage para funcionar
- *      offline en el gimnasio.
- *   2. Datos de ejemplo embebidos (DEFAULT_*) si no hay planilla.
+ * Las rutinas y el catálogo de ejercicios viven en este archivo
+ * (EJERCICIOS y RUTINAS).
  *
  * El progreso (semana actual, días hechos, historial) es local a cada
  * dispositivo y separado por usuario.
@@ -462,15 +440,13 @@ const MEDIA_PATH = 'assets/';
 const STORAGE_KEY = 'rtm_v1';
 const LEGACY_KEY = 'gym_v5';
 
-/* ============================== Datos de ejemplo ==============================
- * Mismo formato que la planilla. Sirven de referencia del esquema y de
- * respaldo si nunca se conecta una sheet.
+/* ============================== Datos ==============================
  * Ejercicios: nombre -> { grupo, media, pasos[], tip, alternativa }
  * media: SOLO si la imagen muestra exactamente ese ejercicio (mismo implemento,
  * ángulo y posición). Ante la duda va vacío: una técnica equivocada es peor
  * que ninguna imagen.
  */
-const DEFAULT_EJERCICIOS = {
+const EJERCICIOS = {
   // --- Entrada en calor ---
   'Rotaciones de hombros y cuello':        { grupo: 'Movilidad', media: 'db/Arm_Circles' },
   'Rotaciones de cadera y rodillas':       { grupo: 'Movilidad', media: 'db/Standing_Hip_Circles' },
@@ -678,7 +654,7 @@ const DEFAULT_EJERCICIOS = {
  * Calentamiento/Estiramiento con dia vacío valen para todos los días; con dia, solo para ese día.
  * tag: principal | superserie | opcional | dropset | finisher | ''
  */
-const DEFAULT_RUTINAS = [
+const RUTINAS = [
   // ---- Generales (todos los días) ----
   ['Mateo','','','','Calentamiento','1','Rotaciones de hombros y cuello','10 por lado','','', '','Despacio, en cada dirección'],
   ['Mateo','','','','Calentamiento','2','Rotaciones de cadera y rodillas','10 por dirección','','', '','Pies al ancho de hombros'],
@@ -802,9 +778,13 @@ function rowsToRutinas(rows) {
 function loadState() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const s = JSON.parse(raw);
+      delete s.sheetUrl; delete s.cache;
+      return s;
+    }
   } catch (e) { /* estado corrupto: se arranca de cero */ }
-  const s = { sheetUrl: '', usuario: '', elegido: false, cache: null, progreso: {} };
+  const s = { usuario: '', elegido: false, progreso: {} };
   migrateLegacy(s);
   return s;
 }
@@ -852,13 +832,7 @@ function prog(usuario) {
 
 /* ============================== Datos activos ============================== */
 
-// Devuelve { ejercicios, rutinas, origen } según haya cache de sheet o no.
-function activeData() {
-  if (S.cache && S.cache.rutinas && S.cache.rutinas.length) {
-    return { ejercicios: S.cache.ejercicios || {}, rutinas: S.cache.rutinas, origen: 'sheet' };
-  }
-  return { ejercicios: DEFAULT_EJERCICIOS, rutinas: rowsToRutinas(DEFAULT_RUTINAS), origen: 'demo' };
-}
+const RUTINAS_ROWS = rowsToRutinas(RUTINAS);
 
 const normKey = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase().replace(/\s+/g, ' ');
 
@@ -907,68 +881,6 @@ function usuarios(rutinas) {
 function weekTipo(model, n) {
   if (!model.tipos.length) return '';
   return model.tipos[(n - 1) % model.tipos.length];
-}
-
-/* ============================== Google Sheets ============================== */
-
-function sheetIdFromUrl(url) {
-  const m = String(url || '').match(/\/d\/([a-zA-Z0-9_-]+)/);
-  return m ? m[1] : '';
-}
-
-// Lee una pestaña vía el endpoint GViz (no requiere API key con la planilla
-// compartida por link). Devuelve array de objetos con claves normalizadas.
-async function fetchTab(id, tab) {
-  const url = `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(tab)}`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`No pude leer la pestaña "${tab}" (HTTP ${res.status})`);
-  const txt = await res.text();
-  const start = txt.indexOf('{'), end = txt.lastIndexOf('}');
-  if (start < 0 || end < 0) throw new Error(`Respuesta inválida para "${tab}". ¿La planilla está compartida por link?`);
-  const json = JSON.parse(txt.slice(start, end + 1));
-  if (json.status === 'error') throw new Error(`Google devolvió error para "${tab}": ${(json.errors || []).map(e => e.detailed_message || e.message).join('; ')}`);
-  const cols = (json.table.cols || []).map(c => normKey(c.label));
-  return (json.table.rows || []).map(row => {
-    const o = {};
-    cols.forEach((label, i) => {
-      if (!label) return;
-      const cell = row.c && row.c[i];
-      let v = cell ? (cell.f ?? cell.v) : '';
-      if (v === null || v === undefined) v = '';
-      o[label] = String(v).trim();
-    });
-    return o;
-  }).filter(o => Object.values(o).some(v => v !== ''));
-}
-
-async function syncSheet(url) {
-  const id = sheetIdFromUrl(url);
-  if (!id) throw new Error('Ese link no parece de Google Sheets. Copiá la URL completa de la planilla.');
-  const [ejRows, rutRows] = await Promise.all([fetchTab(id, 'Ejercicios'), fetchTab(id, 'Rutinas')]);
-  const ejercicios = {};
-  for (const r of ejRows) {
-    const nombre = r.ejercicio || r.nombre;
-    if (!nombre) continue;
-    ejercicios[nombre] = {
-      grupo: r.grupo || '',
-      media: r.media || r.imagen || '',
-      pasos: (r.pasos || r.tecnica || '').split('|').map(s => s.trim()).filter(Boolean),
-      tip: r.tip || '',
-      alternativa: r.alternativa || '',
-    };
-  }
-  const rutinas = rutRows.map(r => ({
-    usuario: r.usuario || '', semana: r.semana || '', dia: r.dia || '',
-    dianombre: r.dianombre || r['dia nombre'] || r.nombre || '',
-    seccion: r.seccion || '', orden: r.orden || '', ejercicio: r.ejercicio || '',
-    series: r.series || '', intensidad: r.intensidad || '', descanso: r.descanso || '',
-    tag: (r.tag || '').toLowerCase(), nota: r.nota || '',
-  })).filter(r => r.usuario && r.ejercicio);
-  if (!rutinas.length) throw new Error('La pestaña "Rutinas" no tiene filas válidas (necesita al menos usuario y ejercicio).');
-  S.sheetUrl = url;
-  S.cache = { ejercicios, rutinas, ts: Date.now() };
-  if (!usuarios(rutinas).some(u => normKey(u) === normKey(S.usuario))) { S.usuario = usuarios(rutinas)[0]; S.elegido = false; }
-  saveState();
 }
 
 /* ============================== Helpers de render ============================== */
@@ -1238,11 +1150,11 @@ let diaTipoSel = null;        // tipo (A/B) elegido dentro de la pantalla de dí
 let flash = null;             // semana recién completada (banner)
 
 function ctx() {
-  const { ejercicios, rutinas, origen } = activeData();
+  const ejercicios = EJERCICIOS, rutinas = RUTINAS_ROWS;
   const users = usuarios(rutinas);
   if (!S.usuario || !users.some(u => normKey(u) === normKey(S.usuario))) S.usuario = users[0] || '';
   const model = buildModel(rutinas, S.usuario);
-  return { ejercicios, rutinas, origen, users, model, p: prog(S.usuario) };
+  return { ejercicios, rutinas, users, model, p: prog(S.usuario) };
 }
 
 function showView(v, dia) {
@@ -1411,15 +1323,6 @@ function renderAjustes(c) {
   $('aj-users').innerHTML = c.users.map(u =>
     `<button class="user-chip ${normKey(u) === normKey(S.usuario) ? 'active' : ''}" data-user="${esc(u)}">${esc(u)}</button>`).join('')
     || '<p class="empty-note">Sin usuarios en los datos.</p>';
-  $('cfg-sheet').value = S.sheetUrl || '';
-  $('btn-forget').style.display = c.origen === 'sheet' ? '' : 'none';
-  const st = $('cfg-status');
-  if (!st.dataset.busy) {
-    st.className = 'cfg-status';
-    st.textContent = c.origen === 'sheet'
-      ? `Conectado a la planilla. Última sincronización: ${new Date(S.cache.ts).toLocaleString('es-AR')}.`
-      : 'Sin planilla conectada: estás viendo los datos de ejemplo.';
-  }
 }
 
 /* ============================== Acciones ============================== */
@@ -1491,7 +1394,7 @@ function toggleDia(n) {
   const h = p.hechos[semana] = p.hechos[semana] || {};
   const marcando = !h[n];
   if (marcando) h[n] = true; else delete h[n];
-  const model = buildModel(activeData().rutinas, S.usuario);
+  const model = buildModel(RUTINAS_ROWS, S.usuario);
   const completa = model.dias.length && model.dias.every(d => h[d.n]);
   if (completa && !p.completadas[semana]) {
     p.completadas[semana] = new Date().toISOString();
@@ -1692,28 +1595,6 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Sincronización con la sheet
-$('btn-sync').addEventListener('click', async () => {
-  const url = $('cfg-sheet').value.trim();
-  const st = $('cfg-status');
-  st.dataset.busy = '1'; st.className = 'cfg-status'; st.textContent = 'Sincronizando…';
-  try {
-    await syncSheet(url);
-    delete st.dataset.busy;
-    render();
-  } catch (err) {
-    st.className = 'cfg-status err';
-    st.textContent = 'Error: ' + err.message;
-    delete st.dataset.busy;
-  }
-});
-$('btn-forget').addEventListener('click', () => {
-  if (confirm('¿Desconectar la planilla y volver a los datos de ejemplo? Tu progreso no se borra.')) {
-    S.cache = null; S.sheetUrl = '';
-    saveState(); render();
-  }
-});
-
 history.replaceState(null, '');
 
 // Respaldo del progreso y las sesiones
@@ -1737,9 +1618,6 @@ $('import-file').addEventListener('change', async e => {
   } catch (err) { alert('No se pudo importar: ' + err.message); }
   e.target.value = '';
 });
-
-// Al abrir: si hay sheet conectada, refresca en segundo plano (si hay red).
-if (S.sheetUrl) syncSheet(S.sheetUrl).then(render).catch(() => {});
 
 render();
 

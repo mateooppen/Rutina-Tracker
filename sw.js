@@ -2,7 +2,7 @@
  * - Precachea el shell de la app para que funcione offline.
  * - Cachea los GIFs de assets/ a medida que se ven (cache-first).
  * Al publicar cambios, subí la versión de CACHE para invalidar lo viejo. */
-const CACHE = 'rtm-v24';
+const CACHE = 'rtm-v25';
 const SHELL = ['./', 'manifest.json', 'logo.png', 'icon-180.png', 'icon-512.png'];
 
 self.addEventListener('install', e => {
@@ -19,7 +19,7 @@ self.addEventListener('activate', e => {
 
 self.addEventListener('fetch', e => {
   const url = new URL(e.request.url);
-  if (e.request.method !== 'GET' || url.origin !== location.origin) return; // p. ej. Google Sheets: directo a la red
+  if (e.request.method !== 'GET' || url.origin !== location.origin) return;
 
   // Assets (GIFs/imágenes): cache-first, no cambian seguido.
   if (url.pathname.includes('/assets/')) {
