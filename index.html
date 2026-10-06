@@ -254,6 +254,24 @@
   .welcome-user .chev { color: var(--text3); }
   .welcome-note { font-size: 12.5px; color: var(--text3); margin-top: 22px; line-height: 1.6; }
 
+  /* ---------- Reproductor guiado (sesiones libres) ---------- */
+  .guide { padding: 14px 16px; }
+  .g-idle { display: flex; align-items: center; gap: 14px; }
+  .g-idle > div { flex: 1; min-width: 0; }
+  .g-lbl { font-size: 11.5px; font-weight: 650; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .g-txt { font-size: 13px; color: var(--text2); line-height: 1.5; margin-top: 3px; }
+  .g-start { display: inline-flex; align-items: center; gap: 6px; padding: 0 16px; height: 44px; border-radius: 12px; border: none; background: var(--accent); color: var(--on-accent); font-size: 14px; font-weight: 700; cursor: pointer; flex-shrink: 0; }
+  .g-top { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; }
+  .g-top .g-lbl:last-child { text-align: right; }
+  .g-name { font-size: 20px; font-weight: 750; letter-spacing: -0.02em; line-height: 1.2; }
+  .g-note { font-size: 13.5px; color: var(--accent-text); font-weight: 600; margin-top: 3px; }
+  .g-time { font-size: 56px; font-weight: 750; letter-spacing: -0.04em; line-height: 1.1; margin: 10px 0 8px; text-align: center; }
+  .g-bar { height: 6px; background: var(--inset); border-radius: 3px; overflow: hidden; }
+  .g-bar i { display: block; height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.25s linear; }
+  .g-acts { display: flex; gap: 8px; margin-top: 14px; }
+  .g-acts button { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 44px; border-radius: 12px; border: 1px solid var(--border2); background: var(--inset); font-size: 13.5px; font-weight: 600; cursor: pointer; }
+  .g-acts button.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+
   /* ---------- Toast ---------- */
   .toast-in { display: flex; align-items: center; gap: 10px; background: var(--text); color: var(--page); border-radius: var(--radius-lg); padding: 8px 8px 8px 16px; font-size: 13.5px; font-weight: 600; box-shadow: 0 8px 28px rgba(0,0,0,0.28); animation: fadein 0.18s ease; }
   .toast-in button { margin-left: auto; background: none; border: none; color: #a3e635; font-size: 13.5px; font-weight: 700; cursor: pointer; padding: 10px 12px; min-height: 40px; }
@@ -308,6 +326,7 @@
       <div class="hero-prog"><i id="rt-prog"></i></div>
     </div>
     <div id="rt-days"></div>
+    <div id="rt-extras"></div>
   </section>
 
   <!-- ============ DÍA ============ -->
@@ -645,11 +664,50 @@ const EJERCICIOS = {
   'Colgarse de la barra':                  { grupo: 'Hombros', media: 'rep/dead-hang-main.webp',
     pasos: ['Agarre al ancho de hombros, cuerpo colgando relajado, pies sin tocar el piso.', 'Dejá que los hombros suban hacia las orejas: es una descompresión, no un ejercicio de fuerza.', 'Respirá lento y sentí cómo se abre la espalda y los hombros.'],
     tip: 'Si el agarre no aguanta, apoyá las puntas de los pies en una silla y descargá parte del peso.' },
+
+  // ============ Sesión libre de cervicales (sentado; sirve en una silla) ============
+  'Postura de base sentado': { grupo: 'Cervicales', media: '',
+    pasos: ['Sentate con las piernas cruzadas o en una silla, con la espalda recta.', 'Subí los hombros, llevalos atrás y abajo, juntando los omóplatos.', 'Coronilla hacia el techo, como si crecieras. Relajá la cara y respirá.'] },
+  'Retracción del cuello': { grupo: 'Cervicales', media: '',
+    pasos: ['Empujá la nuca hacia atrás como haciendo doble mentón, sin inclinar la cabeza.', 'Desde ahí estirá el mentón hacia adelante.', 'Volvé atrás. Lento, observando sensaciones: si algo duele, no sigas.'],
+    tip: 'Es lo contrario de la cabeza adelantada frente a la pantalla.' },
+  'Mentón abajo y enderezar': { grupo: 'Cervicales', media: '',
+    pasos: ['Llevá el mentón adelante y abajo, hacia el pecho.', 'Enderezá tirando la nuca hacia atrás hasta volver a la vertical.', 'Espalda recta todo el tiempo.'] },
+  'Flexión y extensión de cuello': { grupo: 'Cervicales', media: '',
+    pasos: ['Bajá la cabeza llevando el mentón al pecho.', 'Subí y llevala suavemente hacia atrás, mirando al techo.', 'Movimiento fluido, sin forzar: sentí cómo las vértebras ganan espacio.'] },
+  'Inclinación lateral de cuello': { grupo: 'Cervicales', media: '',
+    pasos: ['Oreja derecha hacia el hombro derecho. Volvé al centro.', 'Oreja izquierda hacia el hombro izquierdo. Volvé al centro.', 'Los hombros quedan quietos y bajos.'],
+    tip: 'Si la musculatura está muy contraída puede costar: no rebotes.' },
+  'Semicírculo de cuello por delante': { grupo: 'Cervicales', media: '',
+    pasos: ['Oreja hacia un hombro.', 'Pasá por delante, con el mentón cerca del pecho, hasta el otro hombro.', 'Ida y vuelta, despacio. Nunca por detrás.'] },
+  'Círculos completos de cabeza': { grupo: 'Cervicales', media: '',
+    pasos: ['5 vueltas lentas hacia un lado.', '5 vueltas hacia el otro.', 'Con mucho cuidado en la parte de atrás; si marea o duele, hacé solo semicírculos por delante.'] },
+  'Rotación de cuello': { grupo: 'Cervicales', media: '',
+    pasos: ['Mirá hacia la derecha, volvé al centro, mirá a la izquierda.', 'Mentón a la misma altura, sin inclinar.', 'Fluido.'] },
+  'Manos en la nuca con codos juntos': { grupo: 'Cervicales', media: '',
+    pasos: ['Entrelazá los dedos en la nuca y juntá los codos al frente.', 'Dejá caer la cabeza con el peso de los brazos, sin tirar.', 'Sentí el estiramiento en el cuello y entre los omóplatos.', 'Al final, pequeños movimientos a los lados.'],
+    tip: 'El peso de los brazos alcanza; no tires con fuerza.' },
+  'Automasaje de cuello': { grupo: 'Cervicales', media: '',
+    pasos: ['Apoyá las manos a los lados del cuello.', 'Deslizá con presión firme hacia abajo, hacia los hombros, varias veces.', 'Después masajeá a los lados y donde sientas más tensión.'] },
+  'Círculos de hombros': { grupo: 'Hombros', media: '',
+    pasos: ['Círculos amplios con los hombros hacia atrás.', 'Después hacia adelante.', 'Respirá con el movimiento.'] },
+  'Brazos en cruz con pulsos atrás': { grupo: 'Hombros', media: '',
+    pasos: ['Brazos abiertos a los lados a la altura de los hombros, palmas al frente.', 'Pulsos suaves hacia atrás, juntando los omóplatos.', 'Pecho abierto, cuello largo.'] },
+  'Tomarse los codos por detrás': { grupo: 'Hombros', media: '',
+    pasos: ['Llevá los brazos detrás de la espalda y tomate los codos (o las muñecas si no llegás).', 'Espalda recta, pecho abierto. Mantené respirando.', 'Soltá y repetí con el otro brazo por arriba.'] },
+  'Brazos de águila con inclinación': { grupo: 'Hombros', media: '',
+    pasos: ['Cruzá los brazos al frente y enrollá los antebrazos, o apoyá las manos en los hombros opuestos.', 'Codos arriba, separando los omóplatos.', 'Inclinate hacia el lado indicado, llevá la cabeza al pecho y bajá despacio hacia adelante.', 'Subí vértebra por vértebra, muy despacio.'],
+    tip: 'Buscá la posición más cómoda: solo vos sabés qué necesita tu cuerpo.' },
+  'Cierre sentado': { grupo: 'Cervicales', media: '',
+    pasos: ['Soltá los brazos y relajá el cuello.', 'Enderezá la espalda, crecé hacia el techo y respirá profundo.'] },
 };
 
 /* Rutinas: filas con el mismo esquema que la pestaña "Rutinas".
  * [usuario, semana(A/B/''), dia(nº o '' p/ secciones generales), diaNombre,
  *  seccion, orden, ejercicio, series, intensidad, descanso, tag, nota]
+ * dia con texto (p. ej. 'cervicales') = sesión libre: no cuenta para la semana,
+ * se registra por fecha. Si todos sus pasos tienen tiempo ("45 seg"), la app
+ * la guía de corrido con un timer. Su calentamiento/estiramiento es solo propio.
  * seccion: Calentamiento | Principal | Secundario | Accesorios | Opcional | Estiramiento (u otra: se usa como título)
  * Calentamiento/Estiramiento con dia vacío valen para todos los días; con dia, solo para ese día.
  * tag: principal | superserie | opcional | dropset | finisher | ''
@@ -701,6 +759,24 @@ const RUTINAS = [
   ['Mateo','','4','Casa · Handstand y movilidad','Movilidad','6','Rana (aductores)','90 seg','','','','Contraer 5 s y relajar, 3 veces'],
   ['Mateo','','4','Casa · Handstand y movilidad','Opcional','7','Sentadilla profunda sostenida','60 seg','','','opcional','Si sobra tiempo'],
   ['Mateo','','4','Casa · Handstand y movilidad','Estiramiento','1','Colgarse de la barra','2 × 30 seg','','30 seg','',''],
+  // ---- Sesión libre: cervicales (~10 min, sentado) · del video "Alivia dolor cervical" de MalovaElena ----
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','1','Postura de base sentado','30 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','2','Retracción del cuello','45 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','3','Mentón abajo y enderezar','40 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','4','Flexión y extensión de cuello','30 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','5','Inclinación lateral de cuello','40 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','6','Semicírculo de cuello por delante','25 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','7','Círculos completos de cabeza','45 seg','','','','5 vueltas por lado'],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','8','Rotación de cuello','25 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','9','Manos en la nuca con codos juntos','50 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','10','Automasaje de cuello','60 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','11','Círculos de hombros','20 seg','','','','Atrás y después adelante'],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','12','Brazos en cruz con pulsos atrás','15 seg','','','',''],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','13','Tomarse los codos por detrás','30 seg','','','','Derecho por arriba'],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','14','Tomarse los codos por detrás','20 seg','','','','Izquierdo por arriba'],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','15','Brazos de águila con inclinación','60 seg','','','','Derecho arriba · hacia la derecha'],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','16','Brazos de águila con inclinación','60 seg','','','','Izquierdo arriba · hacia la izquierda'],
+  ['Mateo','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','17','Cierre sentado','15 seg','','','',''],
   // ============ Vero: 3 fuerza (~40 min) + 2 core/movilidad (~25 min) ============
   // Fases: semanas 1–2 RIR 3–4 · 3–4 RIR 2–3 · desde la 5, el RIR indicado.
   ['Vero','','1','Piernas, pecho y espalda','Calentamiento','1','Movilidad articular de pie','3 min','','','',''],
@@ -807,12 +883,23 @@ let S = loadState();
 
 /* Sesiones: pesos y reps registrados por serie.
  * S.sesiones[usuario][semana:dia] = { fecha, sets: { [ejercicio]: [{kg, reps, ok}] } } */
-function sesion(usuario, semana, dia) {
+function sesion(usuario, semana, dia) { return sesionK(usuario, semana + ':' + dia); }
+function sesionK(usuario, k) {
   S.sesiones = S.sesiones || {};
   const u = S.sesiones[usuario] = S.sesiones[usuario] || {};
-  const k = semana + ':' + dia;
   if (!u[k]) u[k] = { fecha: new Date().toISOString(), sets: {} };
   return u[k];
+}
+/* Sesiones libres: S.extras[usuario][id] = [fecha ISO, ...] (una por vez que se hizo). */
+function extrasDe(usuario) { S.extras = S.extras || {}; return S.extras[usuario] = S.extras[usuario] || {}; }
+function vecesExtra(usuario, id) { return extrasDe(usuario)[id] || []; }
+// Clave de sesión (pesos/series) de un día: semana:dia, o x:id:n para la n-ésima vez de una sesión libre.
+function claveSesion(p, d) { return d.libre ? 'x:' + d.n + ':' + (vecesExtra(S.usuario, d.n).length + 1) : p.semana + ':' + d.n; }
+const hoyISO = () => new Date().toISOString().slice(0, 10);
+function haceTexto(iso) {
+  if (!iso) return 'nunca';
+  const d = Math.round((new Date(hoyISO()) - new Date(iso.slice(0, 10))) / 86400000);
+  return d <= 0 ? 'hoy' : d === 1 ? 'ayer' : d < 14 ? `hace ${d} días` : new Date(iso).toLocaleDateString('es-AR', { day: 'numeric', month: 'short' });
 }
 // Series confirmadas de la última sesión (distinta de la actual) con ese ejercicio.
 function ultimaVez(usuario, ejercicio, actualKey) {
@@ -850,8 +937,9 @@ function buildModel(rutinas, usuario) {
   const esCal = r => normKey(r.seccion) === 'calentamiento';
   const esEst = r => normKey(r.seccion).startsWith('estiramiento');
   const conDia = r => r.dia !== '' && !isNaN(Number(r.dia)) && Number(r.dia) > 0;
-  const cal = rs.filter(r => esCal(r) && !conDia(r));
-  const est = rs.filter(r => esEst(r) && !conDia(r));
+  const esLibre = r => r.dia !== '' && isNaN(Number(r.dia));
+  const cal = rs.filter(r => esCal(r) && !conDia(r) && !esLibre(r));
+  const est = rs.filter(r => esEst(r) && !conDia(r) && !esLibre(r));
   const main = rs.filter(r => conDia(r) && !esCal(r) && !esEst(r));
   // Calentamiento/estiramiento propios de un día (reemplazan a los generales)
   const calDia = {}, estDia = {};
@@ -870,8 +958,29 @@ function buildModel(rutinas, usuario) {
   const ordenar = arr => arr.sort((a, b) => String(a.orden).localeCompare(String(b.orden), 'es', { numeric: true }));
   dias.forEach(d => { Object.values(d.porTipo).forEach(ordenar); d.calentamiento = ordenar(calDia[d.n] || []); d.estiramiento = ordenar(estDia[d.n] || []); });
   ordenar(cal); ordenar(est);
-  return { dias, calentamiento: cal, estiramiento: est, tipos };
+  // Sesiones libres: un "día" por identificador de texto, sin tipos de semana.
+  const byLibre = new Map();
+  for (const r of rs.filter(esLibre)) {
+    const id = normKey(r.dia);
+    if (!byLibre.has(id)) byLibre.set(id, { n: id, nombre: r.dianombre || r.dia, libre: true, filas: [], calentamiento: [], estiramiento: [] });
+    const x = byLibre.get(id);
+    (esCal(r) ? x.calentamiento : esEst(r) ? x.estiramiento : x.filas).push(r);
+  }
+  const extras = [...byLibre.values()];
+  extras.forEach(x => {
+    ordenar(x.filas); ordenar(x.calentamiento); ordenar(x.estiramiento);
+    x.pasos = x.filas.map(r => ({ r, secs: pasoSegs(r.series) }));
+    x.guiada = x.filas.length > 0 && x.pasos.every(p => p.secs > 0);
+    x.duracion = x.pasos.reduce((a, p) => a + p.secs, 0);
+  });
+  return { dias, calentamiento: cal, estiramiento: est, tipos, extras };
 }
+// "45 seg" / "2 min" -> segundos de un paso guiado; series con reps -> 0
+function pasoSegs(series) {
+  const t = String(series).match(/^\s*(\d+)\s*(seg|min)\b/i);
+  return t ? +t[1] * (/min/i.test(t[2]) ? 60 : 1) : 0;
+}
+function findDia(model, n) { return model.dias.find(d => d.n === n) || model.extras.find(x => x.n === n) || null; }
 
 function usuarios(rutinas) {
   return [...new Set(rutinas.map(r => r.usuario).filter(Boolean))];
@@ -909,6 +1018,9 @@ const ICONS = {
   dumbbell: '<path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/>',
   trophy: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>',
   sunrise: '<path d="M12 2v8"/><path d="m4.93 10.93 1.41 1.41"/><path d="M2 18h2"/><path d="M20 18h2"/><path d="m19.07 10.93-1.41 1.41"/><path d="M22 22H2"/><path d="m8 6 4-4 4 4"/><path d="M16 18a4 4 0 0 0-8 0"/>',
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  pause: '<rect x="14" y="4" width="4" height="16" rx="1"/><rect x="6" y="4" width="4" height="16" rx="1"/>',
+  skipForward: '<path d="M5 4l10 8-10 8V4z"/><line x1="19" x2="19" y1="5" y2="19"/>',
   stretch: '<circle cx="12" cy="5" r="1.5"/><path d="m9 20 3-6 3 6"/><path d="m6 8 6 2 6-2"/><path d="M12 10v4"/>',
 };
 function icon(name, size = 16, cls = '') {
@@ -1166,7 +1278,7 @@ function showView(v, dia) {
   render();
   window.scrollTo(0, 0);
 }
-window.addEventListener('popstate', () => { if (currentDia != null) { if (H) stopHold(false); currentDia = null; diaTipoSel = null; wakeOff(); render(); } });
+window.addEventListener('popstate', () => { if (currentDia != null) { if (H) stopHold(false); guideStop(); currentDia = null; diaTipoSel = null; wakeOff(); render(); } });
 
 /* ============================== Render ============================== */
 
@@ -1193,9 +1305,9 @@ function render() {
   const tipo = weekTipo(c.model, c.p.semana);
 
   // Topbar
-  const dia = currentDia != null ? c.model.dias.find(d => d.n === currentDia) : null;
+  const dia = currentDia != null ? findDia(c.model, currentDia) : null;
   $('topbar').classList.toggle('has-back', !!dia);
-  $('topbar-title').textContent = dia ? 'Entrenamiento' : 'Rutina Tracker';
+  $('topbar-title').textContent = dia ? (dia.libre ? 'Sesión libre' : 'Entrenamiento') : 'Rutina Tracker';
   $('user-name').textContent = S.usuario || '—';
   $('user-avatar').textContent = (S.usuario || '?').charAt(0).toUpperCase();
 
@@ -1245,10 +1357,29 @@ function renderRutina(c, tipo) {
         </div>
         ${icon('chevronRight', 18, 'chev')}
       </div>`;
-  }).join('') || '<p class="empty-note">Este usuario no tiene días cargados en la rutina. Revisá la planilla en Ajustes.</p>';
+  }).join('') || '<p class="empty-note">Este usuario no tiene días cargados en la rutina.</p>';
+
+  $('rt-extras').innerHTML = model.extras.length ? `<div class="h-section">Sesiones libres</div>` + model.extras.map(x => {
+    const veces = vecesExtra(S.usuario, x.n);
+    const ultima = veces[veces.length - 1];
+    const hoy = !!ultima && ultima.slice(0, 10) === hoyISO();
+    const { titulo, contexto } = splitNombre(x.nombre);
+    const meta = [x.filas.length ? `${x.filas.length} pasos` : '', x.duracion ? Math.round(x.duracion / 60) + ' min' : '', 'última vez ' + haceTexto(ultima)].filter(Boolean).join(' · ');
+    return `
+      <div class="day-card ${hoy ? 'done' : ''}" data-open-dia="${esc(x.n)}" role="button" tabindex="0">
+        <span class="day-check">${hoy ? icon('check', 20) : icon('leaf', 20)}</span>
+        <div class="info">
+          <div class="ov">${esc(contexto || 'Cuando quieras')}${hoy ? ' · hecha hoy' : ''}</div>
+          <div class="nm">${esc(titulo)}</div>
+          <div class="dt">${esc(meta)}</div>
+        </div>
+        ${icon('chevronRight', 18, 'chev')}
+      </div>`;
+  }).join('') : '';
 }
 
 function renderDia(c, d) {
+  if (d.libre) return renderLibre(c, d);
   const { model, p, ejercicios } = c;
   const tipoActual = weekTipo(model, p.semana);
   if (diaTipoSel === null) diaTipoSel = tipoActual;
@@ -1297,6 +1428,140 @@ function renderDia(c, d) {
   btn.dataset.mark = d.n;
 }
 
+/* Pantalla de una sesión libre. Si es guiada (todos los pasos con tiempo), un
+ * reproductor recorre los pasos de corrido con aviso al cambiar; la secuencia
+ * completa queda debajo. Si tiene series con reps, se registra como un día normal. */
+function renderLibre(c, d) {
+  const { p, ejercicios } = c;
+  const veces = vecesExtra(S.usuario, d.n);
+  const ultima = veces[veces.length - 1];
+  const { titulo, contexto } = splitNombre(d.nombre);
+  if (G && G.id !== d.n) guideStop();
+
+  $('dia-hero').innerHTML = `
+    <div class="dia-hero">
+      <div class="ov">Sesión libre${contexto ? ' · ' + esc(contexto) : ''}</div>
+      <h2>${esc(titulo)}</h2>
+      <div class="stats">
+        <span class="stat">${icon('dumbbell', 14)}${d.filas.length} pasos</span>
+        ${d.duracion ? `<span class="stat">${icon('timer', 14)}${Math.round(d.duracion / 60)} min</span>` : ''}
+        <span class="stat">${icon('history', 14)}${veces.length ? `${veces.length} ${veces.length === 1 ? 'vez' : 'veces'} · ${haceTexto(ultima)}` : 'Nunca hecha'}</span>
+      </div>
+    </div>`;
+  $('dia-seg').innerHTML = '';
+
+  const cal = d.calentamiento;
+  $('dia-warm').innerHTML = (d.guiada ? guideHTML(d) : '') + (cal.length
+    ? accHTML('sunrise', 'Entrada en calor', cal.length + ' ejercicios', simpleListHTML(ejercicios, cal)) : '');
+
+  if (d.guiada) {
+    $('dia-main').innerHTML = workoutHTML(ejercicios, d.filas, null) || '<p class="ex-nodata">Sin pasos cargados.</p>';
+    guidePaint();
+  } else {
+    const key = claveSesion(p, d);
+    $('dia-main').innerHTML = workoutHTML(ejercicios, d.filas, { ses: sesionK(S.usuario, key), key }) || '<p class="ex-nodata">Sin ejercicios cargados.</p>';
+  }
+
+  const est = d.estiramiento;
+  $('dia-cool').innerHTML = est.length
+    ? accHTML('stretch', est.length === 1 ? 'Cierre' : 'Estiramientos', est.length + (est.length === 1 ? ' ejercicio' : ' ejercicios'), simpleListHTML(ejercicios, est)) : '';
+
+  const btn = $('btn-dia-mark');
+  btn.innerHTML = `${icon('check', 18)}Registrar sesión`;
+  btn.className = 'btn-big';
+  delete btn.dataset.mark;
+  btn.dataset.extraReg = d.n;
+}
+
+/* ---- Reproductor guiado de una sesión libre ---- */
+let G = null, gIv = null; // { id, pasos, i, endsAt, left (si está en pausa), done }
+function guideHTML(d) {
+  return `<div class="guide card" id="guide"></div>`;
+}
+function guidePaint() {
+  const el = $('guide'); if (!el) return;
+  const c = ctx(); const d = findDia(c.model, currentDia); if (!d || !d.guiada) return;
+  const blks = document.querySelectorAll('#dia-main .blk');
+  blks.forEach(b => b.classList.remove('cur', 'done'));
+  if (!G || G.id !== d.n) {
+    el.innerHTML = `
+      <div class="g-idle">
+        <div><div class="g-lbl">Modo guiado</div><div class="g-txt">Un timer recorre los ${d.pasos.length} pasos de corrido y avisa al cambiar.</div></div>
+        <button class="g-start" data-g="start">${icon('play', 18)}Empezar</button>
+      </div>`;
+    return;
+  }
+  if (G.done) {
+    el.innerHTML = `
+      <div class="g-idle">
+        <div><div class="g-lbl" style="color:var(--accent-text)">Sesión completa</div><div class="g-txt">Quedó registrada. ¡Bien ahí!</div></div>
+        <button class="g-start" data-g="start">${icon('repeat', 18)}Otra vez</button>
+      </div>`;
+    blks.forEach(b => b.classList.add('done'));
+    return;
+  }
+  const paso = G.pasos[G.i], next = G.pasos[G.i + 1];
+  blks.forEach((b, i) => { if (i < G.i) b.classList.add('done'); if (i === G.i) b.classList.add('cur'); });
+  el.innerHTML = `
+    <div class="g-top"><span class="g-lbl">Paso ${G.i + 1} de ${G.pasos.length}</span><span class="g-lbl">${next ? 'Sigue: ' + esc(next.r.ejercicio) : 'Último paso'}</span></div>
+    <div class="g-name">${esc(paso.r.ejercicio)}</div>
+    ${paso.r.nota ? `<div class="g-note">${esc(paso.r.nota)}</div>` : ''}
+    <div class="g-time num" id="g-time">${fmtT(paso.secs)}</div>
+    <div class="g-bar"><i id="g-bar" style="width:100%"></i></div>
+    <div class="g-acts">
+      <button data-g="pause" class="${G.left != null ? 'on' : ''}">${G.left != null ? icon('play', 18) + 'Seguir' : icon('pause', 18) + 'Pausa'}</button>
+      <button data-g="next">${icon('skipForward', 18)}Siguiente</button>
+      <button data-g="stop">${icon('x', 18)}Salir</button>
+    </div>`;
+  guideTick();
+}
+function guideStart() {
+  const c = ctx(); const d = findDia(c.model, currentDia); if (!d || !d.guiada) return;
+  beep(); // también desbloquea el audio en iOS con el toque del usuario
+  G = { id: d.n, pasos: d.pasos, i: 0, endsAt: Date.now() + d.pasos[0].secs * 1000, left: null, done: false };
+  clearInterval(gIv); gIv = setInterval(guideTick, 250);
+  guidePaint();
+}
+function guideGo(i) {
+  if (!G) return;
+  if (i >= G.pasos.length) { // terminó: registrar y avisar
+    G.done = true; clearInterval(gIv);
+    beep(); if (navigator.vibrate) navigator.vibrate([300, 120, 300, 120, 300]);
+    registrarExtra(G.id, true);
+    return;
+  }
+  G.i = i; G.endsAt = Date.now() + G.pasos[i].secs * 1000; G.left = null;
+  beep(); if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+  guidePaint();
+}
+function guideTick() {
+  if (!G || G.done) return;
+  const total = G.pasos[G.i].secs;
+  const left = G.left != null ? G.left : Math.max(0, Math.ceil((G.endsAt - Date.now()) / 1000));
+  const el = $('g-time'), bar = $('g-bar');
+  if (el) el.textContent = fmtT(left);
+  if (bar) bar.style.width = Math.round(left / total * 100) + '%';
+  if (!left && G.left == null) guideGo(G.i + 1);
+}
+function guidePause() {
+  if (!G || G.done) return;
+  if (G.left != null) { G.endsAt = Date.now() + G.left * 1000; G.left = null; }
+  else G.left = Math.max(0, Math.ceil((G.endsAt - Date.now()) / 1000));
+  guidePaint();
+}
+function guideStop() { G = null; clearInterval(gIv); }
+
+// Registra una vez más la sesión libre (fecha de hoy) y ofrece deshacer.
+function registrarExtra(id, quedarse) {
+  const lista = extrasDe(S.usuario)[id] = vecesExtra(S.usuario, id).slice();
+  lista.push(new Date().toISOString());
+  saveState();
+  const d = findDia(ctx().model, id);
+  showToast({ extra: id, texto: `${splitNombre(d ? d.nombre : id).titulo}: sesión registrada` });
+  if (!quedarse && currentDia != null) { history.back(); return; }
+  render();
+}
+
 function renderProgreso(c, tipo) {
   const { model, p } = c;
   const hechos = p.hechos[p.semana] || {};
@@ -1331,7 +1596,7 @@ let toast = null, toastTimer = null;
 
 function showToast(t) {
   toast = t;
-  $('toast').innerHTML = `<div class="toast-in">${icon('check', 16)}<span>Día ${t.dia} marcado como hecho</span><button data-undo>Deshacer</button></div>`;
+  $('toast').innerHTML = `<div class="toast-in">${icon('check', 16)}<span>${esc(t.texto || `Día ${t.dia} marcado como hecho`)}</span><button data-undo>Deshacer</button></div>`;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(hideToast, 6000);
 }
@@ -1414,6 +1679,7 @@ function toggleDia(n) {
 function undoMark() {
   if (!toast) return;
   const p = prog(S.usuario), t = toast;
+  if (t.extra) { vecesExtra(S.usuario, t.extra).pop(); if (G && G.done) guideStop(); hideToast(); saveState(); render(); return; }
   if (p.hechos[t.semana]) delete p.hechos[t.semana][t.dia];
   if (p.completadas[t.semana]) { delete p.completadas[t.semana]; p.semana = t.semana; flash = null; }
   hideToast(); saveState(); render();
@@ -1426,6 +1692,7 @@ $('btn-next').addEventListener('click', () => { const p = prog(S.usuario); p.sem
 $('btn-reset').addEventListener('click', () => {
   if (confirm(`¿Reiniciar todo el progreso de ${S.usuario}? El historial se pierde.`)) {
     S.progreso[S.usuario] = { semana: 1, hechos: {}, completadas: {} };
+    if (S.extras) delete S.extras[S.usuario];
     saveState(); render();
   }
 });
@@ -1436,6 +1703,17 @@ document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () =>
 document.addEventListener('click', e => {
   const mark = e.target.closest('[data-mark]');
   if (mark) { e.stopPropagation(); toggleDia(Number(mark.dataset.mark)); return; }
+  const xr = e.target.closest('[data-extra-reg]');
+  if (xr) { registrarExtra(xr.dataset.extraReg); return; }
+  const g = e.target.closest('[data-g]');
+  if (g) {
+    const a = g.dataset.g;
+    if (a === 'start') guideStart();
+    else if (a === 'pause') guidePause();
+    else if (a === 'next') guideGo(G ? G.i + 1 : 0);
+    else if (a === 'stop') { guideStop(); render(); }
+    return;
+  }
   if (e.target.closest('[data-undo]')) { undoMark(); return; }
   if (e.target.closest('[data-dismiss]')) { flash = null; render(); return; }
   const pick = e.target.closest('[data-pick]');
@@ -1482,7 +1760,7 @@ document.addEventListener('click', e => {
     return;
   }
   const open = e.target.closest('[data-open-dia]');
-  if (open) { flash = null; showView('rutina', Number(open.dataset.openDia)); }
+  if (open) { flash = null; const v = open.dataset.openDia; showView('rutina', isNaN(Number(v)) ? v : Number(v)); }
 });
 // Qué ejercicio abrir después de confirmar una serie:
 // - Ejercicio simple: al completar todas sus series, el siguiente con pendientes.
@@ -1564,8 +1842,8 @@ function stopHold(completo) {
 
 // Serie (objeto de estado) correspondiente a una fila del registro
 function setOf(row) {
-  const c = ctx(); const d = c.model.dias.find(x => x.n === currentDia);
-  return sesion(S.usuario, c.p.semana, d.n).sets[row.dataset.ej][+row.dataset.i];
+  const c = ctx(); const d = findDia(c.model, currentDia);
+  return sesionK(S.usuario, claveSesion(c.p, d)).sets[row.dataset.ej][+row.dataset.i];
 }
 // Edición directa de los números
 document.addEventListener('change', e => {
@@ -1599,7 +1877,7 @@ history.replaceState(null, '');
 
 // Respaldo del progreso y las sesiones
 $('btn-export').addEventListener('click', () => {
-  const data = { app: 'rutina-tracker', version: 1, fecha: new Date().toISOString(), progreso: S.progreso, sesiones: S.sesiones || {} };
+  const data = { app: 'rutina-tracker', version: 1, fecha: new Date().toISOString(), progreso: S.progreso, sesiones: S.sesiones || {}, extras: S.extras || {} };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1613,7 +1891,7 @@ $('import-file').addEventListener('change', async e => {
     const data = JSON.parse(await f.text());
     if (data.app !== 'rutina-tracker' || !data.progreso) throw new Error('El archivo no es un respaldo de Rutina Tracker.');
     if (!confirm('¿Reemplazar el progreso y los pesos de este teléfono por los del respaldo?')) return;
-    S.progreso = data.progreso; S.sesiones = data.sesiones || {};
+    S.progreso = data.progreso; S.sesiones = data.sesiones || {}; S.extras = data.extras || {};
     saveState(); render();
   } catch (err) { alert('No se pudo importar: ' + err.message); }
   e.target.value = '';

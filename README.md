@@ -10,6 +10,7 @@ Funciona como PWA: se puede instalar en la pantalla de inicio y anda sin conexi�
 - **Rutina**: tus días de entrenamiento; cada día abre su pantalla con calentamiento, bloques de ejercicios (las superseries son un bloque) y estiramientos.
 - **Registro de series**: al tocar un ejercicio aparecen sus series con peso y reps precargados de la última vez; confirmás cada serie con un toque. Muestra "Última vez" y la meta del día (te avisa cuándo subir el peso). La técnica (fotos + pasos) queda en un panel "Ver técnica".
 - **Timer de descanso**: arranca solo al confirmar una serie (en superseries, después del ejercicio B), con ±15 s y saltar; vibra y suena al terminar. La pantalla no se apaga mientras entrenás.
+- **Sesiones libres**: rutinas independientes de la semana (por ejemplo una secuencia de cervicales), que se hacen cuando se quiere y se registran por fecha. Si todos sus pasos tienen tiempo, un modo guiado recorre la secuencia de corrido con timer, aviso sonoro y vibración al cambiar de paso, pausa y "siguiente".
 - **Progreso**: semana actual, días completados e historial.
 - **Ajustes**: usuario, respaldo (exportar/importar JSON) y glosario.
 
@@ -44,7 +45,7 @@ Cada fila es una lista con estas columnas, en este orden:
 |---|---|
 | `Usuario` | Nombre de la persona. Cada nombre distinto aparece como un usuario en la app. |
 | `Semana` | `A`, `B`… si la rutina alterna tipos de semana; vacío si todas las semanas son iguales. |
-| `Dia` | Número de día (1, 2, 3…). La cantidad de días de la rutina sale de acá. Vacío = fila de calentamiento/estiramiento general. |
+| `Dia` | Número de día (1, 2, 3…). La cantidad de días de la rutina sale de acá. Vacío = fila de calentamiento/estiramiento general. Un texto (ej: `cervicales`) = sesión libre: no cuenta para la semana y su calentamiento/estiramiento es solo propio. |
 | `DiaNombre` | Nombre del día (ej: "Piernas y glúteos"). |
 | `Seccion` | `Calentamiento`, `Principal`, `Secundario`, `Accesorios`, `Opcional`, `Estiramiento` u otro nombre (se muestra como título). Las filas de `Calentamiento`/`Estiramiento` con `Dia` vacío valen para todos los días; con un `Dia`, solo para ese día (p. ej. un día en casa con su propio calentamiento). |
 | `Orden` | Orden dentro del día (`1`, `2a`, `2b`…). `2a`/`2b` es la convención para superseries. |
