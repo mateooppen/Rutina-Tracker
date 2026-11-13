@@ -169,6 +169,10 @@
   .set-row.done .set-ok { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .set-row.done .stp { opacity: 0.55; }
   .tech-toggle { display: flex; align-items: center; gap: 6px; width: 100%; margin-top: 10px; padding: 9px 0 2px; background: none; border: none; border-top: 1px solid var(--border); font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; }
+  .alt-swap { display: inline-flex; align-items: center; gap: 6px; max-width: 100%; margin-top: 8px; padding: 6px 11px 6px 9px; background: none; border: 1px solid var(--border2); border-radius: 12px; font: inherit; font-size: 12.5px; font-weight: 550; color: var(--text2); text-align: left; line-height: 1.3; cursor: pointer; }
+  .alt-swap .ic { flex: none; color: var(--accent-text); }
+  .alt-swap b { color: var(--text); font-weight: 650; }
+  .alt-swap:active { background: var(--inset); }
   .tech-toggle .arrow { margin-left: auto; color: var(--text3); transition: transform 0.2s; }
   .tech-toggle[aria-expanded="true"] .arrow { transform: rotate(180deg); }
   .ex-body .ex-drawer { padding: 10px 0 0; }
@@ -480,7 +484,7 @@ const EJERCICIOS = {
     tip: 'Pedí ayuda para sacar la barra si el peso es alto y dejá siempre los seguros puestos.' },
   'Peso muerto convencional':              { grupo: 'Cadena posterior', media: 'db/Barbell_Deadlift',
     pasos: ['Barra sobre la mitad del pie, pies al ancho de cadera. Agarrá la barra apenas por fuera de las piernas.', 'Bajá la cadera hasta que las canillas toquen la barra, pecho arriba y espalda neutra.', 'Inspirá, endurecé el abdomen y empujá el piso: la barra sube pegada a las piernas.', 'Terminá de pie con la cadera extendida y bajá controlado por el mismo camino.'],
-    tip: 'Es el ejercicio que más fatiga genera: 3 series alcanzan. Si la espalda se redondea, bajá el peso.' },
+    tip: 'Es el ejercicio que más fatiga genera: no agregues series. Si la espalda se redondea, bajá el peso.' },
   'Press militar con barra de pie':        { grupo: 'Hombros', media: 'db/Standing_Military_Press',
     pasos: ['Barra a la altura de las clavículas, agarre apenas más ancho que los hombros, codos adelante.', 'Apretá glúteos y abdomen para no arquear la espalda baja.', 'Empujá la barra hacia arriba en línea recta, moviendo apenas la cabeza hacia atrás para dejarla pasar.', 'Arriba, bloqueá con la barra sobre la mitad del pie y bajá controlado a las clavículas.'] },
   // --- Piernas ---
@@ -513,6 +517,44 @@ const EJERCICIOS = {
   'Isquiotibiales sentado':                { grupo: 'Estiramiento', media: 'db/Seated_Floor_Hamstring_Stretch' },
   'Hombro cruzado':                        { grupo: 'Estiramiento', media: 'db/Shoulder_Stretch' },
   'Gato-vaca':                             { grupo: 'Estiramiento', media: 'cat_cow.gif' },
+  // --- Cholo: fuerza 4 días (gimnasio) ---
+  'Prensa inclinada':                      { grupo: 'Piernas', media: 'leg_press.gif',
+    pasos: ['Espalda y cadera bien apoyadas en el respaldo, pies al ancho de hombros en el centro de la plataforma.', 'Destrabá los seguros y bajá controlado hasta que las rodillas queden cerca de 90°, sin que la cadera se despegue del asiento.', 'Empujá con toda la planta hasta casi estirar las piernas, sin bloquear las rodillas de golpe.'],
+    tip: 'Si la zona lumbar se redondea abajo, estás bajando de más: acortá el recorrido.' },
+  'Sentadilla búlgara con mancuernas':     { grupo: 'Piernas', media: 'db/Split_Squat_with_Dumbbells',
+    pasos: ['De espaldas a un banco, apoyá el empeine del pie de atrás arriba y adelantá el otro pie un paso largo.', 'Mancuernas colgando a los costados, torso apenas inclinado hacia adelante.', 'Bajá derecho hasta que el muslo de adelante quede paralelo al piso, con la rodilla en línea con el pie.', 'Subí empujando con el talón de adelante. Terminá las reps y cambiá de pierna.'],
+    tip: 'El peso va en la pierna de adelante; la de atrás solo acompaña.' },
+  'Dominadas':                             { grupo: 'Espalda', media: 'db/Pullups',
+    pasos: ['Agarre prono algo más ancho que los hombros, colgado con los brazos estirados.', 'Bajá los hombros lejos de las orejas y tirá llevando los codos hacia las costillas.', 'Subí hasta pasar el mentón por encima de la barra, sin balancearte.', 'Bajá controlado hasta estirar los brazos por completo.'],
+    tip: 'El lastre se suma con cinturón o una mancuerna entre los pies; anotá solo el peso agregado.' },
+  'Remo con barra':                        { grupo: 'Espalda', media: 'db/Bent_Over_Barbell_Row',
+    pasos: ['Pies al ancho de cadera, rodillas apenas flexionadas, torso inclinado desde la cadera con la espalda neutra.', 'Agarre prono algo más ancho que los hombros, brazos estirados.', 'Llevá la barra hacia la parte baja del abdomen juntando las escápulas, sin levantar el torso.', 'Bajá controlado hasta estirar los brazos.'],
+    tip: 'En la variante Pendlay la barra arranca apoyada en el piso en cada repetición, con el torso paralelo al piso.' },
+  'Pájaros con mancuernas en banco inclinado': { grupo: 'Hombros', media: 'reverse_fly.gif',
+    tip: 'Pecho apoyado en el banco, codos apenas flexionados y fijos. Peso liviano: si tenés que dar impulso, bajalo.' },
+  'Curl de bíceps con barra EZ':           { grupo: 'Bíceps', media: 'db/EZ-Bar_Curl',
+    tip: 'Codos pegados al cuerpo y quietos; bajá lento hasta estirar los brazos.' },
+  'Peso muerto rumano con barra':          { grupo: 'Cadena posterior', media: 'barbell_rdl.gif',
+    pasos: ['De pie con la barra en las manos, pies al ancho de cadera y rodillas apenas flexionadas.', 'Llevá la cadera hacia atrás y bajá la barra pegada a las piernas, con la espalda neutra.', 'Bajá hasta sentir el estiramiento atrás del muslo, más o menos a media canilla.', 'Subí empujando la cadera hacia adelante y apretando los glúteos.'],
+    tip: 'Las rodillas casi no se mueven: es una bisagra de cadera, no una sentadilla.' },
+  'Curl femoral acostado en máquina':      { grupo: 'Isquios', media: 'db/Lying_Leg_Curls',
+    tip: 'Cadera pegada al banco durante todo el recorrido; bajá lento.' },
+  'Hip thrust con barra':                  { grupo: 'Glúteos', media: 'db/Barbell_Hip_Thrust',
+    pasos: ['Espalda alta apoyada en el borde de un banco, barra sobre el pliegue de la cadera (con almohadilla), pies al ancho de hombros.', 'Empujá con los talones y subí la cadera hasta que el torso quede paralelo al piso.', 'Arriba, apretá los glúteos un segundo con el mentón hacia el pecho, sin arquear la lumbar.', 'Bajá controlado sin apoyar del todo.'] },
+  'Gemelos sentado en máquina':            { grupo: 'Pantorrillas', media: 'db/Seated_Calf_Raise', tip: 'Pausa de 1–2 segundos abajo, bien estirado, antes de subir.' },
+  // Alternativas (columna `alternativa` de la rutina)
+  'Zancadas con mancuernas':               { grupo: 'Piernas', media: 'db/Dumbbell_Lunges',
+    tip: 'Paso largo y torso erguido; la rodilla de atrás baja casi hasta el piso. Completá un lado y después el otro.' },
+  'Press de hombros con mancuernas':       { grupo: 'Hombros', media: 'db/Dumbbell_Shoulder_Press',
+    tip: 'Sentado con el respaldo casi vertical. Bajá hasta que las mancuernas queden a la altura de las orejas.' },
+  'Remo con el pecho apoyado':             { grupo: 'Espalda', media: 'db/Lying_T-Bar_Row',
+    tip: 'El pecho no se despega del apoyo en ningún momento: así la zona lumbar descansa y trabaja solo la espalda.' },
+  'Peso muerto sumo':                      { grupo: 'Cadena posterior', media: 'db/Sumo_Deadlift',
+    pasos: ['Pies bien abiertos con las puntas hacia afuera, canillas pegadas a la barra.', 'Agarrá la barra por dentro de las piernas, brazos estirados, pecho arriba y espalda neutra.', 'Empujá el piso abriendo las rodillas hacia afuera: la barra sube pegada a las piernas.', 'Terminá de pie con la cadera extendida y bajá controlado por el mismo camino.'],
+    tip: 'El torso queda más vertical que en el convencional: carga menos la zona lumbar y más las piernas.' },
+  'Puente de glúteos con barra':           { grupo: 'Glúteos', media: 'db/Barbell_Glute_Bridge',
+    tip: 'Igual que el hip thrust pero con la espalda en el piso: recorrido más corto, sirve si no hay banco libre.' },
+
   // ============ Vero: rutina en casa (femenino, técnica de su app original) ============
   'Movilidad articular de pie': { grupo: 'Movilidad', media: '', 
     pasos: ['Empezá con 10 círculos de hombros hacia atrás y 10 círculos amplios de brazos.', 'Seguí con 10 rotaciones suaves de torso hacia cada lado, con la cadera quieta.', 'Hacé 10 medias sentadillas suaves, bajando solo hasta donde te resulte cómodo.', 'Cerrá con 10 elevaciones de talones y 8 círculos de tobillo por pie, apoyada en la silla.'] },
@@ -708,7 +750,9 @@ const EJERCICIOS = {
 
 /* Rutinas: filas con el mismo esquema que la pestaña "Rutinas".
  * [usuario, semana(A/B/''), dia(nº o '' p/ secciones generales), diaNombre,
- *  seccion, orden, ejercicio, series, intensidad, descanso, tag, nota]
+ *  seccion, orden, ejercicio, series, intensidad, descanso, tag, nota, alternativa(opcional)]
+ * alternativa: ejercicio del catálogo que puede reemplazar al de la fila; la app
+ * ofrece un botón para cambiar entre los dos (ver conAlt).
  * dia con texto (p. ej. 'cervicales') = sesión libre: no cuenta para la semana,
  * se registra por fecha. Si todos sus pasos tienen tiempo ("45 seg"), la app
  * la guía de corrido con un timer. Su calentamiento/estiramiento es solo propio.
@@ -782,6 +826,38 @@ const RUTINAS = [
   ['Vero','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','15','Brazos de águila con inclinación','60 seg','','','','Derecho arriba · hacia la derecha'],
   ['Vero','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','16','Brazos de águila con inclinación','60 seg','','','','Izquierdo arriba · hacia la izquierda'],
   ['Vero','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','17','Cierre sentado','15 seg','','','',''],
+  // ============ Cholo: fuerza 4 días (lun/mar/jue/vie) ============
+  // Bloque A (principal, 4–6 reps) + bloque B (accesorios, 8–15 reps).
+  // Calentamiento y estiramiento generales: los mismos que Mateo.
+  ['Cholo','','','','Calentamiento','1','Rotaciones de hombros y cuello','10 por lado','','', '','Despacio, en cada dirección'],
+  ['Cholo','','','','Calentamiento','2','Rotaciones de cadera y rodillas','10 por dirección','','', '','Pies al ancho de hombros'],
+  ['Cholo','','','','Calentamiento','3','Sentadilla de peso corporal','2 × 10','','', '','Sin peso, controlado'],
+  ['Cholo','','','','Calentamiento','4','Serie de aproximación con barra vacía','1 × 10','','', '','Del ejercicio principal del día, lento'],
+  ['Cholo','','','','Estiramiento','1','Pecho en marco de puerta','30 seg por lado','','', '','Antebrazo apoyado, girar el cuerpo'],
+  ['Cholo','','','','Estiramiento','2','Cuádriceps de pie','30 seg por lado','','', '','Doblar pierna atrás, agarrar tobillo'],
+  ['Cholo','','','','Estiramiento','3','Isquiotibiales sentado','30–40 seg','','', '','Piernas extendidas, inclinarse adelante'],
+  ['Cholo','','','','Estiramiento','4','Hombro cruzado','30 seg por lado','','', '','Brazo extendido delante del pecho'],
+  ['Cholo','','','','Estiramiento','5','Gato-vaca','10 reps lentas','','', '','En cuatro apoyos, arquear y redondear'],
+  ['Cholo','','1','Piernas · Cadena anterior','Principal','1','Sentadilla trasera con barra','4 × 5–6','RIR 2–3','2–3 min','principal','Subí 5 kg cuando completes 4 × 6','Hack squat en máquina'],
+  ['Cholo','','1','Piernas · Cadena anterior','Accesorios','2','Prensa inclinada','3 × 8–10','RIR 2','2 min','','Subí el peso cuando completes 3 × 10'],
+  ['Cholo','','1','Piernas · Cadena anterior','Accesorios','3','Extensiones de cuádriceps en máquina','3 × 10–12','RIR 1–2','90 seg','',''],
+  ['Cholo','','1','Piernas · Cadena anterior','Accesorios','4','Sentadilla búlgara con mancuernas','3 × 8–10 por lado','RIR 2','90 seg','','','Zancadas con mancuernas'],
+  ['Cholo','','1','Piernas · Cadena anterior','Accesorios','5','Gemelos de pie en máquina','4 × 12–15','RIR 1–2','60 seg','',''],
+  ['Cholo','','2','Tren superior · Empuje','Principal','1','Press de banca con barra','4 × 5–6','RIR 2–3','2–3 min','principal','Subí 2,5 kg cuando completes 4 × 6'],
+  ['Cholo','','2','Tren superior · Empuje','Accesorios','2','Press militar con barra de pie','3 × 6–8','RIR 2','2 min','','Subí 2,5 kg cuando completes 3 × 8','Press de hombros con mancuernas'],
+  ['Cholo','','2','Tren superior · Empuje','Accesorios','3','Press inclinado con mancuernas','3 × 8–10','RIR 2','90 seg','','Subí de mancuerna cuando completes 3 × 10'],
+  ['Cholo','','2','Tren superior · Empuje','Accesorios','4','Elevaciones laterales con mancuernas','4 × 12–15','RIR 1–2','60 seg','',''],
+  ['Cholo','','2','Tren superior · Empuje','Accesorios','5','Extensión de tríceps en polea — cuerda','3 × 10–12','RIR 1–2','60 seg','',''],
+  ['Cholo','','3','Tren superior · Tirón','Principal','1','Dominadas','4 × 6–8','RIR 2','2–3 min','principal','Sumá peso cuando completes 4 × 8','Jalón al pecho'],
+  ['Cholo','','3','Tren superior · Tirón','Accesorios','2','Remo con barra','4 × 6–8','RIR 2','2 min','','Subí 2,5 kg cuando completes 4 × 8','Remo con el pecho apoyado'],
+  ['Cholo','','3','Tren superior · Tirón','Accesorios','3','Remo en polea sentado (agarre neutro)','3 × 8–10','RIR 2','90 seg','',''],
+  ['Cholo','','3','Tren superior · Tirón','Accesorios','4','Pájaros con mancuernas en banco inclinado','3 × 12–15','RIR 1–2','60 seg','',''],
+  ['Cholo','','3','Tren superior · Tirón','Accesorios','5','Curl de bíceps con barra EZ','3 × 8–10','RIR 1–2','60 seg','','','Curl de bíceps con mancuernas'],
+  ['Cholo','','4','Piernas · Cadena posterior','Principal','1','Peso muerto convencional','4 × 5','RIR 2–3','2–3 min','principal','Subí 5 kg cuando completes 4 × 5','Peso muerto sumo'],
+  ['Cholo','','4','Piernas · Cadena posterior','Accesorios','2','Peso muerto rumano con barra','3 × 8–10','RIR 2','2 min','','Subí 2,5 kg cuando completes 3 × 10'],
+  ['Cholo','','4','Piernas · Cadena posterior','Accesorios','3','Curl femoral acostado en máquina','3 × 10–12','RIR 1–2','90 seg','','','Curl femoral sentado en máquina'],
+  ['Cholo','','4','Piernas · Cadena posterior','Accesorios','4','Hip thrust con barra','3 × 8–10','RIR 2','90 seg','','','Puente de glúteos con barra'],
+  ['Cholo','','4','Piernas · Cadena posterior','Accesorios','5','Gemelos sentado en máquina','4 × 12–15','RIR 1–2','60 seg','',''],
   // ============ Vero: 3 fuerza (~40 min) + 2 core/movilidad (~25 min) ============
   // Fases: semanas 1–2 RIR 3–4 · 3–4 RIR 2–3 · desde la 5, el RIR indicado.
   ['Vero','','1','Piernas, pecho y espalda','Calentamiento','1','Movilidad articular de pie','3 min','','','',''],
@@ -844,7 +920,7 @@ const RUTINAS = [
   ['Vero','','5','Core · Hombros, espalda alta y rodillas','Movilidad','9','Estiramiento suave de cuello','45 seg por lado','','','',''],
 ];
 
-const RUTINA_COLS = ['usuario','semana','dia','dianombre','seccion','orden','ejercicio','series','intensidad','descanso','tag','nota'];
+const RUTINA_COLS = ['usuario','semana','dia','dianombre','seccion','orden','ejercicio','series','intensidad','descanso','tag','nota','alternativa'];
 
 function rowsToRutinas(rows) {
   return rows.map(r => {
@@ -935,10 +1011,27 @@ function getEjercicio(ejercicios, nombre) {
   return null;
 }
 
+/* Alternativas: una fila puede traer un segundo ejercicio. El usuario elige cuál
+ * hace (S.alt[usuario][clave] = true → la alternativa) y la fila efectiva
+ * intercambia `ejercicio` y `alternativa`. Como imagen, técnica y pesos se
+ * indexan por nombre de ejercicio, cada variante lleva su propio historial. */
+const altKey = r => [r.semana, r.dia, r.seccion, r.orden].join('|');
+function conAlt(usuario, r) {
+  if (!r.alternativa) return r;
+  const k = altKey(r), on = !!((S.alt || {})[usuario] || {})[k];
+  return { ...r, altKey: k, ejercicio: on ? r.alternativa : r.ejercicio, alternativa: on ? r.ejercicio : r.alternativa };
+}
+function toggleAlt(k) {
+  S.alt = S.alt || {};
+  const u = S.alt[S.usuario] = S.alt[S.usuario] || {};
+  if (u[k]) delete u[k]; else u[k] = true;
+  saveState();
+}
+
 /* Modelo de un usuario a partir de las filas de rutina:
  * { dias: [{ n, nombre, porTipo: {tipo: [filas]} }], calentamiento, estiramiento, tipos } */
 function buildModel(rutinas, usuario) {
-  const rs = rutinas.filter(r => normKey(r.usuario) === normKey(usuario));
+  const rs = rutinas.filter(r => normKey(r.usuario) === normKey(usuario)).map(r => conAlt(usuario, r));
   const esCal = r => normKey(r.seccion) === 'calentamiento';
   const esEst = r => normKey(r.seccion).startsWith('estiramiento');
   const conDia = r => r.dia !== '' && !isNaN(Number(r.dia)) && Number(r.dia) > 0;
@@ -1084,15 +1177,17 @@ function parseRest(s) {
 const kgFmt = k => (Math.round(k * 100) / 100).toString().replace('.', ',');
 const incFromNota = nota => { const m = String(nota).match(/(\d+(?:[.,]\d+)?)\s*kg/i); return m ? parseFloat(m[1].replace(',', '.')) : 0; };
 
-function technicaHTML(e, r) {
+function technicaHTML(e, r, sinAlt) {
   const media = e.media || '', pasos = e.pasos || [];
-  if (!(media || pasos.length || e.tip || e.alternativa)) return '';
+  // La alternativa de la fila pisa a la del catálogo; si ya hay botón de cambio, no se repite acá.
+  const alt = sinAlt ? '' : (r.alternativa || e.alternativa || '');
+  if (!(media || pasos.length || e.tip || alt)) return '';
   return `
     <div class="ex-drawer">
       ${media ? mediaHTML(media, 'Técnica: ' + r.ejercicio) : ''}
       ${pasos.length ? `<ol class="ex-steps">${pasos.map(p => `<li>${esc(p)}</li>`).join('')}</ol>` : ''}
       ${e.tip ? `<div class="ex-tip"><b>Tip:</b> ${esc(e.tip)}</div>` : ''}
-      ${e.alternativa ? `<div class="ex-tip"><b>Alternativa:</b> ${esc(e.alternativa)}</div>` : ''}
+      ${alt ? `<div class="ex-tip"><b>Alternativa:</b> ${esc(alt)}</div>` : ''}
     </div>`;
 }
 
@@ -1103,8 +1198,10 @@ function technicaHTML(e, r) {
 function exerciseHTML(ejercicios, r, opts = {}) {
   const e = getEjercicio(ejercicios, r.ejercicio) || {};
   const media = e.media || '';
-  const tech = technicaHTML(e, r);
-  const nota = /^(superserie|si sobra tiempo)/i.test(r.nota || '') ? '' : (r.nota || '');
+  const swap = opts.log && r.altKey
+    ? `<button class="alt-swap" data-alt="${esc(r.altKey)}" data-to="${esc(r.alternativa)}">${icon('repeat', 14)}<span>Cambiar por <b>${esc(r.alternativa)}</b></span></button>` : '';
+  const tech = technicaHTML(e, r, !!swap);
+  const nota =/^(superserie|si sobra tiempo)/i.test(r.nota || '') ? '' : (r.nota || '');
   const thumb = PLACEHOLDER + (media ? `<img src="${esc(thumbSrc(media))}" alt="" loading="lazy" onerror="this.remove()">` : '');
   const chips = [
     r.intensidad ? `<span class="rx-chip">${esc(r.intensidad)}</span>` : '',
@@ -1118,6 +1215,7 @@ function exerciseHTML(ejercicios, r, opts = {}) {
           <p class="ex-nm">${esc(r.ejercicio)}</p>
           <div class="rx"><span class="rx-main num">${nb(r.series)}</span>${chips}</div>
           ${nota ? `<p class="ex-note">${icon(r.tag === 'principal' ? 'trendingUp' : 'info', 13)}<span>${nb(nota)}</span></p>` : ''}
+          ${swap}
         </div>
         ${expandable ? icon('chevronDown', 18, 'ex-chev') : ''}
       </div>`;
@@ -1747,6 +1845,12 @@ document.addEventListener('click', e => {
   if (play) { toggleHold(play.closest('.set-row')); return; }
   const ok = e.target.closest('[data-ok]');
   if (ok) { if (H) stopHold(false); confirmarSerie(ok.closest('.set-row')); return; }
+  const sw = e.target.closest('[data-alt]');
+  if (sw) {
+    // El panel abierto se recuerda por nombre: se renombra antes de redibujar para que siga abierto.
+    sw.closest('.ex').querySelector('.ex-nm').textContent = sw.dataset.to;
+    toggleAlt(sw.dataset.alt); render(); return;
+  }
   const tt = e.target.closest('.tech-toggle');
   if (tt) { const d = tt.nextElementSibling; const open = d.classList.toggle('open'); tt.setAttribute('aria-expanded', open); return; }
   if (e.target.closest('.ex-body')) return; // toques dentro del registro no cierran el panel
@@ -1882,7 +1986,7 @@ history.replaceState(null, '');
 
 // Respaldo del progreso y las sesiones
 $('btn-export').addEventListener('click', () => {
-  const data = { app: 'rutina-tracker', version: 1, fecha: new Date().toISOString(), progreso: S.progreso, sesiones: S.sesiones || {}, extras: S.extras || {} };
+  const data = { app: 'rutina-tracker', version: 1, fecha: new Date().toISOString(), progreso: S.progreso, sesiones: S.sesiones || {}, extras: S.extras || {}, alt: S.alt || {} };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
@@ -1896,7 +2000,7 @@ $('import-file').addEventListener('change', async e => {
     const data = JSON.parse(await f.text());
     if (data.app !== 'rutina-tracker' || !data.progreso) throw new Error('El archivo no es un respaldo de Rutina Tracker.');
     if (!confirm('¿Reemplazar el progreso y los pesos de este teléfono por los del respaldo?')) return;
-    S.progreso = data.progreso; S.sesiones = data.sesiones || {}; S.extras = data.extras || {};
+    S.progreso = data.progreso; S.sesiones = data.sesiones || {}; S.extras = data.extras || {}; S.alt = data.alt || {};
     saveState(); render();
   } catch (err) { alert('No se pudo importar: ' + err.message); }
   e.target.value = '';
