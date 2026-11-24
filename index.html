@@ -746,6 +746,33 @@ const EJERCICIOS = {
     tip: 'Buscá la posición más cómoda: solo vos sabés qué necesita tu cuerpo.' },
   'Cierre sentado': { grupo: 'Cervicales', media: 'gen/cervical-base.png',
     pasos: ['Soltá los brazos y relajá el cuello.', 'Enderezá la espalda, crecé hacia el techo y respirá profundo.'] },
+  // ============ Día de plaza: calistenia básica en barras (sin imágenes por ahora) ============
+  'Trote suave': { grupo: 'Activación',
+    pasos: ['Trotá liviano alrededor de la plaza o en el lugar.', 'Ritmo cómodo: tenés que poder hablar sin agitarte.'] },
+  'Dominadas negativas': { grupo: 'Espalda',
+    pasos: ['Subí con un salto o desde un banco hasta quedar con el mentón por encima de la barra, agarre prono.', 'Hombros lejos de las orejas, abdomen apretado y piernas juntas.', 'Bajá lo más lento que puedas, de 3 a 5 segundos, hasta estirar los brazos por completo.', 'Soltá, volvé a subir con el salto y repetí.'],
+    tip: 'La bajada lenta construye la fuerza de la dominada completa. Cuando te salgan 5 negativas de 5 segundos, probá las dominadas.' },
+  'Fondos en paralelas': { grupo: 'Pecho',
+    pasos: ['Subite a las paralelas con los brazos estirados y los hombros lejos de las orejas.', 'Inclinate apenas hacia adelante y bajá doblando los codos hacia atrás, sin abrirlos.', 'Llegá hasta que los hombros queden a la altura de los codos, no más abajo.', 'Empujá hasta estirar los brazos por completo.'],
+    tip: 'Si todavía no salen, hacé flexiones con las manos en la barra baja y el cuerpo bien recto, 10 a 12 reps.' },
+  'Remo invertido en barra baja': { grupo: 'Espalda',
+    pasos: ['Colgate debajo de una barra baja con agarre prono, cuerpo recto y talones en el piso.', 'Apretá glúteos y abdomen: el cuerpo es una tabla de la cabeza a los talones.', 'Tirá llevando el pecho a la barra y los codos hacia atrás, juntando las escápulas.', 'Bajá controlado hasta estirar los brazos.'],
+    tip: 'Cuanto más horizontal el cuerpo, más difícil. Para facilitarlo, doblá las rodillas y apoyá toda la planta del pie.' },
+  'Flexiones de brazos': { grupo: 'Pecho',
+    pasos: ['Manos en el piso apenas más abiertas que los hombros, cuerpo recto de la cabeza a los talones.', 'Bajá con los codos a unos 45° del cuerpo hasta que el pecho casi toque el piso.', 'Empujá el piso hasta estirar los brazos, sin que la cadera se hunda ni se levante.'],
+    tip: 'Progresión: pies elevados en un banco. Si se complica, manos en un banco.' },
+  'Sentadilla búlgara sin peso': { grupo: 'Piernas',
+    pasos: ['De espaldas a un banco, apoyá el empeine del pie de atrás arriba y adelantá el otro pie un paso largo.', 'Torso apenas inclinado hacia adelante, manos en la cintura o al frente.', 'Bajá derecho hasta que el muslo de adelante quede paralelo al piso, con la rodilla en línea con el pie.', 'Subí empujando con el talón de adelante. Terminá las reps y cambiá de pierna.'],
+    tip: 'El peso va en la pierna de adelante; la de atrás solo acompaña.' },
+  'Elevación de rodillas colgado': { grupo: 'Core',
+    pasos: ['Colgate de la barra alta con los brazos estirados y los hombros activos.', 'Llevá las rodillas al pecho redondeando apenas la espalda baja, sin tomar envión.', 'Bajá lento hasta estirar las piernas, frenando el balanceo.'],
+    tip: 'Progresión: piernas rectas hasta la horizontal.' },
+  'Encogimientos escapulares colgado': { grupo: 'Espalda',
+    pasos: ['Colgate de la barra con los brazos completamente estirados y los hombros relajados.', 'Sin doblar los codos, bajá los hombros lejos de las orejas: el cuerpo sube unos centímetros.', 'Sostené 2 segundos arriba y volvé a relajar controlado.'],
+    tip: 'Es el arranque de toda dominada: primero bajan las escápulas, después doblan los brazos.' },
+  'Dominadas explosivas': { grupo: 'Espalda',
+    pasos: ['Colgado con agarre prono algo más ancho que los hombros.', 'Tirá lo más rápido y alto que puedas, buscando llevar la barra al pecho.', 'Bajá controlado hasta estirar los brazos y arrancá cada rep desde parado, sin rebotar.'],
+    tip: 'Pocas reps y descanso completo: lo que se entrena es la velocidad. Es la base del muscle-up.' },
 };
 
 /* Rutinas: filas con el mismo esquema que la pestaña "Rutinas".
@@ -808,6 +835,25 @@ const RUTINAS = [
   ['Mateo','','4','Casa · Handstand y movilidad','Movilidad','7','Rana (aductores)','90 seg','','','','Contraer 5 s y relajar, 3 veces'],
   ['Mateo','','4','Casa · Handstand y movilidad','Opcional','8','Sentadilla profunda sostenida','60 seg','','','opcional','Si sobra tiempo'],
   ['Mateo','','4','Casa · Handstand y movilidad','Estiramiento','1','Colgarse de la barra','2 × 30 seg','','30 seg','',''],
+  // ---- Día 5 en la plaza: calistenia básica en barras (~45 min). Base para dominadas, fondos y, más adelante, muscle-up y front lever ----
+  ['Mateo','','5','Plaza · Calistenia básica','Calentamiento','1','Trote suave','3 min','','','','O saltos en el lugar'],
+  ['Mateo','','5','Plaza · Calistenia básica','Calentamiento','2','Rotaciones de hombros y cuello','10 por lado','','','','Sumá muñecas y cadera'],
+  ['Mateo','','5','Plaza · Calistenia básica','Calentamiento','3','Colgarse de la barra','2 × 20–30 seg','','','','Hombros activos, sin encogerse'],
+  ['Mateo','','5','Plaza · Calistenia básica','Calentamiento','4','Sentadilla de peso corporal','1 × 10','','','',''],
+  ['Mateo','','5','Plaza · Calistenia básica','Calentamiento','5','Flexiones inclinadas en silla o mesa','1 × 10','','','','En un banco o en la barra baja'],
+  ['Mateo','','5','Plaza · Calistenia básica','Circuito','1a','Dominadas negativas','4 × 5','','','superserie','Bajá en 3–5 seg. Si ya te salen completas, hacé 5–8 dominadas','Dominadas'],
+  ['Mateo','','5','Plaza · Calistenia básica','Circuito','1b','Fondos en paralelas','4 × 6–10','','','superserie','Si no salen: flexiones en barra baja, 10–12'],
+  ['Mateo','','5','Plaza · Calistenia básica','Circuito','1c','Remo invertido en barra baja','4 × 10–12','','','superserie','Pecho hasta la barra'],
+  ['Mateo','','5','Plaza · Calistenia básica','Circuito','1d','Flexiones de brazos','4 × 10–15','','','superserie','Progresión: pies elevados en un banco'],
+  ['Mateo','','5','Plaza · Calistenia básica','Circuito','1e','Sentadilla búlgara sin peso','4 × 8 por lado','','','superserie',''],
+  ['Mateo','','5','Plaza · Calistenia básica','Circuito','1f','Elevación de rodillas colgado','4 × 10','','90 seg','superserie','Progresión: piernas rectas a 90°'],
+  ['Mateo','','5','Plaza · Calistenia básica','Habilidad','2','Encogimientos escapulares colgado','3 × 5','','60 seg','','Pausa de 2 seg arriba'],
+  ['Mateo','','5','Plaza · Calistenia básica','Habilidad','3','Hollow body hold','3 × 20 seg','','45 seg','','Sumá 5 seg cuando completes las 3 series, hasta 30'],
+  ['Mateo','','5','Plaza · Calistenia básica','Habilidad','4','Dominadas explosivas','3 × 3','','2 min','','Solo si ya hacés dominadas completas: barra al pecho'],
+  ['Mateo','','5','Plaza · Calistenia básica','Estiramiento','1','Colgarse de la barra','30 seg','','','','Pasivo, hombros relajados'],
+  ['Mateo','','5','Plaza · Calistenia básica','Estiramiento','2','Pecho en marco de puerta','30 seg por lado','','','','Contra un poste'],
+  ['Mateo','','5','Plaza · Calistenia básica','Estiramiento','3','Cuádriceps de pie','30 seg por lado','','','',''],
+  ['Mateo','','5','Plaza · Calistenia básica','Estiramiento','4','Isquiotibiales sentado','30–40 seg','','','',''],
   // ---- Sesión libre: cervicales (~10 min, sentado) · del video "Alivia dolor cervical" de MalovaElena ----
   ['Vero','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','1','Postura de base sentada','30 seg','','','',''],
   ['Vero','','cervicales','Cervicales · Cuello y espalda alta','Secuencia','2','Retracción del cuello','45 seg','','','',''],
@@ -1307,7 +1353,8 @@ function blockHTML(ejercicios, b, idx, log) {
     const rondas = parseSeries(first.series).sets;
     const rest = ([...b.rows].reverse().find(r => r.descanso) || {}).descanso || '';
     const restTxt = rest.replace(/\s*tras el par/i, '').trim();
-    top = `<div class="blk-top">${icon('repeat', 14)}Superserie${rondas ? ` · ${rondas} rondas` : ''}${restTxt ? `<span class="sp">${icon('timer', 13)}${esc(restTxt)} al terminar</span>` : ''}</div>`;
+    const circ = b.rows.length > 2;
+    top = `<div class="blk-top">${icon('repeat', 14)}${circ ? 'Circuito' : 'Superserie'}${rondas ? ` · ${rondas} ${circ ? 'vueltas' : 'rondas'}` : ''}${restTxt ? `<span class="sp">${icon('timer', 13)}${esc(restTxt)} al terminar</span>` : ''}</div>`;
   } else if (TAG_TOP[first.tag]) {
     const [ic, label] = TAG_TOP[first.tag];
     top = `<div class="blk-top">${icon(ic, 14)}${label}</div>`;
@@ -1489,7 +1536,8 @@ function renderDia(c, d) {
   const filas = d.porTipo[diaTipoSel] || d.porTipo[''] || [];
   const isDone = !!(p.hechos[p.semana] || {})[d.n];
   const { titulo, contexto } = splitNombre(d.nombre);
-  const nSS = toBlocks(filas).filter(b => b.rows.length > 1).length;
+  const nSS = toBlocks(filas).filter(b => b.rows.length === 2).length;
+  const nCirc = toBlocks(filas).filter(b => b.rows.length > 2).length;
   const key = p.semana + ':' + d.n;
   const ses = sesion(S.usuario, p.semana, d.n);
   const totSets = filas.reduce((a, r) => a + parseSeries(r.series).sets, 0);
@@ -1502,6 +1550,7 @@ function renderDia(c, d) {
       <div class="stats">
         <span class="stat">${icon('dumbbell', 14)}${filas.length} ejercicios</span>
         ${nSS ? `<span class="stat">${icon('repeat', 14)}${nSS} superserie${nSS === 1 ? '' : 's'}</span>` : ''}
+        ${nCirc ? `<span class="stat">${icon('repeat', 14)}${nCirc} circuito${nCirc === 1 ? '' : 's'}</span>` : ''}
         ${doneSets ? `<span class="stat" style="color:var(--accent-text)">${icon('check', 14)}${doneSets} de ${totSets} series</span>` : ''}
         ${isDone ? `<span class="stat" style="color:var(--accent-text)">${icon('check', 14)}Completado</span>` : ''}
       </div>
